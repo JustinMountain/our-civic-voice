@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  civic-voice-db:
+    container_name: civic-voice-db
+    image: postgres:16.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - civic-voice-db:/var/lib/postgresql/data
+
+  civic-voice-pgadmin4:
+    image: dpage/pgadmin4:8.1
+    container_name: civic-voice-pgadmin4
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mountainj@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: strong-password
+    volumes:
+      - civic-voice-pgadmin4:/var/lib/pgadmin
+      
+volumes:
+  civic-voice-db:
+  civic-voice-pgadmin4:
