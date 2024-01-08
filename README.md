@@ -8,6 +8,8 @@ Currently utilizing Postgres and pgAdmin managed via docker and docker compose.
 
 Please run `docker compose up -d` to setup the database before running the application.
 
+When adding the server to pgAdmin, find the IP address of the database via `docker inspect <container>`. It was `172.26.0.2` on my first install, will confirm/check.
+
 ## Work in Progress
 
 ### Phase 1
@@ -38,3 +40,17 @@ The completion of Phase 2 will represent the MVP.
 
 The plan for moving passed the MVP involves setting up a user-driven database for sample communications, adding templates for use in connecting with representatives. 
 
+### Up Next
+
+I need to create a DML statement to
+- Create a role with all privs
+- Create an automation user
+- Grant role to this user
+
+With the user created, I need to use it to run the script that will populate the DB
+
+I need this script to run the script to drop tables for testing.
+
+It then populates the db accordingly
+
+I need to add NOT NULL to appropriate attributes
