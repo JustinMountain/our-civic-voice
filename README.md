@@ -42,11 +42,6 @@ The plan for moving passed the MVP involves setting up a user-driven database fo
 
 ### Up Next
 
-I need to create a DML statement to
-- Create a role with all privs
-- Create an automation user
-- Grant role to this user
-
 With the user created, I need to use it to run the script that will populate the DB
 
 I need this script to run the script to drop tables for testing.
@@ -54,3 +49,15 @@ I need this script to run the script to drop tables for testing.
 It then populates the db accordingly
 
 I need to add NOT NULL to appropriate attributes
+
+### Useful Commands
+
+```
+# Clears the DB to start fresh for testing
+docker network prune && docker volume prune -a
+```
+
+```
+# Run the test.ts file
+ts-node test.ts
+```

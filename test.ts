@@ -2,10 +2,10 @@ import { Pool } from 'pg';
 
 async function connectAndSetupDatabase() {
   const pool = new Pool({
-    user: 'postgres',
+    user: 'automations',
     host: '192.168.1.245',
-    database: 'civic-voice-db',
-    password: 'postgres',
+    database: 'connections',
+    password: 'password',
     port: 5432, // default PostgreSQL port
   });
 
@@ -13,7 +13,12 @@ async function connectAndSetupDatabase() {
   try {
     const client = await pool.connect();
 
-    await client.query(`DROP TABLE IF EXISTS users`);
+    
+    console.log('Database connection successful!');
+
+
+
+    // await client.query(`DROP TABLE IF EXISTS users`);
 
     // Create a new user table
     // await client.query(`
@@ -21,14 +26,14 @@ async function connectAndSetupDatabase() {
     // `);
 
 
-    await client.query(`DROP TABLE IF EXISTS users`);
+    // await client.query(`DROP TABLE IF EXISTS users`);
 
     // await client.query(`
     //   GRANT SELECT, INSERT, UPDATE, DELETE ON users2 TO automations;
     // `);
 
 
-    console.log('Database setup successful!');
+    console.log('Terminating connection');
 
     // Release the client back to the pool
     client.release();
