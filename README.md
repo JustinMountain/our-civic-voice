@@ -42,13 +42,12 @@ The plan for moving passed the MVP involves setting up a user-driven database fo
 
 ### Up Next
 
-With the user created, I need to use it to run the script that will populate the DB
+1. Ensure the header row is as expected before populating the DB
+2. Loop over each row, populating the db
 
-I need this script to run the script to drop tables for testing.
+*I need this script to run the script to drop tables for testing.*
 
-It then populates the db accordingly
-
-I need to add NOT NULL to appropriate attributes
+I need to add NOT NULL to appropriate attributes in DB creation step
 
 ### Useful Commands
 

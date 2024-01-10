@@ -1,4 +1,9 @@
 import { Pool } from 'pg';
+import { parse } from 'csv-parse';
+import fs from 'fs';
+
+const results: any[] = [];
+
 
 async function connectAndSetupDatabase() {
   const pool = new Pool({
@@ -13,30 +18,17 @@ async function connectAndSetupDatabase() {
   try {
     const client = await pool.connect();
 
-    
     console.log('Database connection successful!');
 
+    // Remove all rows from DB for testing purposes
+    await client.query(`DELETE FROM ontario_mpp`);
+    await client.query(`DELETE FROM ontario_mpp_offices`);
 
+    console.log('Content removed from ontario_mpp and ontario_mpp_offices!');
 
-    // await client.query(`DROP TABLE IF EXISTS users`);
+    // Download file from remote and check if it is the same
+      // TODO
 
-    // Create a new user table
-    // await client.query(`
-    //   CREATE ROLE automations WITH LOGIN PASSWORD 'automate';
-    // `);
-
-
-    // await client.query(`DROP TABLE IF EXISTS users`);
-
-    // await client.query(`
-    //   GRANT SELECT, INSERT, UPDATE, DELETE ON users2 TO automations;
-    // `);
-
-
-    console.log('Terminating connection');
-
-    // Release the client back to the pool
-    client.release();
 
   } catch (error) {
     console.error(error);
@@ -44,23 +36,37 @@ async function connectAndSetupDatabase() {
 
 }
 
-connectAndSetupDatabase();
+// connectAndSetupDatabase();
+
+const filePath = './db_sources/ontario/offices-all.csv';
 
 
-// On DB Setup: https://levelup.gitconnected.com/creating-and-filling-a-postgres-db-with-docker-compose-e1607f6f882f
+const processOntario = async () => {
+  const records: string[][] = [];
+  const parser = fs.createReadStream(filePath)
+    .pipe(parse({ delimiter: ",", from_line: 1, relax_column_count: true }));
 
-  // Setup Login/Group Role for automated actions
-    // CREATE ROLE and give PERMISSIONS
-      // CREATE ROLE automations WITH LOGIN PASSWORD 'automate';
-      // GRANT SELECT, INSERT, UPDATE, DELETE ON <schema> TO automations;
+  for await (const record of parser) {
+    records.push(record);
+  }
+  return records;
+};
 
-  // Setup Tables for info 
+processOntario()
+  .then(records => {
+    console.log(records[0]);
+    console.log(records[1]);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+    
 
-// On function call (on setup then nightly?)
 
-  // As automations user, query online source and download file
-    // If file is indentical to one already stored, exit
-    // If file is new/different, loop over and insert/update rows
+
+
+// From the empty DB, I need to check the headers for expected values
+// If expected, loop over CSV data to populate DB
 
 
 // Ontario MPP Info

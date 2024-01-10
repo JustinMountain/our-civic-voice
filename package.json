@@ -1,6 +1,6 @@
 {
   "name": "our-civic-voice",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Our Civic Voice is an open-source portal for connecting Canadians with their elected representatives.",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "csv-parse": "^5.5.3",
     "pg": "^8.11.3"
   },
   "devDependencies": {
