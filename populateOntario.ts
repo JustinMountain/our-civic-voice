@@ -43,16 +43,33 @@ async function populateOntarioTables(records: string[][]) {
 
     // Remove all rows from DB for testing purposes
     console.log('Ensuring ontario_mpps and ontario_mpp_offices tables are empty...');
-    await client.query(`DELETE FROM ontario_mpps`);
     await client.query(`DELETE FROM ontario_mpp_offices`);
+    await client.query(`DELETE FROM ontario_mpps`);
+    console.log('Successfully emptied ontario_mpps and ontario_mpp_offices tables!\n');
 
-    console.log('Successfully emptied ontario_mpps and ontario_mpp_offices tables!');
+    // Removes the header from the index 0
+    const arrayHeaders = records.shift();
 
-    // This is where I do stuff with the records and the DB
-    const subarray = records.slice(1, 2); 
+    console.log('Populating the ontario_mpps and ontario_mpp_offices tables...');
 
-    for (const record of subarray) {
-      const query_mpp = {
+    // Loops over the array to create records for each item
+    for (const record of records) {
+      // Handle when member_id is not a number
+      let memID: number = 0;
+      if (parseInt(record[17], 10)) {
+        memID = parseInt(record[17], 10);
+      }
+
+      // Query to see if entry exists for ontario_mpps PK riding_name
+      const existsQuery = {
+        text: 'SELECT EXISTS(SELECT 1 FROM ontario_mpps WHERE riding_name = $1)',
+        values: [
+          record[14], // riding_name
+        ],
+      };
+
+      // Query to insert a new entry for ontario_mpps PK riding_name
+      const insert_mpp = {
         text: `INSERT INTO ontario_mpps (
           member_id, 
           riding_name, 
@@ -64,7 +81,7 @@ async function populateOntarioTables(records: string[][]) {
           updated_date) 
           VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
         values: [
-          record[17], // member_id
+          memID, // member_id
           record[14], // riding_name
           record[16], // parliamentary_role
           record[15], // party
@@ -74,9 +91,10 @@ async function populateOntarioTables(records: string[][]) {
         ],
       };
 
-      const query_mpp_offices = {
+      // Query to insert a new entry for ontario_mpp_offices FK riding_name
+      const insert_mpp_offices = {
         text: `INSERT INTO ontario_mpp_offices (
-          member_id,
+          riding_name, 
           office_type,
           address,
           city,
@@ -91,7 +109,7 @@ async function populateOntarioTables(records: string[][]) {
           updated_date) 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())`,
         values: [
-          record[17], // member_id
+          record[14], // riding_name
           record[3], // office_type
           record[4], // address
           record[5], // city
@@ -106,14 +124,22 @@ async function populateOntarioTables(records: string[][]) {
         ],
       };
 
+      // Attempt queries above
       try {
-        await client.query(query_mpp);
-        await client.query(query_mpp_offices);
+        const res = await client.query(existsQuery);
+        const exists = res.rows[0].exists;
+
+        if (!exists) {
+          await client.query(insert_mpp);
+        }
+
+        await client.query(insert_mpp_offices);
       } catch (err) {
         console.error(err);
-        // handle error appropriately
       }
     }
+
+    console.log('Completed population of ontario_mpps and ontario_mpp_offices tables!\n');
 
     // Release the client back to the pool
     client.release();
@@ -121,7 +147,6 @@ async function populateOntarioTables(records: string[][]) {
   } catch (error) {
     console.error(error);
   }
-
 }
 
 // Below is the call to run this program

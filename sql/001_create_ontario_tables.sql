@@ -6,8 +6,8 @@ CREATE DATABASE connections;
 
 -- Create Ontario tables
 CREATE TABLE IF NOT EXISTS ontario_mpps (
-    member_id INT PRIMARY KEY,
-    riding_name VARCHAR(255),
+    member_id INT,
+    riding_name VARCHAR(255) PRIMARY KEY,
     parliamentary_role VARCHAR(255),
     party VARCHAR(255),
     first_name VARCHAR(255),
@@ -18,12 +18,12 @@ CREATE TABLE IF NOT EXISTS ontario_mpps (
 
 CREATE TABLE IF NOT EXISTS ontario_mpp_offices (
     office_id SERIAL PRIMARY KEY,
-    member_id INTEGER REFERENCES ontario_mpps(member_id),
+    riding_name VARCHAR(255) REFERENCES ontario_mpps(riding_name),
     office_type VARCHAR(255),
     address VARCHAR(255),
     city VARCHAR(255),
     province VARCHAR(255),
-    postal_code VARCHAR(10),
+    postal_code VARCHAR(20),
     office_email VARCHAR(255),
     email VARCHAR(255),
     telephone VARCHAR(20),
