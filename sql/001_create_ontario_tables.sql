@@ -5,7 +5,7 @@ CREATE DATABASE connections;
 \c connections;
 
 -- Create Ontario tables
-CREATE TABLE IF NOT EXISTS ontario_mpp (
+CREATE TABLE IF NOT EXISTS ontario_mpps (
     member_id INT PRIMARY KEY,
     riding_name VARCHAR(255),
     parliamentary_role VARCHAR(255),
@@ -13,13 +13,12 @@ CREATE TABLE IF NOT EXISTS ontario_mpp (
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     honorific VARCHAR(255),
-    active BOOLEAN,
     updated_date TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS ontario_mpp_offices (
     office_id SERIAL PRIMARY KEY,
-    member_id INTEGER REFERENCES ontario_mpp(member_id),
+    member_id INTEGER REFERENCES ontario_mpps(member_id),
     office_type VARCHAR(255),
     address VARCHAR(255),
     city VARCHAR(255),
@@ -31,6 +30,5 @@ CREATE TABLE IF NOT EXISTS ontario_mpp_offices (
     fax VARCHAR(20),
     toll_free VARCHAR(20),
     tty VARCHAR(20),
-    active BOOLEAN,
     updated_date TIMESTAMP
 );
