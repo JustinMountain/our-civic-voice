@@ -57,6 +57,6 @@ docker network prune && docker volume prune -a
 ```
 
 ```
-# Run the test.ts file
-ts-node test.ts
+# Run the populateOntario.ts.ts file
+ts-node populateOntario.ts.ts
 ```

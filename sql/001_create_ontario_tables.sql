@@ -4,10 +4,6 @@ CREATE DATABASE connections;
 -- Connect to the 'connections' database
 \c connections;
 
--- Drop the tables if they exist
-DROP TABLE IF EXISTS ontario_mpp_offices;
-DROP TABLE IF EXISTS ontario_mpp;
-
 -- Create Ontario tables
 CREATE TABLE IF NOT EXISTS ontario_mpp (
     member_id INT PRIMARY KEY,
