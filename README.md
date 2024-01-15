@@ -16,7 +16,7 @@ When adding the server to pgAdmin, find the IP address of the database via `dock
 
 The first phase will involve setting up the database and access to its contents. 
 
-1. Setup crawler for Ontario MPP into DB
+~~1. Setup crawler for Ontario MPP into DB~~
 2. Setup crawler for Federal MPs into DB
 3. Setup automation to check for updates from source to DB
 4. Setup API for DB access
@@ -40,15 +40,6 @@ The completion of Phase 2 will represent the MVP.
 
 The plan for moving passed the MVP involves setting up a user-driven database for sample communications, adding templates for use in connecting with representatives. 
 
-### Up Next
-
-1. Ensure the header row is as expected before populating the DB
-2. Loop over each row, populating the db
-
-*I need this script to run the script to drop tables for testing.*
-
-I need to add NOT NULL to appropriate attributes in DB creation step
-
 ### Useful Commands
 
 ```
@@ -60,3 +51,24 @@ docker network prune && docker volume prune -a
 # Run the populateOntario.ts.ts file
 ts-node populateOntario.ts.ts
 ```
+
+### Up Next
+
+With every member page catalogued, I need to gather info from the XML on each page
+
+, scrape for the info if not... the CSV looks disorganizaed at quick glance
+
+Contact info will need to be scraped
+
+```
+# How I got all their contact info in Python
+https://github.com/JustinMountain/civic-voice-old/blob/main/civiccrawlers/civiccrawlers/spiders/FederalMPContacts.py
+```
+
+Once I have an idea of all the data I've collected, I need to find a way to organize it into the necessary tables.
+
+Think about adding tags for ministers and whatnot.
+
+Should add Ontario Ministers and Committee members...
+
+Make a MV to serve this data easier
