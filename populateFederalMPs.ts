@@ -3,6 +3,7 @@
 import axios from "axios";
 import axiosRetry from 'axios-retry';
 import * as cheerio from "cheerio";
+import { createObjectCsvWriter } from 'csv-writer';
 
 const baseURL = 'https://www.ourcommons.ca';
 const memberSearchURL = baseURL + '/members/en/search';
@@ -36,14 +37,49 @@ async function processMembers() {
 
   console.log('\nProcessing Federal MP data...')
 
+
+
+
+  // Below is how I handle moving data into CSV... move out to separate function for readability
+    // Start by actually going to the XML file
+
+
+
+  // Hold the data in a meaningful way
+  interface Data {
+    // id: number;
+    name: string;
+    // email: string;
+  }
+
+  const data: Data[] = [];
+
   // Loop over each member, adding data to CSV
   for (const oneMember of allMemberPageData) {
     const selector = cheerio.load(oneMember.data);
     // console.log(selector("h1").first().text());
+
+    const thisMember: Data = {
+      // id: 0,
+      name: selector("h1").first().text(),
+      // email: ''
+    };
+
+    data.push(thisMember);
   }
 
-  console.log('Processed all: ' + allMemberPageData.length + ` MPs in ${Date.now() - startGather}ms`);
-  console.log('DB populated with Federal MPs. Closing program.');
+  // Write CSV
+  const csvWriter = createObjectCsvWriter({
+    path: './db-sources/federal-mps/out.csv',
+    header: [
+      // { id: 'id', title: 'ID' },
+      { id: 'name', title: 'NAME' },
+      // { id: 'email', title: 'EMAIL' }
+    ]
+  });
+  
+  csvWriter.writeRecords(data)
+    .then(() => console.log('Processed all: ' + allMemberPageData.length + ` MPs in ${Date.now() - startGather}ms to out.csv`));
 }
 
 processMembers();
