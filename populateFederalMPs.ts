@@ -52,7 +52,7 @@ async function createFederalMembersCSV() {
       // Create CSV from scraped data
       const fileName = `${timeRetrieved}-federal-mps`
       const csvWriter = createObjectCsvWriter({
-        path: `./db-sources/federal-mps/${fileName}.csv`,
+        path: `./db-sources/federal-mps/member-info/${fileName}.csv`,
         header: [
           { id: 'honorific', title: 'honorific' },
           { id: 'firstName', title: 'first_name' },
@@ -101,26 +101,16 @@ async function createFederalMPContactInfoCSV() {
   })  
   
   // Gather page data for all MPs
-  // const allMemberPageData = await Promise.all(memberURLs.map(async (url) => { 
-  //   const memberURL = baseURL + url;
-  //   const response = await axios.get(memberURL);
-  //   return { url: memberURL, data: response.data };
-  // }));
-
-  // Gather page data for all MPs
-  const someMemberPageData = await Promise.all(someMemberURLs.map(async (url) => { 
+  const allMemberPageData = await Promise.all(memberURLs.map(async (url) => { 
     const memberURL = baseURL + url;
     const response = await axios.get(memberURL);
     return { url: memberURL, data: response.data };
   }));
-  
-  // console.log(allMemberPageData)
 
   console.log('Processing Federal MPs contact info...')
 
   // Hold the data in a meaningful way
   interface MemberContactData {
-    // office_id: number;
     name: string;
     constituency: string;
     email: string;
@@ -140,46 +130,25 @@ async function createFederalMPContactInfoCSV() {
   const data: MemberContactData[] = [];
 
   // Loop over each member, adding data to CSV
-  for (const oneMember of someMemberPageData) {
+  for (const oneMember of allMemberPageData) {
     const selector = cheerio.load(oneMember.data);
 
-    // Will need something like this for constituency offices
-    // let textLines = '';
-    // let postalCode: string | undefined = '';
-
-    // const addressPTag = selector('#contact .row .col-md-3 p:nth-of-type(1)').html();
-    // if (addressPTag) {
-    //   const textLines = addressPTag.split('<br>').map(line => line.trim());
-    //   console.log(textLines)
-
-    //   postalCode = textLines.find(line => /^[A-Z]\d[A-Z] \d[A-Z]\d$/.test(line));
-    //   if (postalCode === undefined) {
-    //     postalCode = '';
-    //   }
-    // }
-    
     // Retrieve Hill Office contact info
     if (selector('#contact .row .col-md-3 > h4').text() === 'Hill Office') {
-
       let phoneNumber = '';
       let faxNumber = '';
 
       const contactNumbers = selector('#contact .row .col-md-3 p:nth-of-type(2)').html();
       if (contactNumbers) {
         const phoneSplit = contactNumbers.split('<br>')
-        // console.log(phoneSplit[0].trim())
-        // console.log(phoneSplit[1].trim())
 
         if (phoneSplit[0]) {
           phoneNumber = phoneSplit[0].split(':')[1].trim()
           faxNumber = phoneSplit[1].split(':')[1].trim()
         }
-
-        // console.log(phoneSplit)
       }
 
       const thisMember: MemberContactData = {
-        // id: 0,
         name: selector('h1').first().text(),
         constituency: selector('.ce-mip-overview a').first().text(),
         email: selector('#contact a:eq(0)').text(),
@@ -197,17 +166,96 @@ async function createFederalMPContactInfoCSV() {
       };
   
       data.push(thisMember);
+    }
+
+    // Retrieve Constituency Office contact info
+    const numberConstituencyOffices = selector('#contact .col-md-9 .ce-mip-contact-constituency-office-container').children('div').length;
+    
+    for (let i = 1; i <= numberConstituencyOffices; i++) {
+
+      const thisOfficeAddress = selector(`.ce-mip-contact-constituency-office:nth-of-type(${i}) p`).first().html();
+      const thisOfficeContact = selector(`.ce-mip-contact-constituency-office:nth-of-type(${i}) p:nth-of-type(2)`).html();
+      
+      let officeAddress = '';
+      let officeCity = '';
+      let officeProvince = '';
+      let officePostalCode = '';
+      let phoneNumber = '';
+      let faxNumber = '';
+
+      if (thisOfficeAddress) {
+        const address = thisOfficeAddress.split('<br>')
+        const cityAndProvince = address[2].trim().split(', ')
+        officeAddress = address[1].trim()
+        officeCity = cityAndProvince[0].trim()
+
+        if (cityAndProvince[1]) {
+          officeProvince = cityAndProvince[1].trim()
+        }
+
+        officePostalCode = address[3].trim()
+      }
+
+      if (thisOfficeContact) {
+        const phoneSplit = thisOfficeContact.split('<br>')
+        if (phoneSplit[0]) {
+          if (phoneSplit[0].split(':')[1]) {
+            phoneNumber = phoneSplit[0].split(':')[1].trim()
+          }
+          if (phoneSplit[1].split(':')[1]) {
+            faxNumber = phoneSplit[1].split(':')[1].trim()
+          }
+        }
+      }
+
+      const thisMember: MemberContactData = {
+        name: selector('h1').first().text(),
+        constituency: selector('.ce-mip-overview a').first().text(),
+        email: selector('#contact a:eq(0)').text(),
+        website: selector('#contact a:eq(1)').text(),
+        office_type: 'Constituency Office',
+        office_title: selector(`.ce-mip-contact-constituency-office:nth-of-type(${i}) strong`).text().trim(),
+        office_address: officeAddress,
+        office_city: officeCity,
+        office_province: officeProvince,
+        office_postal_code: officePostalCode,
+        office_note: '',
+        office_phone: phoneNumber,
+        office_fax: faxNumber,
+        source: oneMember.url,
+      };
   
+      data.push(thisMember);
     }
 
   }
 
-  console.log(data)
-  console.log(data.length)
-  
-  console.log(`Processed all contact info in ${Date.now() - timeRetrieved}ms`)  
+  // Create CSV from scraped data
+  const fileName = `${timeRetrieved}-federal-mp-contact-info`
+  const csvWriter = createObjectCsvWriter({
+    path: `./db-sources/federal-mps/contact-info/${fileName}.csv`,
+    header: [
+      { id: 'name', title: 'name' },
+      { id: 'constituency', title: 'constituency' },
+      { id: 'email', title: 'email' },
+      { id: 'website', title: 'website' },
+      { id: 'office_type', title: 'office_type' },
+      { id: 'office_title', title: 'office_title' },
+      { id: 'office_address', title: 'office_address' },
+      { id: 'office_city', title: 'office_city' },
+      { id: 'office_province', title: 'office_province' },
+      { id: 'office_postal_code', title: 'office_postal_code' },
+      { id: 'office_note', title: 'office_note' },
+      { id: 'office_phone', title: 'office_phone' },
+      { id: 'office_fax', title: 'office_fax' },
+      { id: 'source', title: 'source' },
+    ]
+  });
+
+  // Write CSV and notify user
+  csvWriter.writeRecords(data)
+    .then(() => console.log(`Processed all contact info in ${Date.now() - timeRetrieved}ms to ${fileName}.csv`));
 }
 
-
-// createFederalMembersCSV()
+createFederalMembersCSV()
 createFederalMPContactInfoCSV()
