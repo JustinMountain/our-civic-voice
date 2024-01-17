@@ -74,3 +74,14 @@ Should add Ontario Ministers and Committee members...
 Make a MV to serve this data easier
 
 I need a function to limit the number of valid CSVs kept
+
+#### Step 1: Create the CSV, check format is the same if not scraped
+
+#### Step 2: Check if CSV content is identical to previous version
+
+#### Step 3: New data should instigate database update
+
+#### Step 3: Cleanup CSV files, delete if data is same
+
+#### UI will need a way to interact with DB population
+

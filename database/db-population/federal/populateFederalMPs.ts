@@ -7,7 +7,7 @@ import * as cheerio from "cheerio";
 const baseURL = 'https://www.ourcommons.ca';
 
 // Scrapes federal MP data from the Parliament of Canada website and outputs it to a CSV file
-async function createFederalMembersCSV() {
+export async function createFederalMembersCSV() {
   // Interface to hold data for individual members
   interface MemberData {
     honorific: string;
@@ -52,7 +52,7 @@ async function createFederalMembersCSV() {
       // Create CSV from scraped data
       const fileName = `${timeRetrieved}-federal-mps`
       const csvWriter = createObjectCsvWriter({
-        path: `./db-sources/federal-mps/member-info/${fileName}.csv`,
+        path: `./database/csv-sources/federal/member-info/${fileName}.csv`,
         header: [
           { id: 'honorific', title: 'honorific' },
           { id: 'firstName', title: 'first_name' },
@@ -76,7 +76,7 @@ async function createFederalMembersCSV() {
   );
 }
 
-async function createFederalMPContactInfoCSV() {
+export async function createFederalMPContactInfoCSV() {
   const memberSearchURL = baseURL + '/members/en/search';
   const allMembersPage = await axios.get(memberSearchURL);
   const selector = cheerio.load(allMembersPage.data);
@@ -233,7 +233,7 @@ async function createFederalMPContactInfoCSV() {
   // Create CSV from scraped data
   const fileName = `${timeRetrieved}-federal-mp-contact-info`
   const csvWriter = createObjectCsvWriter({
-    path: `./db-sources/federal-mps/contact-info/${fileName}.csv`,
+    path: `./database/csv-sources/federal/contact-info/${fileName}.csv`,
     header: [
       { id: 'name', title: 'name' },
       { id: 'constituency', title: 'constituency' },
@@ -256,6 +256,3 @@ async function createFederalMPContactInfoCSV() {
   csvWriter.writeRecords(data)
     .then(() => console.log(`Processed all contact info in ${Date.now() - timeRetrieved}ms to ${fileName}.csv`));
 }
-
-createFederalMembersCSV()
-createFederalMPContactInfoCSV()
