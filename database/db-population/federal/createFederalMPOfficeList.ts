@@ -1,105 +1,60 @@
-import axios, { all } from "axios";
+import axios from "axios";
+import { AxiosInstance } from "axios";
 import axiosRetry from 'axios-retry';
 import { createObjectCsvWriter } from 'csv-writer';
-const { XMLParser } = require("fast-xml-parser");
 import * as cheerio from "cheerio";
 
-const baseURL = 'https://www.ourcommons.ca';
-
-// Scrapes federal MP data from the Parliament of Canada website and outputs it to a CSV file
-export async function createFederalMembersCSV() {
-  // Interface to hold data for individual members
-  interface MemberData {
-    honorific: string;
-    firstName: string;
-    lastName: string;
-    constituency: string;
-    provinceTerritory: string;
-    partyAffiliation: string;
-    startDate: string;
-    timeRetrieved: number;
-  }
-
-  const memberSearchURL = baseURL + '/members/en/search/xml';
-  const parser = new XMLParser();
-  const timeRetrieved = Date.now();
-  const data: MemberData[] = [];
-
-  console.log('\nProcessing Federal MP data...');
-
-  axios.get(memberSearchURL, { responseType: 'document' })
-    .then(response => {
-      // Axios request was for an XML object, so we parse the data of the response object
-      const jsonObj = parser.parse(response.data);
-
-      // Loops over each member and adds their data to the data array
-      for (const oneMember of jsonObj.ArrayOfMemberOfParliament.MemberOfParliament) {
-        // Utilize the MemberData interface to hold the data for each member
-        const thisMember: MemberData = {
-          honorific: oneMember.PersonShortHonorific, // Honorific
-          firstName: oneMember.PersonOfficialFirstName, // First Name
-          lastName: oneMember.PersonOfficialLastName, // Last Name
-          constituency: oneMember.ConstituencyName, // Constituency
-          provinceTerritory: oneMember.ConstituencyProvinceTerritoryName, // Province / Territory
-          partyAffiliation: oneMember.CaucusShortName, // Political Affiliation
-          startDate: oneMember.FromDateTime, // Start Date
-          timeRetrieved: timeRetrieved
-        };
-
-        data.push(thisMember);
-      }
-
-      // Create CSV from scraped data
-      const fileName = `${timeRetrieved}-federal-mps`
-      const csvWriter = createObjectCsvWriter({
-        path: `./database/csv-sources/federal/member-info/${fileName}.csv`,
-        header: [
-          { id: 'honorific', title: 'honorific' },
-          { id: 'firstName', title: 'first_name' },
-          { id: 'lastName', title: 'last_name' },
-          { id: 'constituency', title: 'constituency' },
-          { id: 'provinceTerritory', title: 'province_territory' },
-          { id: 'partyAffiliation', title: 'party_affiliation' },
-          { id: 'startDate', title: 'start_date' },
-          { id: 'timeRetrieved', title: 'time_retrieved' }
-        ]
-      });
-
-      // Write CSV and notify user
-      csvWriter.writeRecords(data)
-        .then(() => console.log('Processed all ' + data.length + ` MPs in ${Date.now() - timeRetrieved}ms to ${fileName}.csv`));
-    })
-    .catch(error => {
-      // Handle error
-      console.error(error);
-    }
-  );
+// Interface to hold data for one office of a member
+interface MemberContactData {
+  name: string;
+  constituency: string;
+  email: string;
+  website: string;
+  office_type: string;
+  office_title: string;
+  office_address: string;
+  office_city: string;
+  office_province: string;
+  office_postal_code: string;
+  office_note: string;
+  office_phone: string;
+  office_fax: string;
+  source: string;
 }
 
+const baseURL = 'https://www.ourcommons.ca';
+const memberSearchURL = `${baseURL}/members/en/search/xml`;
+const memberCSVFilepath = './database/csv-sources/federal/member-info/';
+const axiosInstance = axios.create();
+
+// Setup axios retry for status code 5xx and Network errors
+axiosRetry(axiosInstance, {
+  retries: 5,
+  retryDelay: (retryCount) => { return retryCount * 1000},
+  onRetry: (count, err, req) => { console.log(`retry attempt #${count} got ${err}`); },
+  retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
+})  
+
+async function fetchFederalMPOfficeData(axiosInstance: AxiosInstance): Promise<any> {}
+function parseFederalMPOfficeData(parser: XMLParser, axiosResponse: any, timeRetrieved: number): MemberData[] {}
+async function createFederalMPOfficeCSV(parser: XMLParser, axiosInstance: AxiosInstance, csvFilepath: string) {}
+export async function runFederalMPOfficeScraperToCSV() {}
+
+// Scrapes federal MP contact info from the Parliament of Canada website and outputs it to a CSV file
 export async function createFederalMPContactInfoCSV() {
   const memberSearchURL = baseURL + '/members/en/search';
+  const timeRetrieved = Date.now();
   const allMembersPage = await axios.get(memberSearchURL);
   const selector = cheerio.load(allMembersPage.data);
-  const timeRetrieved = Date.now();
+  const data: MemberContactData[] = [];
 
-  // Search for all member URLs for parsing
   console.log('Searching for Federal MPs...')
 
-  const memberURLs = selector(".ce-mip-mp-tile-container>a").map((i, el) => {
+  // Search for all member URLs from search page
+  const memberURLs = selector(".ce-mip-mp-tile-container > a").map((i, el) => {
     return selector(el).attr("href")
   }).get();
 
-  const someMemberURLs = memberURLs.slice(0, 3);
-  // console.log(someMemberURLs)
-
-  // Setup axios retry for status code 5xx and Network errors
-  axiosRetry(axios, {
-    retries: 5,
-    retryDelay: (retryCount) => { return retryCount * 1000},
-    onRetry: (count, err, req) => { console.log(`retry attempt #${count} got ${err}`); },
-    retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
-  })  
-  
   // Gather page data for all MPs
   const allMemberPageData = await Promise.all(memberURLs.map(async (url) => { 
     const memberURL = baseURL + url;
@@ -107,27 +62,7 @@ export async function createFederalMPContactInfoCSV() {
     return { url: memberURL, data: response.data };
   }));
 
-  console.log('Processing Federal MPs contact info...')
-
-  // Hold the data in a meaningful way
-  interface MemberContactData {
-    name: string;
-    constituency: string;
-    email: string;
-    website: string;
-    office_type: string;
-    office_title: string;
-    office_address: string;
-    office_city: string;
-    office_province: string;
-    office_postal_code: string;
-    office_note: string;
-    office_phone: string;
-    office_fax: string;
-    source: string;
-  }
-
-  const data: MemberContactData[] = [];
+  console.log('Processing Federal MP contact info...')
 
   // Loop over each member, adding data to CSV
   for (const oneMember of allMemberPageData) {
@@ -148,6 +83,7 @@ export async function createFederalMPContactInfoCSV() {
         }
       }
 
+      // Create MemberContactData object for this office
       const thisMember: MemberContactData = {
         name: selector('h1').first().text(),
         constituency: selector('.ce-mip-overview a').first().text(),
@@ -171,8 +107,8 @@ export async function createFederalMPContactInfoCSV() {
     // Retrieve Constituency Office contact info
     const numberConstituencyOffices = selector('#contact .col-md-9 .ce-mip-contact-constituency-office-container').children('div').length;
     
+    // Some MPs have multiple constituency offices, so we loop over each one
     for (let i = 1; i <= numberConstituencyOffices; i++) {
-
       const thisOfficeAddress = selector(`.ce-mip-contact-constituency-office:nth-of-type(${i}) p`).first().html();
       const thisOfficeContact = selector(`.ce-mip-contact-constituency-office:nth-of-type(${i}) p:nth-of-type(2)`).html();
       
@@ -208,6 +144,7 @@ export async function createFederalMPContactInfoCSV() {
         }
       }
 
+      // Create MemberContactData object for this office
       const thisMember: MemberContactData = {
         name: selector('h1').first().text(),
         constituency: selector('.ce-mip-overview a').first().text(),
@@ -227,7 +164,6 @@ export async function createFederalMPContactInfoCSV() {
   
       data.push(thisMember);
     }
-
   }
 
   // Create CSV from scraped data
@@ -256,3 +192,4 @@ export async function createFederalMPContactInfoCSV() {
   csvWriter.writeRecords(data)
     .then(() => console.log(`Processed all contact info in ${Date.now() - timeRetrieved}ms to ${fileName}.csv`));
 }
+

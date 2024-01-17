@@ -1,5 +1,6 @@
-import { createFederalMembersCSV, createFederalMPContactInfoCSV } 
-  from './database/db-population/federal/populateFederalMPs';
+import { runFederalMPScraperToCSV } from './database/db-population/federal/createFederalMPList';
+import { runFederalMPOfficeScraperToCSV } from './database/db-population/federal/createFederalMPOfficeList';
 
-createFederalMembersCSV()
-createFederalMPContactInfoCSV()
+// This section creates the CSV files for the federal MPs
+// runFederalMPScraperToCSV()
+runFederalMPOfficeScraperToCSV()
