@@ -75,9 +75,9 @@ Make a MV to serve this data easier
 
 I need a function to limit the number of valid CSVs kept
 
-#### Step 1: Create the CSV, check format is the same if not scraped
+#### Step 1: Create the CSV
 
-#### Step 2: Check if CSV content is identical to previous version
+#### Step 2: Check if CSV content is identical to previous version (headers, then content)
 
 #### Step 3: New data should instigate database update
 

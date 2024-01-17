@@ -20,10 +20,10 @@ interface MemberData {
 }
 
 const baseURL = 'https://www.ourcommons.ca';
-const memberSearchURL = `${baseURL}/members/en/search/xml`;
+const federalMemberSearchXML = `${baseURL}/members/en/search/xml`;
 const timeRetrieved = Date.now();
-const fileName = formatDateForFileName(timeRetrieved);
 const memberCSVFilepath = './database/csv-sources/federal/member-info/';
+const fileName = `${formatDateForFileName(timeRetrieved)}-federal-mps.csv`;
 const csvFilepath = `${memberCSVFilepath}${fileName}`;
 const parser = new XMLParser();
 const axiosInstance = axios.create({
@@ -42,22 +42,22 @@ axiosRetry(axiosInstance, {
 })  
 
 // Fetches federal MP data from the Parliament of Canada website
-async function fetchFederalMPData(axiosInstance: AxiosInstance): Promise<any> {
+export async function fetchFederalMPData(axiosInstance: AxiosInstance): Promise<any> {
   console.log('Fetching Federal MP data...');
   try {
-    return await axiosInstance.get(memberSearchURL);
+    return await axiosInstance.get(federalMemberSearchXML);
   } catch (error) {
-    console.error(`Could not fetch data from ${memberSearchURL}`);
+    console.error(`Could not fetch data from ${federalMemberSearchXML}`);
     throw error;
   }
 }
 
 // Parses the XML response from the Parliament of Canada website
 function parseFederalMPData(parser: XMLParser, axiosResponse: any, timeRetrieved: number): MemberData[] {
+  console.log('Parsing Federal MP data...');
   const jsonObj = parser.parse(axiosResponse.data);
   const data: MemberData[] = [];
 
-  console.log('Parsing Federal MP data...');
   for (const oneMember of jsonObj.ArrayOfMemberOfParliament.MemberOfParliament) {
     const thisMember: MemberData = {
       honorific: oneMember.PersonShortHonorific,
@@ -76,10 +76,7 @@ function parseFederalMPData(parser: XMLParser, axiosResponse: any, timeRetrieved
 }
 
 // Creates CSV file from the scraped data
-async function createFederalMembersCSV(parser: XMLParser, axiosInstance: AxiosInstance, csvFilepath: string) {
-  const axiosResponse  = await fetchFederalMPData(axiosInstance);
-  const data = parseFederalMPData(parser, axiosResponse, timeRetrieved);
-
+async function createFederalMembersCSV(data: MemberData[], csvFilepath: string) {
   console.log('Writing Federal MP data to CSV...');
   try {
     // Create CSV from scraped data
@@ -110,7 +107,9 @@ async function createFederalMembersCSV(parser: XMLParser, axiosInstance: AxiosIn
 
 export async function runFederalMPScraperToCSV() {
   try {
-    await createFederalMembersCSV(parser, axiosInstance, csvFilepath);
+    const axiosResponse  = await fetchFederalMPData(axiosInstance);
+    const data: MemberData[] = parseFederalMPData(parser, axiosResponse, timeRetrieved);  
+    await createFederalMembersCSV(data, csvFilepath);
   } catch (error) {
     console.error(`error`);
     throw error;
