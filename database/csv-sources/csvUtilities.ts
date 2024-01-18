@@ -20,7 +20,9 @@ export async function checkForCSVUpdate(created: Boolean, directory: string): Pr
 
     // Make assumptions about requiring update based on number of files
     if (allFiles.length == 0) { return false; }
-    if (allFiles.length == 1) { return true; }
+    if (allFiles.length == 1) { 
+      console.log('Finished handling CSV file.\n')
+      return true; }
 
     // If there are two or more files, the most recent 2 will be checked
     const oldFile = allFiles[0];
@@ -78,7 +80,7 @@ async function checkCSVEquality(directory: string, oldFileName: string, newFileN
   }
 }
 
-async function findCSVFiles(directory: string): Promise<string[]> {
+export async function findCSVFiles(directory: string): Promise<string[]> {
   if (!await fs.pathExists(directory)) {
     throw new Error('Directory does not exist');
   }

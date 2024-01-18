@@ -4,8 +4,8 @@ import axiosRetry from 'axios-retry';
 import { createObjectCsvWriter } from 'csv-writer';
 import { XMLParser } from 'fast-xml-parser';
 
-import { formatDateForFileName } from '../utilities';
-import { consoleHighlight, consoleReset } from '../utilities';
+import { formatDateForFileName } from '../csvUtilities';
+import { consoleHighlight, consoleReset } from '../csvUtilities';
 
 // Interface to hold data for individual members
 interface MemberData {

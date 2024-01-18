@@ -85,3 +85,10 @@ I need a function to limit the number of valid CSVs kept
 
 #### UI will need a way to interact with DB population
 
+
+###### Super Important
+
+Pull out all passwords and make them valid
+Federal Offices
+Review all code for cleanliness, console.log messages, typesafety, etc
+Bring Ontario up to new standard
