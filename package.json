@@ -17,9 +17,11 @@
     "csv-writer": "^1.6.0",
     "date-fns": "^3.2.0",
     "fast-xml-parser": "^4.3.3",
+    "fs-extra": "^11.2.0",
     "pg": "^8.11.3"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
     "@types/pg": "^8.10.9"
   }
 }

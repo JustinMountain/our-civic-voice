@@ -105,11 +105,12 @@ async function createFederalMembersCSV(data: MemberData[], csvFilepath: string) 
   }
 }
 
-export async function runFederalMPScraperToCSV() {
+export async function runFederalMPScraperToCSV(): Promise<Boolean> {
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance);
     const data: MemberData[] = parseFederalMPData(parser, axiosResponse, timeRetrieved);  
     await createFederalMembersCSV(data, csvFilepath);
+    return true;
   } catch (error) {
     console.error(`error`);
     throw error;

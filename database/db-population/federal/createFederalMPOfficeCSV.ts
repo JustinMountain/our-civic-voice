@@ -214,19 +214,19 @@ async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: 
     await csvWriter.writeRecords(data);
     console.log(
       `Processed all MP contact info (${data.length} offices) to ${consoleHighlight}${fileName}${consoleReset} in ${Date.now() - timeRetrieved}ms\n`
-    );    
-
+    );   
   } catch (error) {
     console.error(`Could not write data to ${csvFilepath}`);
     throw error;
   }
 }
 
-export async function runFederalMPOfficeScraperToCSV() {
+export async function runFederalMPOfficeScraperToCSV(): Promise<Boolean> {
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance, federalMemberSearchURL);
     const data: MemberContactData[] = parseFederalMPOfficeData(axiosResponse, timeRetrieved);  
     await createFederalMPOfficeCSV(data, csvFilepath);
+    return true;
   } catch (error) {
     console.error(`error`);
     throw error;
