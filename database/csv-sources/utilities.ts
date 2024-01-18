@@ -16,8 +16,13 @@ export async function checkForCSVUpdate(created: Boolean, directory: string): Pr
   // When a CSV File was successfully created:
   if (created) {
     console.log(`Handling CSV file created in ${directory}...`)
-
     const allFiles = await findCSVFiles(directory);
+
+    // Make assumptions about requiring update based on number of files
+    if (allFiles.length == 0) { return false; }
+    if (allFiles.length == 1) { return true; }
+
+    // If there are two or more files, the most recent 2 will be checked
     const oldFile = allFiles[0];
     const newFile = allFiles[1];
     const oldLength = await checkCSVLength(directory, oldFile);

@@ -1,8 +1,5 @@
--- Create the 'connections' database
-CREATE DATABASE connections;
-
 -- Connect to the 'connections' database
-\c connections;
+\c our_civic_voice;
 
 -- Create Ontario tables
 CREATE TABLE IF NOT EXISTS ontario_mpps (

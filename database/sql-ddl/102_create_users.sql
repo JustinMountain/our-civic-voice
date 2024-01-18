@@ -5,4 +5,4 @@ CREATE USER automations WITH PASSWORD 'password';
 GRANT admin TO automations;
 
 -- Grant the 'automations' user the ability to connect the 'connections' database
-GRANT CONNECT ON DATABASE connections TO automations;
+GRANT CONNECT ON DATABASE our_civic_voice TO automations;
