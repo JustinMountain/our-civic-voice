@@ -151,3 +151,6 @@ async function populateOntarioTables(records: string[][]) {
 
 // Below is the call to run this program
 runProgram();
+
+
+// Here we just need to read the CSV and populate the database
