@@ -88,7 +88,6 @@ I need a function to limit the number of valid CSVs kept
 
 ###### Super Important
 
-1. Need better cleansing for federal office strings
 1. Bring Ontario up to new standard
 1. Pull out all passwords and make them valid
 

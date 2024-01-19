@@ -135,16 +135,25 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
         let faxNumber = '';
   
         if (thisOfficeAddress) {
-          const address = thisOfficeAddress.split('<br>')
-          const cityAndProvince = address[2].trim().split(', ')
-          officeAddress = address[1].trim()
-          officeCity = cityAndProvince[0].trim()
-  
+          let address = thisOfficeAddress.split('<br>')
+
+          officePostalCode = address[address.length - 2].trim();
+
+          const cityAndProvince = address[address.length - 3].trim().split(', ');
+
+          console.log(cityAndProvince);
+          officeCity = cityAndProvince[0].trim();
+
           if (cityAndProvince[1]) {
             officeProvince = cityAndProvince[1].trim()
           }
-  
-          officePostalCode = address[3].trim()
+
+          if (address.length == 1) {
+            officeAddress = address[0].trim();
+          }
+          if (address.length == 2) {
+            officeAddress = `${address[0].trim()} ${address[1].trim()}`;
+          }
         }
   
         if (thisOfficeContact) {
@@ -185,7 +194,7 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
   return data;
 }
 
-async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: string) {
+async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: string): Promise<Boolean> {
   console.log('Writing Federal MP contact info to CSV...');
 
   try {
@@ -215,6 +224,7 @@ async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: 
     console.log(
       `Processed all MP contact info (${data.length} offices) to ${consoleHighlight}${fileName}${consoleReset} in ${Date.now() - timeRetrieved}ms\n`
     );   
+    return true;
   } catch (error) {
     console.error(`Could not write data to ${csvFilepath}`);
     throw error;
@@ -225,8 +235,7 @@ export async function runFederalMPOfficeScraperToCSV(): Promise<Boolean> {
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance, federalMemberSearchURL);
     const data: MemberContactData[] = parseFederalMPOfficeData(axiosResponse, timeRetrieved);  
-    await createFederalMPOfficeCSV(data, csvFilepath);
-    return true;
+    return createFederalMPOfficeCSV(data, csvFilepath);
   } catch (error) {
     console.error(`error`);
     throw error;
