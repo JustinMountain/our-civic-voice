@@ -6,6 +6,7 @@ import * as cheerio from "cheerio";
 
 import { formatDateForFileName } from '../csvUtilities';
 import { consoleHighlight, consoleReset } from '../csvUtilities';
+import { checkForCSVUpdate } from '../csvUtilities';
 
 // Interface to hold data for one office of a member
 interface MemberContactData {
@@ -141,7 +142,6 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
 
           const cityAndProvince = address[address.length - 3].trim().split(', ');
 
-          console.log(cityAndProvince);
           officeCity = cityAndProvince[0].trim();
 
           if (cityAndProvince[1]) {
@@ -235,7 +235,12 @@ export async function runFederalMPOfficeScraperToCSV(): Promise<Boolean> {
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance, federalMemberSearchURL);
     const data: MemberContactData[] = parseFederalMPOfficeData(axiosResponse, timeRetrieved);  
-    return createFederalMPOfficeCSV(data, csvFilepath);
+    const isFileCreated = await createFederalMPOfficeCSV(data, csvFilepath);
+
+    if (isFileCreated) {
+      return await checkForCSVUpdate(isFileCreated, memberContactCSVFilepath);
+    }
+    return false;
   } catch (error) {
     console.error(`error`);
     throw error;

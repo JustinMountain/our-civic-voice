@@ -6,6 +6,7 @@ import { XMLParser } from 'fast-xml-parser';
 
 import { formatDateForFileName } from '../csvUtilities';
 import { consoleHighlight, consoleReset } from '../csvUtilities';
+import { checkForCSVUpdate } from '../csvUtilities';
 
 // Interface to hold data for individual members
 interface MemberData {
@@ -76,7 +77,7 @@ function parseFederalMPData(parser: XMLParser, axiosResponse: any, timeRetrieved
 }
 
 // Creates CSV file from the scraped data
-async function createFederalMembersCSV(data: MemberData[], csvFilepath: string) {
+async function createFederalMembersCSV(data: MemberData[], csvFilepath: string): Promise<Boolean> {
   console.log('Writing Federal MP data to CSV...');
   try {
     // Create CSV from scraped data
@@ -99,6 +100,7 @@ async function createFederalMembersCSV(data: MemberData[], csvFilepath: string) 
     console.log(
       `Processed all ${data.length} MPs to ${consoleHighlight}${fileName}${consoleReset} in ${Date.now() - timeRetrieved}ms\n`
     );    
+    return true;
   } catch (error) {
     console.error(`Could not write data to ${csvFilepath}`);
     throw error;
@@ -109,8 +111,12 @@ export async function runFederalMPScraperToCSV(): Promise<Boolean> {
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance);
     const data: MemberData[] = parseFederalMPData(parser, axiosResponse, timeRetrieved);  
-    await createFederalMembersCSV(data, csvFilepath);
-    return true;
+    const isFileCreated = await createFederalMembersCSV(data, csvFilepath);
+
+    if (isFileCreated) {
+      return await checkForCSVUpdate(isFileCreated, memberCSVFilepath);
+    }
+    return false;
   } catch (error) {
     console.error(`error`);
     throw error;

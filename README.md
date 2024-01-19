@@ -15,7 +15,6 @@ When adding the server to pgAdmin, find the IP address of the database via `dock
 ### Phase 1
 
 The first phase will involve setting up the database and access to its contents. 
-Need to move CSV Update check to CSV script from DB script
 
 ~~1. Setup crawler for Ontario MPP into DB~~
 2. Setup crawler for Federal MPs into DB
@@ -90,16 +89,17 @@ I need a function to limit the number of valid CSVs kept
 ###### Super Important
 
 1. Bring Ontario up to new standard
-1. Pull out all passwords and make them valid
+- drop all tables, init all tables need to be created
+- populate tables needs to be re-done
 
-```
-# Highlights which MPs are effected
-SELECT office_postal_code, office_telephone, office_fax FROM federal_mp_offices;
-```
+1. Pull out all passwords and make them valid
+1. Review console.log messages and color code
+
+1. Better comments (JSDoc?)
 
 1. Can I create "serverless"-like functionality via Docker?
  - Maybe I can hack it by setting restart to 24 hours and having the app run on startup
- 1. The app doesn't currently populate automatically on startup, find a way to call init.ts
+
+1. The app doesn't currently populate automatically on startup, find a way to call init.ts
 
 1. Create some cool things to log (first stretch goal)
-1. Review console.log messages and color code

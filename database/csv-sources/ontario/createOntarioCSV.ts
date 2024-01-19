@@ -49,9 +49,13 @@ async function fetchOntarioMPPCSV(axiosInstance: AxiosInstance): Promise<Boolean
 
 export async function runOntarioMPPScraperToCSV(): Promise<Boolean> {
   try {
-    const ontarioMPPCSV = await fetchOntarioMPPCSV(axiosInstance);
-    await checkForCSVUpdate(ontarioMPPCSV, ontarioCSVFilepath);
-    return true;
+    const isFileCreated = await fetchOntarioMPPCSV(axiosInstance);
+
+    if (isFileCreated) {
+      return await checkForCSVUpdate(isFileCreated, ontarioCSVFilepath);
+    }
+
+    return false;
   } catch (error) {
     console.error(`error`);
     throw error;

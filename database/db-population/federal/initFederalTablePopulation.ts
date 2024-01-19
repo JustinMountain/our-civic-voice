@@ -1,6 +1,6 @@
 import { dropAllFederalTables } from './dropAllFederalTables';
-import { populateFederalMemberTable } from './populateFederalTable';
-import { populateFederalMemberOfficeTable } from './populateFederalOfficeTable';
+import { populateFederalMemberTable } from './populateFederalMemberTable';
+import { populateFederalMemberOfficeTable } from './populateFederalMemberOfficeTable';
 
 const federalMemberInfoDirectory = './database/csv-sources/federal/member-info/';
 const federalMemberContactInfoDirectory = './database/csv-sources/federal/contact-info/';
