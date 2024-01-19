@@ -88,18 +88,18 @@ I need a function to limit the number of valid CSVs kept
 
 ###### Super Important
 
-1. Review all code for cleanliness, console.log messages, typesafety, etc
 1. Need better cleansing for federal office strings
-1. The app doesn't currently populate automatically on startup 
- - Can create init.ts that calls all the populate functions since csv are stored for initial startup already
+1. Bring Ontario up to new standard
+1. Pull out all passwords and make them valid
 
 ```
 # Highlights which MPs are effected
 SELECT office_postal_code, office_telephone, office_fax FROM federal_mp_offices;
 ```
 
-1. Bring Ontario up to new standard
-1. Pull out all passwords and make them valid
 1. Can I create "serverless"-like functionality via Docker?
  - Maybe I can hack it by setting restart to 24 hours and having the app run on startup
+ 1. The app doesn't currently populate automatically on startup, find a way to call init.ts
+
 1. Create some cool things to log (first stretch goal)
+1. Review console.log messages and color code

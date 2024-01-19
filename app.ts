@@ -1,27 +1,23 @@
 import { checkForCSVUpdate } from './database/csv-sources/csvUtilities';
 import { runFederalMPScraperToCSV } from './database/csv-sources/federal/createFederalMPCSV';
 import { runFederalMPOfficeScraperToCSV } from './database/csv-sources/federal/createFederalMPOfficeCSV';
-import { populateFederalMemberTable } from './database/db-population/federal/populateFederalTable';
-import { populateFederalMemberOfficeTable } from './database/db-population/federal/populateFederalOfficeTable';
+import { dropAllFederalTables } from './database/db-population/federal/dropAllFederalTables';
+import { initFederalTablePopulation } from './database/db-population/federal/initFederalTablePopulation';
 
 const federalMemberInfoDirectory = './database/csv-sources/federal/member-info/';
 const federalMemberContactInfoDirectory = './database/csv-sources/federal/contact-info/';
 
-async function run() {
+async function runApplication() {
   const federalMPs = await runFederalMPScraperToCSV();
   const federalMPsUpdated = await checkForCSVUpdate(federalMPs, federalMemberInfoDirectory);
-  
-  if (federalMPsUpdated) {
-    await populateFederalMemberTable(federalMemberInfoDirectory);
+
+  const federalMPOffices = await runFederalMPOfficeScraperToCSV();
+  const federalMPOfficesUpdated = await checkForCSVUpdate(federalMPOffices, federalMemberContactInfoDirectory);
+
+  if (federalMPsUpdated || federalMPOfficesUpdated) {
+    await dropAllFederalTables();
+    await initFederalTablePopulation();
   }
-
-  // const federalMPOffices = await runFederalMPOfficeScraperToCSV();
-  // const federalMPOfficesUpdated = await checkForCSVUpdate(federalMPOffices, federalMemberContactInfoDirectory)
-
-  // if (federalMPOfficesUpdated) {
-  //   await populateFederalMemberOfficeTable(federalMemberContactInfoDirectory);
-  // }
-
 }
 
-run();
+runApplication();
