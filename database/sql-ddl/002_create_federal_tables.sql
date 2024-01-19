@@ -23,10 +23,10 @@ CREATE TABLE IF NOT EXISTS federal_mp_offices (
     office_address VARCHAR(255),
     office_city VARCHAR(255),
     office_province VARCHAR(255),
-    office_postal_code VARCHAR(20),
+    office_postal_code VARCHAR(255),
     office_note VARCHAR(255),
-    office_telephone VARCHAR(20),
-    office_fax VARCHAR(20),
+    office_telephone VARCHAR(255),
+    office_fax VARCHAR(255),
     source VARCHAR(255),
     updated_date TIMESTAMP
 );

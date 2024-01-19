@@ -7,7 +7,7 @@ export async function populateFederalMemberTable(directory: string): Promise<Boo
   let recentFileName: string = '';
   let data: string[][] = [];
 
-  console.log('Retrieving data from CSV for population...');
+  console.log('Retrieving data from CSV...');
   try {
     const allFileNames = await findCSVFiles(directory);
     recentFileName = allFileNames[0];
