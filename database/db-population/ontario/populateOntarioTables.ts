@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import pool from '../databasePool';
 import { parse } from 'csv-parse';
 import fs from 'fs';
 
@@ -15,7 +15,7 @@ function runProgram() {
 }
 
 // Takes the csv file and converst it into an array
-async function processOntarioCSV(filePath: string) {
+async function processOntarioCSV(filePath: string): Promise<string[][]> {
   const records: string[][] = [];
   const parser = fs.createReadStream(filePath)
     .pipe(parse({ delimiter: ",", from_line: 1, relax_column_count: true }));
@@ -27,14 +27,7 @@ async function processOntarioCSV(filePath: string) {
 };
 
 // Takes the array and 
-async function populateOntarioTables(records: string[][]) {
-  const pool = new Pool({
-    user: 'automations',
-    host: '192.168.1.245',
-    database: 'connections',
-    password: 'password',
-    port: 5432, // default PostgreSQL port
-  });
+export async function populateOntarioTables(records: string[][]): Promise<Boolean> {
 
   try {
     const client = await pool.connect();
@@ -144,9 +137,12 @@ async function populateOntarioTables(records: string[][]) {
     // Release the client back to the pool
     client.release();
 
+    return true;
   } catch (error) {
     console.error(error);
   }
+  return false;
+
 }
 
 // Below is the call to run this program

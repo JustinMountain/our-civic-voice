@@ -69,8 +69,8 @@ async function checkCSVEquality(directory: string, oldFileName: string, newFileN
     const newFileContent = await fs.promises.readFile(`${directory}/${newFileName}`, { encoding: 'utf-8' });
 
     // Parse CSV content
-    const oldFileParsed = parse(oldFileContent);
-    const newFileParsed = parse(newFileContent);
+    const oldFileParsed = parse(oldFileContent, { relax_column_count: true });
+    const newFileParsed = parse(newFileContent, { relax_column_count: true });
 
     // Compare the files
     return JSON.stringify(oldFileParsed) === JSON.stringify(newFileParsed);
@@ -100,7 +100,8 @@ async function checkCSVLength(directory: string, fileName: string): Promise<numb
 
   let rowCount = 0;
   try {
-    const parser = await fs.createReadStream(filePath).pipe(parse())
+    const parser = await fs.createReadStream(filePath)
+    .pipe(parse({ delimiter: ",", from_line: 1, relax_column_count: true }));
 
     for await (const record of parser) {
       rowCount++;

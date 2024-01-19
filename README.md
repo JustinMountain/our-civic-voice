@@ -15,6 +15,7 @@ When adding the server to pgAdmin, find the IP address of the database via `dock
 ### Phase 1
 
 The first phase will involve setting up the database and access to its contents. 
+Need to move CSV Update check to CSV script from DB script
 
 ~~1. Setup crawler for Ontario MPP into DB~~
 2. Setup crawler for Federal MPs into DB
