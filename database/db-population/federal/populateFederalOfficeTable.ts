@@ -2,7 +2,7 @@ import pool from '../databasePool';
 import { processCSVtoMemory } from '../populationUtilities';
 import { findCSVFiles } from '../../csv-sources/csvUtilities';
 
-// From Memory to DB
+// Handles the population of the federal_mp_offices table
 export async function populateFederalMemberOfficeTable(directory: string): Promise<Boolean> {
   let recentFileName: string = '';
   let data: string[][] = [];
@@ -12,7 +12,7 @@ export async function populateFederalMemberOfficeTable(directory: string): Promi
     const allFileNames = await findCSVFiles(directory);
     recentFileName = allFileNames[0];
   } catch (error) {
-    console.log('Could not find CSV file:')
+    console.log('Could not find CSV file:');
     console.error(error);
     return false;
   }
@@ -21,8 +21,8 @@ export async function populateFederalMemberOfficeTable(directory: string): Promi
     try {
       data = await processCSVtoMemory(`${directory}/${recentFileName}`);  
     } catch (error) {
-      console.log('Could not process CSV file:')
-      console.error(error)
+      console.log('Could not process CSV file:');
+      console.error(error);
       return false;
     }
   }
@@ -30,13 +30,6 @@ export async function populateFederalMemberOfficeTable(directory: string): Promi
   console.log('Connecting to the database...');
   try {
     const client = await pool.connect();
-
-    // Remove all data from table
-    console.log('Clearing Federal MP Member Contact Info table...');
-    await client.query(`DELETE FROM federal_mp_offices`);
-    console.log('Successfully cleared Federal MP Member Contact Info table!');
-
-    // Removes the header from the index 0
     const arrayHeaders = data.shift();
 
     console.log('Attempting to insert records...');
@@ -58,7 +51,7 @@ export async function populateFederalMemberOfficeTable(directory: string): Promi
           office_fax,
           source,
           updated_date) 
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 , $11, $12, $13, $14)`,
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 , $11, $12, $13, $14);`,
         values: [
           record[1],
           record[2],
@@ -75,14 +68,14 @@ export async function populateFederalMemberOfficeTable(directory: string): Promi
           record[13],
           new Date(parseInt(record[14])),
         ],
-      };
+      }
       await client.query(insert_mp_office);
     }
     console.log('Successfully inserted all Federal Member Contact info!\n');
     client.release();
     return true;
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return false;
   }
 }

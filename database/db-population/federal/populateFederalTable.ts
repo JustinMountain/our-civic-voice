@@ -21,8 +21,8 @@ export async function populateFederalMemberTable(directory: string): Promise<Boo
     try {
       data = await processCSVtoMemory(`${directory}/${recentFileName}`);  
     } catch (error) {
-      console.log('Could not process CSV file:')
-      console.error(error)
+      console.log('Could not process CSV file:');
+      console.error(error);
       return false;
     }
   }
@@ -30,13 +30,6 @@ export async function populateFederalMemberTable(directory: string): Promise<Boo
   console.log('Connecting to the database...');
   try {
     const client = await pool.connect();
-
-    // Remove all data from table
-    console.log('Clearing Federal MP Member Info table...');
-    await client.query(`DELETE FROM federal_mps`);
-    console.log('Successfully cleared Federal MP Member Info table!');
-
-    // Removes the header from the index 0
     const arrayHeaders = data.shift();
 
     console.log('Attempting to insert records...');
@@ -52,7 +45,7 @@ export async function populateFederalMemberTable(directory: string): Promise<Boo
           party,
           active_from,
           updated_date) 
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`,
         values: [
           record[0],
           record[1],
@@ -70,7 +63,7 @@ export async function populateFederalMemberTable(directory: string): Promise<Boo
     client.release();
     return true;
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return false;
   }
 }
