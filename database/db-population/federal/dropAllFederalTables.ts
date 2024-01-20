@@ -11,7 +11,7 @@ export async function dropAllFederalTables(): Promise<Boolean> {
 
     // Federal MP Member Info table
     console.log('Clearing Federal MP Member Info table...');
-    await client.query(`DELETE FROM federal_mps`);
+    await client.query(`DELETE FROM federal_mps;`);
     console.log('Successfully cleared Federal MP Member Info table!\n');
 
     client.release();

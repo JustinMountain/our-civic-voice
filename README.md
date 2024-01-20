@@ -75,27 +75,14 @@ Make a MV to serve this data easier
 
 I need a function to limit the number of valid CSVs kept
 
-#### Step 1: Create the CSV
-
-#### Step 2: Check if CSV content is identical to previous version
-
-#### Step 3: New data should instigate database update
-
-#### Step 3: Cleanup CSV files, delete if data is same
-
-#### UI will need a way to interact with DB population
-
+UI will need a way to interact with DB population
 
 ###### Super Important
 
-1. Bring Ontario up to new standard
-- drop all tables, init all tables need to be created
-- populate tables needs to be re-done
-
-1. Pull out all passwords and make them valid
 1. Review console.log messages and color code
 
 1. Better comments (JSDoc?)
+1. Pull out all passwords and make them valid
 
 1. Can I create "serverless"-like functionality via Docker?
  - Maybe I can hack it by setting restart to 24 hours and having the app run on startup

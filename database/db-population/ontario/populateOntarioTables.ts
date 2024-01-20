@@ -1,52 +1,41 @@
 import pool from '../databasePool';
-import { parse } from 'csv-parse';
-import fs from 'fs';
+import { findCSVFiles } from '../../csv-sources/csvUtilities';
+import { processCSVtoMemory } from '../populationUtilities';
 
-const filePath = './db_sources/ontario/offices-all.csv';
+export async function populateOntarioMemberTables(directory: string): Promise<Boolean> {
+  let recentFileName: string = '';
+  let data: string[][] = [];
 
-function runProgram() {
-  processOntarioCSV(filePath)
-  .then(records => {
-    populateOntarioTables(records);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-}
+  console.log(`Retrieving data from ${directory}...`);
+  try {
+    const allFileNames = await findCSVFiles(directory);
+    console.log(allFileNames);
+    recentFileName = allFileNames[0];
+    console.log(recentFileName);
 
-// Takes the csv file and converst it into an array
-async function processOntarioCSV(filePath: string): Promise<string[][]> {
-  const records: string[][] = [];
-  const parser = fs.createReadStream(filePath)
-    .pipe(parse({ delimiter: ",", from_line: 1, relax_column_count: true }));
-
-  for await (const record of parser) {
-    records.push(record);
+  } catch (error) {
+    console.log('Could not find CSV file:')
+    console.error(error);
+    return false;
   }
-  return records;
-};
 
-// Takes the array and 
-export async function populateOntarioTables(records: string[][]): Promise<Boolean> {
+  if (recentFileName !== '') {
+    try {
+      data = await processCSVtoMemory(`${directory}${recentFileName}`);  
+    } catch (error) {
+      console.log('Could not process CSV file:');
+      console.error(error);
+      return false;
+    }
+  }
 
+  console.log('Connecting to the database...');
   try {
     const client = await pool.connect();
+    const arrayHeaders = data.shift();
 
-    console.log('Database connection successful!');
-
-    // Remove all rows from DB for testing purposes
-    console.log('Ensuring ontario_mpps and ontario_mpp_offices tables are empty...');
-    await client.query(`DELETE FROM ontario_mpp_offices`);
-    await client.query(`DELETE FROM ontario_mpps`);
-    console.log('Successfully emptied ontario_mpps and ontario_mpp_offices tables!\n');
-
-    // Removes the header from the index 0
-    const arrayHeaders = records.shift();
-
-    console.log('Populating the ontario_mpps and ontario_mpp_offices tables...');
-
-    // Loops over the array to create records for each item
-    for (const record of records) {
+    console.log('Attempting to insert records...');
+    for (const record of data) {
       // Handle when member_id is not a number
       let memID: number = 0;
       if (parseInt(record[17], 10)) {
@@ -118,35 +107,21 @@ export async function populateOntarioTables(records: string[][]): Promise<Boolea
       };
 
       // Attempt queries above
-      try {
-        const res = await client.query(existsQuery);
-        const exists = res.rows[0].exists;
+      const res = await client.query(existsQuery);
+      const exists = res.rows[0].exists;
 
-        if (!exists) {
-          await client.query(insert_mpp);
-        }
-
-        await client.query(insert_mpp_offices);
-      } catch (err) {
-        console.error(err);
+      if (!exists) {
+        await client.query(insert_mpp);
       }
+
+      await client.query(insert_mpp_offices);
     }
 
-    console.log('Completed population of ontario_mpps and ontario_mpp_offices tables!\n');
-
-    // Release the client back to the pool
+    console.log('Successfully inserted all Ontario Member info!\n');
     client.release();
-
     return true;
   } catch (error) {
     console.error(error);
+    return false;
   }
-  return false;
-
 }
-
-// Below is the call to run this program
-runProgram();
-
-
-// Here we just need to read the CSV and populate the database

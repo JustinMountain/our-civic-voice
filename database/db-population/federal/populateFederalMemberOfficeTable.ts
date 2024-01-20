@@ -1,13 +1,13 @@
 import pool from '../databasePool';
-import { processCSVtoMemory } from '../populationUtilities';
 import { findCSVFiles } from '../../csv-sources/csvUtilities';
+import { processCSVtoMemory } from '../populationUtilities';
 
 // Handles the population of the federal_mp_offices table
 export async function populateFederalMemberOfficeTable(directory: string): Promise<Boolean> {
   let recentFileName: string = '';
   let data: string[][] = [];
 
-  console.log('Retrieving data from CSV...');
+  console.log(`Retrieving data from ${directory}...`);
   try {
     const allFileNames = await findCSVFiles(directory);
     recentFileName = allFileNames[0];
