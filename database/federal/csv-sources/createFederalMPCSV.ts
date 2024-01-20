@@ -5,8 +5,8 @@ import { createObjectCsvWriter } from 'csv-writer';
 import { XMLParser } from 'fast-xml-parser';
 
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
-import { formatDateForFileName } from '../csvUtilities';
-import { checkForCSVUpdate } from '../csvUtilities';
+import { formatDateForFileName } from '../../config/csvUtilities';
+import { checkForCSVUpdate } from '../../config/csvUtilities';
 
 // Interface to hold data for individual members
 interface MemberData {

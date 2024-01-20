@@ -1,9 +1,9 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './database/config/constants';
-import { runFederalMPScraperToCSV } from './database/csv-sources/federal/createFederalMPCSV';
-import { runFederalMPOfficeScraperToCSV } from './database/csv-sources/federal/createFederalMPOfficeCSV';
-import { initFederalTablePopulation } from './database/db-population/federal/initFederalTablePopulation';
-import { runOntarioMPPScraperToCSV } from './database/csv-sources/ontario/createOntarioCSV';
-import { initOntarioTablePopulation } from './database/db-population/ontario/initOntarioTablePopulation';
+import { runFederalMPScraperToCSV } from './database/federal/csv-sources/createFederalMPCSV';
+import { runFederalMPOfficeScraperToCSV } from './database/federal/csv-sources/createFederalMPOfficeCSV';
+import { initFederalTablePopulation } from './database/federal/db-population/initFederalTablePopulation';
+import { runOntarioMPPScraperToCSV } from './database/ontario/csv-sources/createOntarioCSV';
+import { initOntarioTablePopulation } from './database/ontario/db-population/initOntarioTablePopulation';
 
 async function runApplication() {
   const timeStarted = Date.now();

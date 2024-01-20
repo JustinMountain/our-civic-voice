@@ -1,4 +1,4 @@
-import pool from '../databasePool';
+import pool from '../../config/databasePool';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 
 export async function dropAllFederalTables(): Promise<Boolean> {

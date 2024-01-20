@@ -1,8 +1,8 @@
-import pool from '../databasePool';
-import { findCSVFiles } from '../../csv-sources/csvUtilities';
-import { processCSVtoMemory } from '../populationUtilities';
+import pool from '../../config/databasePool';
+import { findCSVFiles } from '../../config/csvUtilities';
+import { processCSVtoMemory } from '../../config/populationUtilities';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
-import { dbQuery } from '../populationUtilities';
+import { dbQuery } from '../../config/populationUtilities';
 
 async function retrieveDataForPopulation(directory: string): Promise<string[][]> {
   let recentFileName: string = '';

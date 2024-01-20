@@ -4,8 +4,8 @@ import axiosRetry from 'axios-retry';
 import { writeFile } from 'fs/promises';
 
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
-import { formatDateForFileName } from '../csvUtilities';
-import { checkForCSVUpdate } from '../csvUtilities';
+import { formatDateForFileName } from '../../config/csvUtilities';
+import { checkForCSVUpdate } from '../../config/csvUtilities';
 
 const ontarioMPPContactInfoURL = 'https://www.ola.org/sites/default/files/node-files/office_csvs/offices-all.csv';
 const ontarioCSVFilepath = './database/csv-sources/ontario/csv-download/';

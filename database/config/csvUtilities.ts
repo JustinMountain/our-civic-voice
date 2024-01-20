@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import { parse } from 'csv-parse';
 import * as path from 'path';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './constants';
 
 export function formatDateForFileName(timeRetrieved: number): string {
   const formattedDate = format(new Date(timeRetrieved), "yyyy-MM-dd-HH-mm");
