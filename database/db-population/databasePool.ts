@@ -8,9 +8,9 @@ const pool = new Pool({
   port: 5432, // default PostgreSQL port
 });
 
-pool.on('error', (err) => {
-    console.error('Unexpected error on idle client', err);
-    process.exit(-1);
+pool.on('error', (error) => {
+  console.error('Unexpected error on idle client', error);
+  process.exit(-1);
 });
 
 export default pool;

@@ -79,8 +79,6 @@ UI will need a way to interact with DB population
 
 ###### Super Important
 
-1. Review console.log messages and color code
-
 1. Better comments (JSDoc?)
 1. Pull out all passwords and make them valid
 
@@ -90,3 +88,4 @@ UI will need a way to interact with DB population
 1. The app doesn't currently populate automatically on startup, find a way to call init.ts
 
 1. Create some cool things to log (first stretch goal)
+1. Redo README

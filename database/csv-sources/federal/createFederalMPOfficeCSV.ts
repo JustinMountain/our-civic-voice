@@ -4,8 +4,8 @@ import axiosRetry from 'axios-retry';
 import { createObjectCsvWriter } from 'csv-writer';
 import * as cheerio from "cheerio";
 
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 import { formatDateForFileName } from '../csvUtilities';
-import { consoleHighlight, consoleReset } from '../csvUtilities';
 import { checkForCSVUpdate } from '../csvUtilities';
 
 // Interface to hold data for one office of a member
@@ -40,12 +40,12 @@ const batchSize = 30;
 axiosRetry(axiosInstance, {
   retries: 5,
   retryDelay: (retryCount) => { return retryCount * 1000},
-  onRetry: (count, err, req) => { console.log(`retry attempt #${count} got ${err}`); },
+  onRetry: (count, error, req) => { console.error(`${CONSOLE_ERROR}Retry attempt #${count}${CONSOLE_RESET} got ${error}`); },
   retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
 })  
 
 export async function fetchFederalMPData(axiosInstance: AxiosInstance, federalMemberSearchURL: string): Promise<any> {
-  console.log('Fetching Federal MP contact pages...')
+  console.log(`Fetching Federal MP contact pages from ${federalMemberSearchURL}...`)
   try {
     const allMembersPage = await axiosInstance.get(federalMemberSearchURL);
     const selector = cheerio.load(allMembersPage.data);
@@ -57,7 +57,7 @@ export async function fetchFederalMPData(axiosInstance: AxiosInstance, federalMe
     return allMemberPageData;
 
   } catch (error) {
-    console.error(`Could not fetch data from ${federalMemberSearchURL}`);
+    console.error(`${CONSOLE_ERROR}Could not fetch Federal data. ${CONSOLE_RESET}`);
     throw error;
   }
 }
@@ -77,7 +77,7 @@ async function fetchContactInfoInBatches(urls: string[], axiosInstance: AxiosIns
 }
 
 function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): MemberContactData[] {
-  console.log('Parsing Federal MP contact pages...')
+  console.log('Parsing Federal MP data from URL...');
   const data: MemberContactData[] = [];
 
   for (const oneMember of axiosResponse) {
@@ -222,27 +222,30 @@ async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: 
     // Write CSV and notify user
     await csvWriter.writeRecords(data);
     console.log(
-      `Processed all MP contact info (${data.length} offices) to ${consoleHighlight}${fileName}${consoleReset} in ${Date.now() - timeRetrieved}ms\n`
+      `${CONSOLE_HIGHLIGHT}Processed all ${data.length} MPs${CONSOLE_RESET} to ${fileName} ${CONSOLE_HIGHLIGHT}in ${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`
     );   
     return true;
   } catch (error) {
-    console.error(`Could not write data to ${csvFilepath}`);
+    console.error(`${CONSOLE_ERROR}Could not write data${CONSOLE_RESET} to ${csvFilepath}. `);
     throw error;
   }
 }
 
 export async function runFederalMPOfficeScraperToCSV(): Promise<Boolean> {
+  console.log(`Starting the Federal MP Office scraper...`)
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance, federalMemberSearchURL);
     const data: MemberContactData[] = parseFederalMPOfficeData(axiosResponse, timeRetrieved);  
     const isFileCreated = await createFederalMPOfficeCSV(data, csvFilepath);
 
     if (isFileCreated) {
-      return await checkForCSVUpdate(isFileCreated, memberContactCSVFilepath);
+      const handled = await checkForCSVUpdate(isFileCreated, memberContactCSVFilepath);
+      console.log(`${CONSOLE_HIGHLIGHT}Federal MP Office scraper has completed!${CONSOLE_RESET}`);
+      return handled;
     }
     return false;
   } catch (error) {
-    console.error(`error`);
+    console.error(`${CONSOLE_ERROR}Something went wrong running the Federal MP Office scraper. ${CONSOLE_RESET}`);
     throw error;
   }
 }

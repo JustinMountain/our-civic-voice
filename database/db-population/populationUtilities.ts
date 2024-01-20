@@ -1,6 +1,11 @@
 import { parse } from 'csv-parse';
 import fs from 'fs';
 
+export interface dbQuery {
+  text: string;
+  values: (string | number)[];
+}
+
 export async function processCSVtoMemory(filePath: string): Promise<string[][]> {
   const records: string[][] = [];
 

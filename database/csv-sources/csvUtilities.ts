@@ -3,9 +3,7 @@ import fs from 'fs-extra'
 import { parse } from 'csv-parse';
 import * as path from 'path';
 
-export const consoleHighlight = "\x1b[34m";
-export const consoleError = "\x1b[31m";
-export const consoleReset = "\x1b[0m";
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
 
 export function formatDateForFileName(timeRetrieved: number): string {
   const formattedDate = format(new Date(timeRetrieved), "yyyy-MM-dd-HH-mm");
@@ -21,7 +19,7 @@ export async function checkForCSVUpdate(created: Boolean, directory: string): Pr
     // Make assumptions about requiring update based on number of files
     if (allFiles.length == 0) { return false; }
     if (allFiles.length == 1) { 
-      console.log('Finished handling CSV file.\n')
+      console.log(`${CONSOLE_HIGHLIGHT}Finished handling CSV file.${CONSOLE_RESET}`)
       return true; }
 
     // If there are two or more files, the most recent 2 will be checked
@@ -37,19 +35,19 @@ export async function checkForCSVUpdate(created: Boolean, directory: string): Pr
       if (isIdentical) {
         // Situation 1: The files are the same
         fs.remove(`${directory}/${newFile}`);
-        console.log(`${consoleHighlight}No changes detected, deleted new file.${consoleReset}\n`)
+        console.log(`${CONSOLE_HIGHLIGHT}No changes detected, deleted new file.${CONSOLE_RESET}`)
         return false;
       }
       if (!isIdentical) {
         // Situation 2: The files are different
         await fs.move(`${directory}/${oldFile}`, `${directory}/archive/${oldFile}`);
-        console.log(`${consoleHighlight}Moved outdated file to archive.${consoleReset}\n`)
+        console.log(`${CONSOLE_HIGHLIGHT}Moved outdated file to archive.${CONSOLE_RESET}`)
         return true;
       }
     } else {
       // Case for when the new file is different (determined by length)
       await fs.move(`${directory}/${oldFile}`, `${directory}/archive/${oldFile}`);
-      console.log(`${consoleHighlight}Moved outdated file to archive.${consoleReset}\n`)
+      console.log(`${CONSOLE_HIGHLIGHT}Moved outdated file to archive.${CONSOLE_RESET}`)
       return true;
     }
     return false;
@@ -63,6 +61,7 @@ export async function checkForCSVUpdate(created: Boolean, directory: string): Pr
 }
 
 async function checkCSVEquality(directory: string, oldFileName: string, newFileName: string): Promise<Boolean> {
+  console.log(`Checking CSV files for equality...`)
   try {
     // Read files
     const oldFileContent = await fs.promises.readFile(`${directory}/${oldFileName}`, { encoding: 'utf-8' });
@@ -75,8 +74,8 @@ async function checkCSVEquality(directory: string, oldFileName: string, newFileN
     // Compare the files
     return JSON.stringify(oldFileParsed) === JSON.stringify(newFileParsed);
   } catch (error) {
-      console.error(error);
-      return false;
+    console.error(`${CONSOLE_ERROR}Something went wrong checking CSV files. ${CONSOLE_RESET}`);
+    throw error; 
   }
 }
 
@@ -108,7 +107,7 @@ async function checkCSVLength(directory: string, fileName: string): Promise<numb
     }
     return rowCount;
   } catch (error) {
-    console.error(error);
-    throw(error);
+    console.error(`${CONSOLE_ERROR}Something went wrong reading the CSV file. ${CONSOLE_RESET}`);
+    throw error; 
   }
 }

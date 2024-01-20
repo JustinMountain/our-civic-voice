@@ -4,8 +4,8 @@ import axiosRetry from 'axios-retry';
 import { createObjectCsvWriter } from 'csv-writer';
 import { XMLParser } from 'fast-xml-parser';
 
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 import { formatDateForFileName } from '../csvUtilities';
-import { consoleHighlight, consoleReset } from '../csvUtilities';
 import { checkForCSVUpdate } from '../csvUtilities';
 
 // Interface to hold data for individual members
@@ -38,24 +38,24 @@ const axiosInstance = axios.create({
 axiosRetry(axiosInstance, {
   retries: 5,
   retryDelay: (retryCount) => { return retryCount * 1000},
-  onRetry: (count, err, req) => { console.log(`retry attempt #${count} got ${err}`); },
+  onRetry: (count, error, req) => { console.error(`${CONSOLE_ERROR}Retry attempt #${count}${CONSOLE_RESET} got ${error}`); },
   retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
 })  
 
 // Fetches federal MP data from the Parliament of Canada website
 export async function fetchFederalMPData(axiosInstance: AxiosInstance): Promise<any> {
-  console.log('Fetching Federal MP data...');
+  console.log(`Fetching Federal MP data from ${federalMemberSearchXML}...`);
   try {
     return await axiosInstance.get(federalMemberSearchXML);
   } catch (error) {
-    console.error(`Could not fetch data from ${federalMemberSearchXML}`);
+    console.error(`${CONSOLE_ERROR}Could not fetch Federal data: ${CONSOLE_RESET}`);
     throw error;
   }
 }
 
 // Parses the XML response from the Parliament of Canada website
 function parseFederalMPData(parser: XMLParser, axiosResponse: any, timeRetrieved: number): MemberData[] {
-  console.log('Parsing Federal MP data...');
+  console.log('Parsing Federal MP data from retrieved XML...');
   const jsonObj = parser.parse(axiosResponse.data);
   const data: MemberData[] = [];
 
@@ -98,27 +98,30 @@ async function createFederalMembersCSV(data: MemberData[], csvFilepath: string):
     // Write CSV and notify user
     await csvWriter.writeRecords(data);
     console.log(
-      `Processed all ${data.length} MPs to ${consoleHighlight}${fileName}${consoleReset} in ${Date.now() - timeRetrieved}ms\n`
+      `${CONSOLE_HIGHLIGHT}Processed all ${data.length} MPs${CONSOLE_RESET} to ${fileName} ${CONSOLE_HIGHLIGHT}in ${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`
     );    
     return true;
   } catch (error) {
-    console.error(`Could not write data to ${csvFilepath}`);
+    console.error(`${CONSOLE_ERROR}Could not write data${CONSOLE_RESET} to ${csvFilepath}. `);
     throw error;
   }
 }
 
 export async function runFederalMPScraperToCSV(): Promise<Boolean> {
+  console.log(`Starting the Federal MP Member scraper...`)
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance);
     const data: MemberData[] = parseFederalMPData(parser, axiosResponse, timeRetrieved);  
     const isFileCreated = await createFederalMembersCSV(data, csvFilepath);
 
     if (isFileCreated) {
-      return await checkForCSVUpdate(isFileCreated, memberCSVFilepath);
+      const handled = await checkForCSVUpdate(isFileCreated, memberCSVFilepath);
+      console.log(`${CONSOLE_HIGHLIGHT}Federal MP Member scraper has completed!${CONSOLE_RESET}`);
+      return handled;
     }
     return false;
   } catch (error) {
-    console.error(`error`);
+    console.error(`${CONSOLE_ERROR}Something went wrong running the Federal MP scraper. ${CONSOLE_RESET}`);
     throw error;
   }
 }

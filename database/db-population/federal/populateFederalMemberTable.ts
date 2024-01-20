@@ -1,6 +1,7 @@
 import pool from '../databasePool';
 import { findCSVFiles } from '../../csv-sources/csvUtilities';
 import { processCSVtoMemory } from '../populationUtilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 
 // From Memory to DB
 export async function populateFederalMemberTable(directory: string): Promise<Boolean> {
@@ -12,18 +13,16 @@ export async function populateFederalMemberTable(directory: string): Promise<Boo
     const allFileNames = await findCSVFiles(directory);
     recentFileName = allFileNames[0];
   } catch (error) {
-    console.log('Could not find CSV file:')
-    console.error(error);
-    return false;
+    console.error(`${CONSOLE_ERROR}Could not find CSV file. ${CONSOLE_RESET}`);
+    throw error;
   }
 
   if (recentFileName !== '') {
     try {
       data = await processCSVtoMemory(`${directory}/${recentFileName}`);  
     } catch (error) {
-      console.log('Could not process CSV file:');
-      console.error(error);
-      return false;
+      console.error(`${CONSOLE_ERROR}Could not process CSV file. ${CONSOLE_RESET}`);
+      throw error;
     }
   }
 
@@ -59,11 +58,11 @@ export async function populateFederalMemberTable(directory: string): Promise<Boo
       };
       await client.query(insert_mp);
     }
-    console.log('Successfully inserted all Federal Member info!\n');
+    console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all Federal Member Contact info!${CONSOLE_RESET}`);
     client.release();
     return true;
   } catch (error) {
-    console.error(error);
-    return false;
+    console.error(`${CONSOLE_ERROR}Received database error. ${CONSOLE_RESET}`);
+    throw error;
   }
 }
