@@ -23,7 +23,7 @@ interface MemberData {
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchXML = `${baseURL}/members/en/search/xml`;
 const timeRetrieved = Date.now();
-const memberCSVFilepath = './database/csv-sources/federal/member-info/';
+const memberCSVFilepath = './database/federal/csv-sources/member-info/';
 const fileName = `${formatDateForFileName(timeRetrieved)}-federal-mps.csv`;
 const csvFilepath = `${memberCSVFilepath}${fileName}`;
 const parser = new XMLParser();

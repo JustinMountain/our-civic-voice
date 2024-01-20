@@ -8,7 +8,7 @@ import { formatDateForFileName } from '../../config/csvUtilities';
 import { checkForCSVUpdate } from '../../config/csvUtilities';
 
 const ontarioMPPContactInfoURL = 'https://www.ola.org/sites/default/files/node-files/office_csvs/offices-all.csv';
-const ontarioCSVFilepath = './database/csv-sources/ontario/csv-download/';
+const ontarioCSVFilepath = './database/ontario/csv-sources/csv-download/';
 
 const timeRetrieved = Date.now();
 const axiosInstance = axios.create({

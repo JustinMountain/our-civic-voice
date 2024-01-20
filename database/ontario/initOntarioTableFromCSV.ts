@@ -1,8 +1,8 @@
-import { dropAllOntarioTables } from './dropAllOntarioTables';
-import { populateOntarioMemberTables } from './populateOntarioTables';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
+import { dropAllOntarioTables } from './db-population/dropAllOntarioTables';
+import { populateOntarioMemberTables } from './db-population/populateOntarioTables';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
 
-const ontarioMemberInfoDirectory = './database/csv-sources/ontario/csv-download/';
+const ontarioMemberInfoDirectory = './database/ontario/csv-sources/csv-download/';
 
 export async function initOntarioTablePopulation(): Promise<Boolean> {
   console.log(`Initializing Ontario table population...`)

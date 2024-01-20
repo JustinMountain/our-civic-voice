@@ -30,7 +30,7 @@ interface MemberContactData {
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchURL = `${baseURL}/members/en/search`;
 const timeRetrieved = Date.now();
-const memberContactCSVFilepath = './database/csv-sources/federal/contact-info/';
+const memberContactCSVFilepath = './database/federal/csv-sources/contact-info/';
 const fileName = `${formatDateForFileName(timeRetrieved)}-federal-mps.csv`;
 const csvFilepath = `${memberContactCSVFilepath}${fileName}`;
 const axiosInstance = axios.create();
