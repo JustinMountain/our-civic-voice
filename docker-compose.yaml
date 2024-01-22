@@ -5,13 +5,13 @@ services:
     image: postgres:16.1-alpine
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=${PG_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${PG_PASSWORD:-postgres}
     ports:
       - '5432:5432'
     volumes: 
       - civic-voice-db:/var/lib/postgresql/data
-      - ./database/sql-ddl/:/docker-entrypoint-initdb.d/
+      - ./database/sql/ddl/:/docker-entrypoint-initdb.d/
   civic-voice-pgadmin4:
     image: dpage/pgadmin4:8.1
     container_name: civic-voice-pgadmin4
@@ -19,8 +19,8 @@ services:
     ports:
       - "8888:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: mountainj@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: strong-password
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL:-admin@example.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD:-password}
     volumes:
       - civic-voice-pgadmin4:/var/lib/pgadmin
       

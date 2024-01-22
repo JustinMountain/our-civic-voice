@@ -26,9 +26,9 @@ async function retrieveDataForPopulation(): Promise<string[][]> {
 
 function createExistQuery(record: string[]): dbQuery {
   const existsQuery: dbQuery = {
-    text: 'SELECT EXISTS(SELECT 1 FROM ontario_mpps WHERE riding_name = $1)',
+    text: 'SELECT EXISTS(SELECT 1 FROM ontario_mpps WHERE constituency = $1)',
     values: [
-      record[14], // riding_name
+      record[14],
     ],
   };
   return existsQuery;
@@ -41,23 +41,23 @@ function createMPPQuery(record: string[]): dbQuery {
   }
   const mppQuery = {
     text: `INSERT INTO ontario_mpps (
-      member_id, 
-      riding_name, 
-      parliamentary_role, 
-      party, 
-      first_name, 
-      last_name, 
-      honorific, 
-      updated_date) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+      member_id,
+      constituency,
+      parliamentary_role,
+      party,
+      first_name,
+      last_name,
+      honorific,
+      updated_date)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
     values: [
-      memID, // member_id
-      record[14], // riding_name
-      record[16], // parliamentary_role
-      record[15], // party
-      record[1], // first_name
-      record[2], // last_name
-      record[0], // honorific
+      memID,
+      record[14],
+      record[16],
+      record[15],
+      record[1],
+      record[2],
+      record[0],
     ],
   };
   return mppQuery;
@@ -66,33 +66,33 @@ function createMPPQuery(record: string[]): dbQuery {
 function createMPPOfficeQuery(record: string[]): dbQuery {
   const mppOfficeQuery = {
     text: `INSERT INTO ontario_mpp_offices (
-      riding_name, 
+      constituency,
       office_type,
-      address,
-      city,
-      province,
-      postal_code,
+      office_address,
+      office_city,
+      office_province,
+      office_postal_code,
       office_email,
-      email,
-      telephone,
-      fax,
-      toll_free,
-      tty,
-      updated_date) 
+      general_email,
+      office_telephone,
+      office_fax,
+      office_toll_free,
+      office_tty,
+      updated_date)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())`,
     values: [
-      record[14], // riding_name
-      record[3], // office_type
-      record[4], // address
-      record[5], // city
-      record[6], // province
-      record[7], // postal_code
-      record[8], // office_email
-      record[9], // email
-      record[10], // telephone
-      record[11], // fax
-      record[12], // toll_free
-      record[13], // tty
+      record[14],
+      record[3],
+      record[4],
+      record[5],
+      record[6],
+      record[7],
+      record[8],
+      record[9],
+      record[10],
+      record[11],
+      record[12],
+      record[13],
     ],
   };
   return mppOfficeQuery;

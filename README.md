@@ -2,6 +2,47 @@
 
 Our Civic Voice is an open-source portal for connecting Canadians with their elected representatives. 
 
+## Running the Application
+
+```
+# Start the containers
+docker compose up -d
+```
+
+Optional: Create a `.env` file in the root directory:
+
+```
+# Default values for docker-compose.yaml variables
+PG_USERNAME=postgres
+PG_PASSWORD=postgres
+PGADMIN_EMAIL=admin@example.com
+PGADMIN_PASSWORD=strong-password
+```
+
+### Registering the server with pgAdmin:
+
+Click `Add New Server` on the dashboard or right-click `Servers > Register > Server...`.
+
+On the *General* tab, enter a name for the server.
+
+On the *Connection* tab, fill out the following information:
+1. `Host name/address: civic-voice-db` or as appropriate if changed in docker compose file.
+2. `Username: postgres` or as declared in `.env` as above.
+3. `Password: postgres` or as declared in `.env` as above.
+
+You can now run queries on the database by selecting `Servers > civic-voice-db > Databases > our_civic_voice` and clicking on the Query Tool.
+
+```
+SELECT * FROM federal_mps;
+SELECT * FROM federal_mp_offices;
+SELECT * FROM ontario_mpps;
+SELECT * FROM ontario_mpp_offices;
+```
+
+Note: This will only work after I finish dockerizing the app as it exists!
+
+## Redo Below:
+
 ## Database
 
 Currently utilizing Postgres and pgAdmin managed via docker and docker compose. 
@@ -54,25 +95,10 @@ ts-node populateOntario.ts.ts
 
 ### Up Next
 
-With every member page catalogued, I need to gather info from the XML on each page
+Think about adding tags for ministers and whatnot
 
-, scrape for the info if not... the CSV looks disorganizaed at quick glance
-
-Contact info will need to be scraped
-
-```
-# How I got all their contact info in Python
-https://github.com/JustinMountain/civic-voice-old/blob/main/civiccrawlers/civiccrawlers/spiders/FederalMPContacts.py
-```
-
-Once I have an idea of all the data I've collected, I need to find a way to organize it into the necessary tables.
-
-Think about adding tags for ministers and whatnot.
-
-Should add Ontario Ministers and Committee members...
+Should add committees
 
 Make a MV to serve this data easier
-
-I need a function to limit the number of valid CSVs kept
 
 UI will need a way to interact with DB population
