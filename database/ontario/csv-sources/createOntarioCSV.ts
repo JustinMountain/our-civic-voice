@@ -26,12 +26,38 @@ axiosRetry(axiosInstance, {
   retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
 })  
 
+/**
+ * Runs the Ontario MPP scraper and creates a CSV file with the scraped data.
+ * @returns True if the CSV file was created, false otherwise.
+ */
+export async function runOntarioMPPScraperToCSV(): Promise<Boolean> {
+  console.log(`Starting the Ontario MPP scraper...`)
+  try {
+    const isFileCreated = await fetchOntarioMPPCSV(axiosInstance);
+
+    if (isFileCreated) {
+      const handled = await checkForCSVUpdate(ontarioCSVFilepath);
+      console.log(`${CONSOLE_HIGHLIGHT}Ontario MPP scraper has completed!${CONSOLE_RESET}`);
+      return handled;
+    }
+    return false;
+  } catch (error) {
+    console.error(`${CONSOLE_ERROR}Something went wrong running the Ontario MPP scraper. ${CONSOLE_RESET}`);
+    throw error;
+  }
+}
+
+/**
+ * Helper function to fetch the Ontario MPP data from the source.
+ * @param axiosInstance The axios instance to use for the request.
+ * @returns True if the file was downloaded successfully, false otherwise.
+ */
 async function fetchOntarioMPPCSV(axiosInstance: AxiosInstance): Promise<Boolean> {
   console.log(`Fetching Ontario MPP data from ${ontarioMPPContactInfoURL}...`);
   const fileName = `${formatDateForFileName(timeRetrieved)}-ontario-mpps.csv`;
 
   try {
-    const response = await axios.get(ontarioMPPContactInfoURL, {
+    const response = await axiosInstance.get(ontarioMPPContactInfoURL, {
       responseType: 'arraybuffer'
     });
   
@@ -44,23 +70,6 @@ async function fetchOntarioMPPCSV(axiosInstance: AxiosInstance): Promise<Boolean
     return true;
   } catch (error) {
     console.error(`${CONSOLE_ERROR}Could not fetch data${CONSOLE_RESET} from ${ontarioMPPContactInfoURL}. `);
-    throw error;
-  }
-}
-
-export async function runOntarioMPPScraperToCSV(): Promise<Boolean> {
-  console.log(`Starting the Ontario MPP scraper...`)
-  try {
-    const isFileCreated = await fetchOntarioMPPCSV(axiosInstance);
-
-    if (isFileCreated) {
-      const handled = await checkForCSVUpdate(isFileCreated, ontarioCSVFilepath);
-      console.log(`${CONSOLE_HIGHLIGHT}Ontario MPP scraper has completed!${CONSOLE_RESET}`);
-      return handled;
-    }
-    return false;
-  } catch (error) {
-    console.error(`${CONSOLE_ERROR}Something went wrong running the Ontario MPP scraper. ${CONSOLE_RESET}`);
     throw error;
   }
 }

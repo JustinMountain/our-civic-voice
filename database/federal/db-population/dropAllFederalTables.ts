@@ -1,6 +1,10 @@
 import pool from '../../config/databasePool';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 
+/**
+ * Drops all Federal MP tables from the database.
+ * @returns True if all tables were dropped successfully, false otherwise.
+ */
 export async function dropAllFederalTables(): Promise<Boolean> {
   console.log(`Dropping all Federal tables from the database...`)
 

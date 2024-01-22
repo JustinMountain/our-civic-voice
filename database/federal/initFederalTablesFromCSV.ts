@@ -5,7 +5,7 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/const
 
 /**
  * Initializes the Federal tables from the CSV sources.
- * @returns {Promise<Boolean>} True if successful, false if not.
+ * @returns True if successful, otherwise false.
  */
 export async function initFederalTablePopulation(): Promise<Boolean> {
   console.log(`Initializing Federal table population...`)

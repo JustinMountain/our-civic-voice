@@ -3,6 +3,9 @@ import { runFederalMPScraperToCSV } from './csv-sources/createFederalMPCSV';
 import { runFederalMPOfficeScraperToCSV } from './csv-sources/createFederalMPOfficeCSV';
 import { initFederalTablePopulation } from './initFederalTablesFromCSV';
 
+/**
+ * Runs the Federal update process to scrape, check for updates, and populate the database as needed.
+ */
 export async function runFederalUpdate() {
   const timeStarted = Date.now();
   console.log(`Checking for updates to Federal tables from public sources...`);

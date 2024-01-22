@@ -2,6 +2,10 @@ import { dropAllOntarioTables } from './db-population/dropAllOntarioTables';
 import { populateOntarioMemberTables } from './db-population/populateOntarioTables';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
 
+/**
+ * Initializes the Ontario tables from the CSV sources.
+ * @returns True if successful, otherwise false.
+ */
 export async function initOntarioTablePopulation(): Promise<Boolean> {
   console.log(`Initializing Ontario table population...`)
 

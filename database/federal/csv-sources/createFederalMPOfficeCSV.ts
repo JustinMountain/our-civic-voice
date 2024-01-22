@@ -44,7 +44,35 @@ axiosRetry(axiosInstance, {
   retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
 })  
 
-export async function fetchFederalMPData(axiosInstance: AxiosInstance, federalMemberSearchURL: string): Promise<any> {
+/**
+ * Runs the Federal MP Office scraper and creates a CSV file with the scraped data.
+ * @returns True if the CSV file was created, false otherwise.
+ */
+export async function runFederalMPOfficeScraperToCSV(): Promise<Boolean> {
+  console.log(`Starting the Federal MP Office scraper...`)
+  try {
+    const axiosResponse  = await fetchFederalMPData(axiosInstance, federalMemberSearchURL);
+    const data: MemberContactData[] = parseFederalMPOfficeData(axiosResponse, timeRetrieved);  
+    const isFileCreated = await createFederalMPOfficeCSV(data, csvFilepath);
+
+    if (isFileCreated) {
+      const handled = await checkForCSVUpdate(memberContactCSVFilepath);
+      console.log(`${CONSOLE_HIGHLIGHT}Federal MP Office scraper has completed!${CONSOLE_RESET}`);
+      return handled;
+    }
+    return false;
+  } catch (error) {
+    console.error(`${CONSOLE_ERROR}Something went wrong running the Federal MP Office scraper. ${CONSOLE_RESET}`);
+    throw error;
+  }
+}
+
+/**
+ * Helper function to fetch each federal MP's contact info.
+ * @param axiosInstance The axios instance to use for the request.
+ * @returns The fetched federal MP data as an Axios response object.
+ */
+async function fetchFederalMPData(axiosInstance: AxiosInstance, federalMemberSearchURL: string): Promise<any> {
   console.log(`Fetching Federal MP contact pages from ${federalMemberSearchURL}...`)
   try {
     const allMembersPage = await axiosInstance.get(federalMemberSearchURL);
@@ -62,6 +90,13 @@ export async function fetchFederalMPData(axiosInstance: AxiosInstance, federalMe
   }
 }
 
+/**
+ * Helper function which fetches the contact info for batches of MPs.
+ * @param urls The URLs to fetch.
+ * @param axiosInstance The axios instance to use for the request.
+ * @param batchSize The number of URLs to fetch at a time.
+ * @returns The bulk contact info for each federal MP.
+ */
 async function fetchContactInfoInBatches(urls: string[], axiosInstance: AxiosInstance, batchSize: number): Promise<any> {
   let results: any[] = [];
   for (let i = 0; i < urls.length; i += batchSize) {
@@ -76,6 +111,12 @@ async function fetchContactInfoInBatches(urls: string[], axiosInstance: AxiosIns
   return results;
 }
 
+/**
+ * Helper function to parse the Federal MP data from the Parliament of Canada website.
+ * @param axiosResponse The Axios Response object containing the HTML data.
+ * @param timeRetrieved The time the data was retrieved.
+ * @returns An array of MemberContactData objects, each representing a single office of an MP.
+ */
 function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): MemberContactData[] {
   console.log('Parsing Federal MP data from URL...');
   const data: MemberContactData[] = [];
@@ -194,6 +235,12 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
   return data;
 }
 
+/**
+ * Helper function to create a CSV file from the scraped data.
+ * @param data An array of MemberContactData objects.
+ * @param csvFilepath The filepath to write the CSV file to.
+ * @returns True if the CSV file was created, false otherwise.
+ */
 async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: string): Promise<Boolean> {
   console.log('Writing Federal MP contact info to CSV...');
 
@@ -227,25 +274,6 @@ async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: 
     return true;
   } catch (error) {
     console.error(`${CONSOLE_ERROR}Could not write data${CONSOLE_RESET} to ${csvFilepath}. `);
-    throw error;
-  }
-}
-
-export async function runFederalMPOfficeScraperToCSV(): Promise<Boolean> {
-  console.log(`Starting the Federal MP Office scraper...`)
-  try {
-    const axiosResponse  = await fetchFederalMPData(axiosInstance, federalMemberSearchURL);
-    const data: MemberContactData[] = parseFederalMPOfficeData(axiosResponse, timeRetrieved);  
-    const isFileCreated = await createFederalMPOfficeCSV(data, csvFilepath);
-
-    if (isFileCreated) {
-      const handled = await checkForCSVUpdate(isFileCreated, memberContactCSVFilepath);
-      console.log(`${CONSOLE_HIGHLIGHT}Federal MP Office scraper has completed!${CONSOLE_RESET}`);
-      return handled;
-    }
-    return false;
-  } catch (error) {
-    console.error(`${CONSOLE_ERROR}Something went wrong running the Federal MP Office scraper. ${CONSOLE_RESET}`);
     throw error;
   }
 }

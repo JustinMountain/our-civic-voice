@@ -2,6 +2,9 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/const
 import { runOntarioMPPScraperToCSV } from './csv-sources/createOntarioCSV';
 import { initOntarioTablePopulation } from './initOntarioTableFromCSV';
 
+/**
+ * Runs the Ontario update process to scrape, check for updates, and populate the database as needed.
+ */
 export async function runOntarioUpdate() {
   const timeStarted = Date.now();
   console.log(`Checking for updates to Federal tables from public sources...`);
