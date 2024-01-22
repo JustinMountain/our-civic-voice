@@ -1,6 +1,10 @@
 import pool from '../../config/databasePool';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 
+/**
+ * Drops all Ontario MPP tables from the database.
+ * @returns True if all tables were dropped successfully, false otherwise.
+ */
 export async function dropAllOntarioTables(): Promise<Boolean> {
   console.log(`Dropping all Ontario tables from the database...`)
 

@@ -17,11 +17,17 @@ export interface dbQuery {
 export async function processCSVtoMemory(filePath: string): Promise<string[][]> {
   const records: string[][] = [];
 
-  const parser = fs.createReadStream(filePath)
+  try {
+    const parser = fs.createReadStream(filePath)
     .pipe(parse({ delimiter: ",", from_line: 1, relax_column_count: true }));
 
-  for await (const record of parser) {
-    records.push(record);
+    for await (const record of parser) {
+      records.push(record);
+    }
+    return records;
+
+  } catch (error) {
+    console.error(`Could not process CSV file: ${filePath}`);
+    throw error;
   }
-  return records;
 }

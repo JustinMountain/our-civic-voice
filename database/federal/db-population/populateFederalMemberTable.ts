@@ -8,7 +8,7 @@ const federalMemberInfoDirectory = './database/federal/csv-sources/member-info/'
 
 /**
  * Populates the federal_mps table with the data from the saved CSV files.
- * @returns Whether the tables were successfully populated.
+ * @returns True if successful, otherwise false.
  */
 export async function populateFederalMemberTable(): Promise<Boolean> {
   let recentFileName: string = '';
