@@ -76,16 +76,3 @@ Make a MV to serve this data easier
 I need a function to limit the number of valid CSVs kept
 
 UI will need a way to interact with DB population
-
-###### Super Important
-
-1. Better comments (JSDoc?)
-1. Pull out all passwords and make them valid
-
-1. Can I create "serverless"-like functionality via Docker?
- - Maybe I can hack it by setting restart to 24 hours and having the app run on startup
-
-1. The app doesn't currently populate automatically on startup, find a way to call init.ts
-
-1. Create some cool things to log (first stretch goal)
-1. Redo README

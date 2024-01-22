@@ -1,5 +1,5 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './database/config/constants';
-import { initFederalTablePopulation } from './database/federal/initFederalTableFromCSV';
+import { initFederalTablePopulation } from './database/federal/initFederalTablesFromCSV';
 import { initOntarioTablePopulation } from './database/ontario/initOntarioTableFromCSV';
 
 async function initDatabase() {

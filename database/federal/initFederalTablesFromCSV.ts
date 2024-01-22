@@ -3,9 +3,10 @@ import { populateFederalMemberTable } from './db-population/populateFederalMembe
 import { populateFederalMemberOfficeTable } from './db-population/populateFederalMemberOfficeTable';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
 
-const federalMemberInfoDirectory = './database/federal/csv-sources/member-info/';
-const federalMemberContactInfoDirectory = './database/federal/csv-sources/contact-info/';
-
+/**
+ * Initializes the Federal tables from the CSV sources.
+ * @returns {Promise<Boolean>} True if successful, false if not.
+ */
 export async function initFederalTablePopulation(): Promise<Boolean> {
   console.log(`Initializing Federal table population...`)
 
@@ -14,8 +15,8 @@ export async function initFederalTablePopulation(): Promise<Boolean> {
   try {
     federalTablesDropped = await dropAllFederalTables();
     if (federalTablesDropped) {
-      const memberTablePopulated = await populateFederalMemberTable(federalMemberInfoDirectory);
-      const officeTablePopulated = await populateFederalMemberOfficeTable(federalMemberContactInfoDirectory);
+      const memberTablePopulated = await populateFederalMemberTable();
+      const officeTablePopulated = await populateFederalMemberOfficeTable();
       if (memberTablePopulated && officeTablePopulated) { 
         console.log(`${CONSOLE_HIGHLIGHT}Initialization of Federal tables complete!${CONSOLE_RESET}`);
         return true; 
@@ -27,3 +28,6 @@ export async function initFederalTablePopulation(): Promise<Boolean> {
   }
   return false;
 }
+
+
+

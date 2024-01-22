@@ -4,16 +4,18 @@ import { processCSVtoMemory } from '../../config/populationUtilities';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 import { dbQuery } from '../../config/populationUtilities';
 
-async function retrieveDataForPopulation(directory: string): Promise<string[][]> {
+const ontarioMemberInfoDirectory = './database/ontario/csv-sources/csv-download/';
+
+async function retrieveDataForPopulation(): Promise<string[][]> {
   let recentFileName: string = '';
   let data: string[][] = [];
 
-  console.log(`Retrieving data from ${directory}...`);
+  console.log(`Retrieving data from ${ontarioMemberInfoDirectory}...`);
   try {
-    const allFileNames = await findCSVFiles(directory);
+    const allFileNames = await findCSVFiles(ontarioMemberInfoDirectory);
     recentFileName = allFileNames[0];
     if (recentFileName !== '') {
-      data = await processCSVtoMemory(`${directory}${recentFileName}`);  
+      data = await processCSVtoMemory(`${ontarioMemberInfoDirectory}${recentFileName}`);  
     }
     return data;
   } catch (error) {
@@ -96,8 +98,8 @@ function createMPPOfficeQuery(record: string[]): dbQuery {
   return mppOfficeQuery;
 }
 
-export async function populateOntarioMemberTables(directory: string): Promise<Boolean> {
-  let data = await retrieveDataForPopulation(directory);
+export async function populateOntarioMemberTables(): Promise<Boolean> {
+  let data = await retrieveDataForPopulation();
 
   console.log('Connecting to the database...');
   try {

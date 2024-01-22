@@ -3,14 +3,19 @@ import { findCSVFiles } from '../../config/csvUtilities';
 import { processCSVtoMemory } from '../../config/populationUtilities';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 
-// From Memory to DB
-export async function populateFederalMemberTable(directory: string): Promise<Boolean> {
+const federalMemberInfoDirectory = './database/federal/csv-sources/member-info/';
+
+/**
+ * Populates the federal_mps table with the data from the CSV files.
+ * @returns Whether the tables were successfully populated..
+ */
+export async function populateFederalMemberTable(): Promise<Boolean> {
   let recentFileName: string = '';
   let data: string[][] = [];
 
-  console.log(`Retrieving data from ${directory}...`);
+  console.log(`Retrieving data from ${federalMemberInfoDirectory}...`);
   try {
-    const allFileNames = await findCSVFiles(directory);
+    const allFileNames = await findCSVFiles(federalMemberInfoDirectory);
     recentFileName = allFileNames[0];
   } catch (error) {
     console.error(`${CONSOLE_ERROR}Could not find CSV file. ${CONSOLE_RESET}`);
@@ -19,7 +24,7 @@ export async function populateFederalMemberTable(directory: string): Promise<Boo
 
   if (recentFileName !== '') {
     try {
-      data = await processCSVtoMemory(`${directory}/${recentFileName}`);  
+      data = await processCSVtoMemory(`${federalMemberInfoDirectory}/${recentFileName}`);  
     } catch (error) {
       console.error(`${CONSOLE_ERROR}Could not process CSV file. ${CONSOLE_RESET}`);
       throw error;

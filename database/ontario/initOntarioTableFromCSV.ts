@@ -2,8 +2,6 @@ import { dropAllOntarioTables } from './db-population/dropAllOntarioTables';
 import { populateOntarioMemberTables } from './db-population/populateOntarioTables';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
 
-const ontarioMemberInfoDirectory = './database/ontario/csv-sources/csv-download/';
-
 export async function initOntarioTablePopulation(): Promise<Boolean> {
   console.log(`Initializing Ontario table population...`)
 
@@ -12,7 +10,7 @@ export async function initOntarioTablePopulation(): Promise<Boolean> {
   try {
     ontarioablesDropped = await dropAllOntarioTables();
     if (ontarioablesDropped) {
-      await populateOntarioMemberTables(ontarioMemberInfoDirectory);
+      await populateOntarioMemberTables();
       console.log(`${CONSOLE_HIGHLIGHT}Initialization of Ontario tables complete!${CONSOLE_RESET}`);
       return true;
     }

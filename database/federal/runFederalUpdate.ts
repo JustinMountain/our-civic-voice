@@ -1,7 +1,7 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
 import { runFederalMPScraperToCSV } from './csv-sources/createFederalMPCSV';
 import { runFederalMPOfficeScraperToCSV } from './csv-sources/createFederalMPOfficeCSV';
-import { initFederalTablePopulation } from './initFederalTableFromCSV';
+import { initFederalTablePopulation } from './initFederalTablesFromCSV';
 
 export async function runFederalUpdate() {
   const timeStarted = Date.now();
