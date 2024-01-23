@@ -2,9 +2,9 @@ import { Pool } from 'pg';
 
 const pool = new Pool({
   user: 'automations',
-  host: '192.168.1.245',
-  database: 'our_civic_voice',
-  password: 'password',
+  host: process.env.DB_HOST || '127.0.0.1',
+  database: process.env.DB_NAME || 'our_civic_voice',
+  password: process.env.DB_PASSWORD || 'password',
   port: 5432, // default PostgreSQL port
 });
 
