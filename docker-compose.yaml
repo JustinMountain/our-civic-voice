@@ -33,11 +33,11 @@ services:
     container_name: data-pipeline
     restart: unless-stopped
     build: ./data-pipeline
+    depends_on:
+      - civic-voice-db
     environment:
       # Used to describe the database connection in /config/databasePool.ts
       - DB_HOST=civic-voice-db
-    depends_on:
-      - civic-voice-db
     networks:
       - ocv-network
 
