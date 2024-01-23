@@ -1,6 +1,6 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './config/constants';
-import { runFederalUpdate } from './federal/runFederalUpdate';
-import { runOntarioUpdate } from './ontario/runOntarioUpdate';
+import { runFederalUpdate } from './scripts/runFederalUpdate';
+import { runOntarioUpdate } from './scripts/runOntarioUpdate';
 
 async function runApplication() {
   const timeStarted = Date.now();

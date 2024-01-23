@@ -1,7 +1,7 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
-import { runFederalMPScraperToCSV } from './csv-sources/createFederalMPCSV';
-import { runFederalMPOfficeScraperToCSV } from './csv-sources/createFederalMPOfficeCSV';
-import { initFederalTablePopulation } from './initFederalTablesFromCSV';
+import { runFederalMPScraperToCSV } from './scrapers/federal/createFederalMPCSV';
+import { runFederalMPOfficeScraperToCSV } from './scrapers/federal/createFederalMPOfficeCSV';
+import { initFederalTablePopulation } from './db-population/federal/initFederalTablesFromCSV';
 
 /**
  * Runs the Federal update process to scrape, check for updates, and populate the database as needed.

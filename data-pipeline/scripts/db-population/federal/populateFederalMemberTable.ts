@@ -1,10 +1,9 @@
-import pool from '../../config/databasePool';
-import { findCSVFiles } from '../../config/csvUtilities';
-import { processCSVtoMemory } from '../../config/populationUtilities';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
-import { dbQuery } from '../../config/populationUtilities';
-
-const federalMemberInfoDirectory = './federal/csv-sources/member-info/';
+import pool from '../../../config/databasePool';
+import { findCSVFiles } from '../../../config/csvUtilities';
+import { processCSVtoMemory } from '../../../config/populationUtilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
+import { FED_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
+import { dbQuery } from '../../../config/populationUtilities';
 
 /**
  * Populates the federal_mps table with the data from the saved CSV files.
@@ -14,9 +13,9 @@ export async function populateFederalMemberTable(): Promise<Boolean> {
   let recentFileName: string = '';
   let data: string[][] = [];
 
-  console.log(`Retrieving data from ${federalMemberInfoDirectory}...`);
+  console.log(`Retrieving data from ${FED_MEMBER_INFO_DIRECTORY}...`);
   try {
-    const allFileNames = await findCSVFiles(federalMemberInfoDirectory);
+    const allFileNames = await findCSVFiles(FED_MEMBER_INFO_DIRECTORY);
     recentFileName = allFileNames[0];
   } catch (error) {
     console.error(`${CONSOLE_ERROR}Could not find CSV file. ${CONSOLE_RESET}`);
@@ -25,7 +24,7 @@ export async function populateFederalMemberTable(): Promise<Boolean> {
 
   if (recentFileName !== '') {
     try {
-      data = await processCSVtoMemory(`${federalMemberInfoDirectory}/${recentFileName}`);  
+      data = await processCSVtoMemory(`${FED_MEMBER_INFO_DIRECTORY}/${recentFileName}`);  
     } catch (error) {
       console.error(`${CONSOLE_ERROR}Could not process CSV file. ${CONSOLE_RESET}`);
       throw error;

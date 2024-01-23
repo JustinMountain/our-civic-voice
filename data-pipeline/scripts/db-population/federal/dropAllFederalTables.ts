@@ -1,5 +1,5 @@
-import pool from '../../config/databasePool';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
+import pool from '../../../config/databasePool';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
 
 /**
  * Drops all Federal MP tables from the database.

@@ -4,9 +4,10 @@ import axiosRetry from 'axios-retry';
 import { createObjectCsvWriter } from 'csv-writer';
 import * as cheerio from "cheerio";
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
-import { formatDateForFileName } from '../../config/csvUtilities';
-import { checkForCSVUpdate } from '../../config/csvUtilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
+import { formatDateForFileName } from '../../../config/csvUtilities';
+import { checkForCSVUpdate } from '../../../config/csvUtilities';
+import { FED_MEMBER_CONTACT_DIRECTORY } from '../../../config/constants';
 
 // Interface to hold data for one office of a member
 interface MemberContactData {
@@ -30,9 +31,8 @@ interface MemberContactData {
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchURL = `${baseURL}/members/en/search`;
 const timeRetrieved = Date.now();
-const memberContactCSVFilepath = './federal/csv-sources/contact-info/';
 const fileName = `${formatDateForFileName(timeRetrieved)}-federal-mps.csv`;
-const csvFilepath = `${memberContactCSVFilepath}${fileName}`;
+const csvFilepath = `${FED_MEMBER_CONTACT_DIRECTORY}${fileName}`;
 const axiosInstance = axios.create();
 const batchSize = 30;
 
@@ -56,7 +56,7 @@ export async function runFederalMPOfficeScraperToCSV(): Promise<Boolean> {
     const isFileCreated = await createFederalMPOfficeCSV(data, csvFilepath);
 
     if (isFileCreated) {
-      const handled = await checkForCSVUpdate(memberContactCSVFilepath);
+      const handled = await checkForCSVUpdate(FED_MEMBER_CONTACT_DIRECTORY);
       console.log(`${CONSOLE_HIGHLIGHT}Federal MP Office scraper has completed!${CONSOLE_RESET}`);
       return handled;
     }

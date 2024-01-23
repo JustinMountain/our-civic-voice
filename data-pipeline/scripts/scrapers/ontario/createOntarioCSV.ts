@@ -3,12 +3,12 @@ import { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import { writeFile } from 'fs/promises';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
-import { formatDateForFileName } from '../../config/csvUtilities';
-import { checkForCSVUpdate } from '../../config/csvUtilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
+import { formatDateForFileName } from '../../../config/csvUtilities';
+import { checkForCSVUpdate } from '../../../config/csvUtilities';
+import { ONT_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
 
 const ontarioMPPContactInfoURL = 'https://www.ola.org/sites/default/files/node-files/office_csvs/offices-all.csv';
-const ontarioCSVFilepath = './ontario/csv-sources/csv-download/';
 
 const timeRetrieved = Date.now();
 const axiosInstance = axios.create({
@@ -36,7 +36,7 @@ export async function runOntarioMPPScraperToCSV(): Promise<Boolean> {
     const isFileCreated = await fetchOntarioMPPCSV(axiosInstance);
 
     if (isFileCreated) {
-      const handled = await checkForCSVUpdate(ontarioCSVFilepath);
+      const handled = await checkForCSVUpdate(ONT_MEMBER_INFO_DIRECTORY);
       console.log(`${CONSOLE_HIGHLIGHT}Ontario MPP scraper has completed!${CONSOLE_RESET}`);
       return handled;
     }
@@ -62,8 +62,8 @@ async function fetchOntarioMPPCSV(axiosInstance: AxiosInstance): Promise<Boolean
     });
   
     if (response.status === 200) {
-      await writeFile(`${ontarioCSVFilepath}${fileName}`, response.data);
-      console.log(`${CONSOLE_HIGHLIGHT}CSV file downloaded${CONSOLE_RESET} and saved to ${ontarioCSVFilepath}!`);
+      await writeFile(`${ONT_MEMBER_INFO_DIRECTORY}${fileName}`, response.data);
+      console.log(`${CONSOLE_HIGHLIGHT}CSV file downloaded${CONSOLE_RESET} and saved to ${ONT_MEMBER_INFO_DIRECTORY}!`);
     } else {
       console.error('Failed to download CSV file:', response.status);
     }

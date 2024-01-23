@@ -4,9 +4,10 @@ import axiosRetry from 'axios-retry';
 import { createObjectCsvWriter } from 'csv-writer';
 import { XMLParser } from 'fast-xml-parser';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
-import { formatDateForFileName } from '../../config/csvUtilities';
-import { checkForCSVUpdate } from '../../config/csvUtilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
+import { formatDateForFileName } from '../../../config/csvUtilities';
+import { checkForCSVUpdate } from '../../../config/csvUtilities';
+import { FED_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
 
 // Interface to hold data for individual members
 interface MemberData {
@@ -23,9 +24,8 @@ interface MemberData {
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchXML = `${baseURL}/members/en/search/xml`;
 const timeRetrieved = Date.now();
-const memberCSVFilepath = './federal/csv-sources/member-info/';
 const fileName = `${formatDateForFileName(timeRetrieved)}-federal-mps.csv`;
-const csvFilepath = `${memberCSVFilepath}${fileName}`;
+const csvFilepath = `${FED_MEMBER_INFO_DIRECTORY}${fileName}`;
 const parser = new XMLParser();
 const axiosInstance = axios.create({
   headers: {
@@ -54,7 +54,7 @@ export async function runFederalMPScraperToCSV(): Promise<Boolean> {
     const isFileCreated = await createFederalMembersCSV(data, csvFilepath);
 
     if (isFileCreated) {
-      const handled = await checkForCSVUpdate(memberCSVFilepath);
+      const handled = await checkForCSVUpdate(FED_MEMBER_INFO_DIRECTORY);
       console.log(`${CONSOLE_HIGHLIGHT}Federal MP Member scraper has completed!${CONSOLE_RESET}`);
       return handled;
     }

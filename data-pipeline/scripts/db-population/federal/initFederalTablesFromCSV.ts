@@ -1,7 +1,7 @@
-import { dropAllFederalTables } from './db-population/dropAllFederalTables';
-import { populateFederalMemberTable } from './db-population/populateFederalMemberTable';
-import { populateFederalMemberOfficeTable } from './db-population/populateFederalMemberOfficeTable';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+import { dropAllFederalTables } from './dropAllFederalTables';
+import { populateFederalMemberTable } from './populateFederalMemberTable';
+import { populateFederalMemberOfficeTable } from './populateFederalMemberOfficeTable';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
 
 /**
  * Initializes the Federal tables from the CSV sources.

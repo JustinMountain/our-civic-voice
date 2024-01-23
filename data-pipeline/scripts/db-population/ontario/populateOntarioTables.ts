@@ -1,10 +1,9 @@
-import pool from '../../config/databasePool';
-import { findCSVFiles } from '../../config/csvUtilities';
-import { processCSVtoMemory } from '../../config/populationUtilities';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
-import { dbQuery } from '../../config/populationUtilities';
-
-const ontarioMemberInfoDirectory = './ontario/csv-sources/csv-download/';
+import pool from '../../../config/databasePool';
+import { findCSVFiles } from '../../../config/csvUtilities';
+import { processCSVtoMemory } from '../../../config/populationUtilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
+import { ONT_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
+import { dbQuery } from '../../../config/populationUtilities';
 
 /**
  * Populates the ontario_mpps table with the data from the saved CSV files.
@@ -55,12 +54,12 @@ async function retrieveDataForPopulation(): Promise<string[][]> {
   let recentFileName: string = '';
   let data: string[][] = [];
 
-  console.log(`Retrieving data from ${ontarioMemberInfoDirectory}...`);
+  console.log(`Retrieving data from ${ONT_MEMBER_INFO_DIRECTORY}...`);
   try {
-    const allFileNames = await findCSVFiles(ontarioMemberInfoDirectory);
+    const allFileNames = await findCSVFiles(ONT_MEMBER_INFO_DIRECTORY);
     recentFileName = allFileNames[0];
     if (recentFileName !== '') {
-      data = await processCSVtoMemory(`${ontarioMemberInfoDirectory}${recentFileName}`);  
+      data = await processCSVtoMemory(`${ONT_MEMBER_INFO_DIRECTORY}${recentFileName}`);  
     }
     return data;
   } catch (error) {

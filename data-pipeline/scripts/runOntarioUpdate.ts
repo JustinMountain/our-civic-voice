@@ -1,6 +1,6 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
-import { runOntarioMPPScraperToCSV } from './csv-sources/createOntarioCSV';
-import { initOntarioTablePopulation } from './initOntarioTableFromCSV';
+import { runOntarioMPPScraperToCSV } from './scrapers/ontario/createOntarioCSV';
+import { initOntarioTablePopulation } from './db-population/ontario/initOntarioTableFromCSV';
 
 /**
  * Runs the Ontario update process to scrape, check for updates, and populate the database as needed.

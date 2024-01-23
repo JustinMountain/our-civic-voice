@@ -1,6 +1,6 @@
-import { dropAllOntarioTables } from './db-population/dropAllOntarioTables';
-import { populateOntarioMemberTables } from './db-population/populateOntarioTables';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+import { dropAllOntarioTables } from './dropAllOntarioTables';
+import { populateOntarioMemberTables } from './populateOntarioTables';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
 
 /**
  * Initializes the Ontario tables from the CSV sources.
