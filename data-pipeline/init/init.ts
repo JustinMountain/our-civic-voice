@@ -1,6 +1,6 @@
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './config/constants';
-import { initFederalTablePopulation } from './scripts/db-population/federal/initFederalTablesFromCSV';
-import { initOntarioTablePopulation } from './scripts/db-population/ontario/initOntarioTableFromCSV';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+import { initFederalTablePopulation } from '../scripts/db-population/federal/initFederalTablesFromCSV';
+import { initOntarioTablePopulation } from '../scripts/db-population/ontario/initOntarioTableFromCSV';
 
 async function initDatabase() {
   const timeStarted = Date.now();

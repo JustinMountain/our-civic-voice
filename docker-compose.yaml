@@ -38,6 +38,8 @@ services:
     environment:
       # Used to describe the database connection in /config/databasePool.ts
       - DB_HOST=civic-voice-db
+    volumes: 
+      - ./data-pipeline/csv/:/usr/app/data-pipeline/csv/
     networks:
       - ocv-network
 
