@@ -2,6 +2,9 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/const
 import { runFederalUpdate } from './runFederalUpdate';
 import { runOntarioUpdate } from './runOntarioUpdate';
 
+/**
+ * Runs the all of the update processes to scrape, check for updates, and populate the database as needed.
+ */
 export async function runAllUpdates() {
   const timeStarted = Date.now();
   console.log(`Checking for updates from public sources...`);

@@ -8,36 +8,30 @@ import { runOntarioUpdate } from './scripts/runOntarioUpdate';
 const app = express();
 const port = 3000;
 
-app.get('/scripts/:scriptname', (req: Request, res: Response) => {
-  const scriptName = req.params.scriptname;
-  if (scriptName === 'runAllUpdates') {
+// Mapping script names to their respective functions
+const scriptActions = {
+  'all': runAllUpdates,
+  'federal': runFederalUpdate,
+  'ontario': runOntarioUpdate,
+};
+
+app.get('/scripts/update/:scriptname', async (req: Request, res: Response) => {
+  const scriptName = req.params.scriptname.toLowerCase();
+  const scriptToRun = scriptActions[scriptName as keyof typeof scriptActions];
+
+  if (scriptToRun) {
     try {
-      runAllUpdates();
-      return;
+      await scriptToRun();
+      console.log(`${CONSOLE_HIGHLIGHT}Script "${scriptName}" executed successfully${CONSOLE_RESET}`)
+      res.send("Script executed successfully");
     } catch (error) {
-      console.error(`${CONSOLE_ERROR}Error updating all sources on GET request: ${CONSOLE_RESET}`, error);
-      throw error;
+      console.error(`${CONSOLE_ERROR}Error executing ${scriptName}: ${CONSOLE_RESET}`, error);
+      res.status(500).send(`Error executing the script. Check the logs for more details.`);
     }
+  } else {
+    res.status(404).send("Script not found.");
   }
-  if (scriptName === 'runFederalUpdate') {
-    try {
-      runFederalUpdate();
-      return;
-    } catch (error) {
-      console.error(`${CONSOLE_ERROR}Error updating all sources on GET request: ${CONSOLE_RESET}`, error);
-      throw error;
-    }
-  }
-  if (scriptName === 'runOntarioUpdate') {
-    try {
-      runOntarioUpdate();
-      return;
-    } catch (error) {
-      console.error(`${CONSOLE_ERROR}Error updating all sources on GET request: ${CONSOLE_RESET}`, error);
-      throw error;
-    }
-  }
-  res.status(404).send("Script not found");
+
 });
 
 app.listen(port, () => {

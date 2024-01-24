@@ -6,7 +6,7 @@ Our Civic Voice is an open-source portal for connecting Canadians with their ele
 
 ```
 # Start the containers
-docker compose up -d
+docker compose up
 ```
 
 Optional: Create a `.env` file in the root directory:
@@ -19,7 +19,17 @@ PGADMIN_EMAIL=admin@example.com
 PGADMIN_PASSWORD=strong-password
 ```
 
-### Registering the server with pgAdmin:
+### Running the Update Scripts
+
+With the containers running, visit `[host.address]:3000/scripts/update/scriptname` in a web browser. The following scriptnames are currently functional:
+
+1. `/all` 
+2. `/federal`
+3. `/ontario`
+
+These endpoints will extract, transform, and load data for their respective tables.
+
+### Registering the Server with pgAdmin:
 
 Click `Add New Server` on the dashboard or right-click `Servers > Register > Server...`.
 
