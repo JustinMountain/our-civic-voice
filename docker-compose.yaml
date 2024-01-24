@@ -38,7 +38,7 @@ services:
     depends_on:
       - civic-voice-db
     environment:
-      # Used to describe the database connection in /config/databasePool.ts
+      # DB container_name used for the database connection in /data-pipeline/config/databasePool.ts
       - DB_HOST=civic-voice-db
     volumes: 
       - ./data-pipeline/csv/:/usr/app/data-pipeline/csv/

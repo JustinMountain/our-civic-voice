@@ -1,7 +1,7 @@
 {
-  "name": "our-civic-voice",
-  "version": "0.0.2",
-  "description": "Our Civic Voice is an open-source portal for connecting Canadians with their elected representatives.",
+  "name": "our-civic-voice-data-pipeline",
+  "version": "0.1.0",
+  "description": "The data-pipeline service acts as the ETL layer providing the representative contact information for the application.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
