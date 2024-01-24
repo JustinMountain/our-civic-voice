@@ -1,20 +1,45 @@
+import express, { Request, Response } from 'express';
+
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './config/constants';
+import { runAllUpdates } from './scripts/runAllUpdates';
 import { runFederalUpdate } from './scripts/runFederalUpdate';
 import { runOntarioUpdate } from './scripts/runOntarioUpdate';
 
-async function runApplication() {
-  const timeStarted = Date.now();
-  console.log(`Checking for updates from public sources...`);
+const app = express();
+const port = 3000;
 
-  try {
-    await runFederalUpdate();
-    await runOntarioUpdate();  
-  } catch (error) { 
-    console.error(`${CONSOLE_ERROR}Encountered an error while running the application: ${CONSOLE_RESET}`, error);
-    throw error;
+app.get('/scripts/:scriptname', (req: Request, res: Response) => {
+  const scriptName = req.params.scriptname;
+  if (scriptName === 'runAllUpdates') {
+    try {
+      runAllUpdates();
+      return;
+    } catch (error) {
+      console.error(`${CONSOLE_ERROR}Error updating all sources on GET request: ${CONSOLE_RESET}`, error);
+      throw error;
+    }
   }
-  console.log(`\n${CONSOLE_HIGHLIGHT}Application is up to date with public sources!${CONSOLE_RESET}`);
-  console.log(`The process took ${CONSOLE_HIGHLIGHT}${Date.now() - timeStarted}ms!${CONSOLE_RESET}\n`);   
-}
+  if (scriptName === 'runFederalUpdate') {
+    try {
+      runFederalUpdate();
+      return;
+    } catch (error) {
+      console.error(`${CONSOLE_ERROR}Error updating all sources on GET request: ${CONSOLE_RESET}`, error);
+      throw error;
+    }
+  }
+  if (scriptName === 'runOntarioUpdate') {
+    try {
+      runOntarioUpdate();
+      return;
+    } catch (error) {
+      console.error(`${CONSOLE_ERROR}Error updating all sources on GET request: ${CONSOLE_RESET}`, error);
+      throw error;
+    }
+  }
+  res.status(404).send("Script not found");
+});
 
-runApplication();
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
