@@ -1,4 +1,6 @@
-# Our Civic Voice
+[![Our Civic Voice banner image](/images/banner.jpg "Our Civic Voice")](/images/banner.jpg)
+
+# About
 
 Our Civic Voice is a portal for connecting Canadians with their elected representatives. 
 
@@ -52,3 +54,7 @@ DELETE FROM federal_mps;
 ```
 
 ## Architecture
+
+Our Civic Voice is still a work in progress. The following represents the MVP architecture that I'm currently working towards:
+
+[![Architecture diagram image](/images/architecture.jpg "Planned Architecture")](/images/architecture.jpg)
