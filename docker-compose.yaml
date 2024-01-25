@@ -1,5 +1,13 @@
 version: '3.8'
 services:
+  nginx: 
+    build: ./nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    networks:
+      - ocv-network
+
   civic-voice-db:
     container_name: civic-voice-db
     image: postgres:16.1-alpine
@@ -42,6 +50,21 @@ services:
       - DB_HOST=civic-voice-db
     volumes: 
       - ./data-pipeline/csv/:/usr/app/data-pipeline/csv/
+    networks:
+      - ocv-network
+
+  express-backend:
+    container_name: express-backend
+    restart: unless-stopped
+    build: ./express
+    ports:
+      - '3001:3000'
+    depends_on:
+      - civic-voice-db
+      - nginx
+    environment:
+      # DB container_name used for the database connection in /data-pipeline/config/databasePool.ts
+      - DB_HOST=civic-voice-db
     networks:
       - ocv-network
 
