@@ -15,8 +15,6 @@ services:
     environment:
       - POSTGRES_USER=${PG_USERNAME}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
-    ports:
-      - '5432:5432'
     volumes: 
       - civic-voice-db:/var/lib/postgresql/data
       - ./database/sql/ddl/:/docker-entrypoint-initdb.d/
@@ -57,8 +55,6 @@ services:
     container_name: express-backend
     restart: unless-stopped
     build: ./express
-    ports:
-      - '3001:3000'
     depends_on:
       - civic-voice-db
       - nginx

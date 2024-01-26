@@ -58,3 +58,23 @@ DELETE FROM federal_mps;
 Our Civic Voice is still a work in progress. The following represents the MVP architecture that I'm currently working towards:
 
 [![Architecture diagram image](/images/architecture.jpg "Planned Architecture")](/images/architecture.jpg)
+
+### Database Layer
+
+The PostgreSQL database is available within the stack via `civic-voice-db:5432` or externally by exposing port `5432` in the `docker-compose.yaml`.
+
+pgAdmin has been packaged with the application and is available via a web browser at `host-address:8888`.
+
+[Link to README](/database/README.md)
+
+### Data Pipeline Layer
+
+The functions to run the ETL layer are temporarily available via port `3000` on the docker host. 
+
+[Link to README](/data-pipeline/README.md)
+
+### REST API
+
+An express REST API is currently being built behind nginx and is available over HTTP via the docker host.
+
+[Link to README](/express/README.md)
