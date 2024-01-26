@@ -55,7 +55,7 @@ DELETE FROM federal_mps;
 
 ## Architecture
 
-Our Civic Voice is still a work in progress. The following represents the MVP architecture that I'm currently working towards:
+Our Civic Voice is still a work in progress. The following represents the MVP architecture that I'm currently working on:
 
 [![Architecture diagram image](/images/architecture.jpg "Planned Architecture")](/images/architecture.jpg)
 

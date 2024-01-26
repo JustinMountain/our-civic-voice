@@ -12,10 +12,13 @@ COPY ./package*.json ./
 RUN npm ci
 
 # Install ts-node and typescript
-RUN npm install -g ts-node typescript express
+RUN npm install -g typescript
 
-# Copy all files
+# Copy all filess
 COPY ./ ./
+
+# Build app
+RUN npm run build
 
 # Expose the listening port
 EXPOSE 3000
@@ -27,4 +30,4 @@ RUN chown -R node:node /usr/app
 USER node
 
 # Command to run when starting the container
-CMD ["ts-node", "app.ts"]
+CMD ["npm", "run", "dev"]
