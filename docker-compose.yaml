@@ -56,7 +56,7 @@ services:
       - database
     environment:
       # DB container_name used for the database connection in /data-pipeline/config/databasePool.ts
-      - DB_HOST=ocv-postgres
+      - DB_HOST=database
     volumes: 
       - ./data-pipeline/:/usr/app/
     networks:
