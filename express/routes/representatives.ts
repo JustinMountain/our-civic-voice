@@ -38,7 +38,7 @@ router.get('/federal', async (req: Request, res: Response) => {
   try {
     const client = await pool.connect();
 
-    const reps = await client.query(`SELECT honorific, first_name, last_name, constituency, party, province_territory FROM federal_mps;`);
+    const reps = await client.query(`SELECT honorific, first_name, last_name, constituency, party, province_territory, 'Federal' AS gov_level FROM federal_mps;`);
 
     res.status(200).json(reps.rows); 
     client.release();
@@ -69,7 +69,7 @@ router.get('/ontario', async (req: Request, res: Response) => {
   try {
     const client = await pool.connect();
 
-    const reps = await client.query(`SELECT honorific, first_name, last_name, constituency, party, 'ontario' AS province_territory FROM ontario_mpps;`);
+    const reps = await client.query(`SELECT honorific, first_name, last_name, constituency, party, 'Ontario' AS province_territory, 'Provincial' AS gov_level FROM ontario_mpps;`);
 
     res.status(200).json(reps.rows); 
     client.release();
