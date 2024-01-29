@@ -14,6 +14,9 @@ RUN npm ci
 # Install ts-node and typescript
 RUN npm install -g ts-node typescript express
 
+# Install nodemon for development
+RUN npm i -g nodemon
+
 # Copy all files
 COPY ./ ./
 
@@ -26,5 +29,8 @@ RUN chown -R node:node /usr/app
 # Run container as non-root (unprivileged) user to follow principle of least privilege
 USER node
 
+# Command to run when developing the container
+CMD ["nodemon", "app.ts"]
+
 # Command to run when starting the container
-CMD ["ts-node", "app.ts"]
+# CMD ["ts-node", "app.ts"]
