@@ -1,6 +1,20 @@
 import Image from "next/image";
 
-export default function Home() {
+import { REST_API_URL } from "../config/constants";
+
+interface Representative {
+  honorific: string,
+  first_name: string,
+  last_name: string,
+  constituency: string,
+  party: string,
+  province_territory: string,
+}
+
+export default async function Home() {
+
+  const data: Representative[] = await getData();
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -37,6 +51,12 @@ export default function Home() {
           height={37}
           priority
         />
+      </div>
+
+      <div>
+        {data.map((rep) => (
+          rep.first_name
+        ))}
       </div>
 
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
@@ -110,4 +130,16 @@ export default function Home() {
       </div>
     </main>
   );
+}
+
+async function getData() {
+  try {
+    const url = `${REST_API_URL}/representatives/`;
+    console.log(url);
+    const res = await fetch(url)
+    return res.json()
+  } catch (error) {
+    console.error(`Could not GET from Federal table.`);
+    throw error; 
+  }
 }

@@ -16,6 +16,8 @@ services:
     depends_on:
       - nginx
       - backend-express
+    environment:
+      - REST_ENDPOINT=http://backend-express:3000 # optional
     volumes: 
       - ./frontend/:/usr/app/
     networks:
@@ -73,8 +75,6 @@ services:
       - DB_HOST=database
     volumes: 
       - ./express/:/usr/app/
-    ports: 
-      - 3000:3000
     networks:
       - ocv-network
 
