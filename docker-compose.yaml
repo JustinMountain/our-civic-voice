@@ -73,6 +73,8 @@ services:
     environment:
       # DB container_name used for the database connection in /data-pipeline/config/databasePool.ts
       - DB_HOST=database
+    ports:
+      - 3000:3000
     volumes: 
       - ./express/:/usr/app/
     networks:
