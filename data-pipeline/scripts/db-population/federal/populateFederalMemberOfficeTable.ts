@@ -59,7 +59,7 @@ function createMPOfficeQuery(record: string[]): dbQuery {
   const mppOfficeQuery = {
     text: `INSERT INTO federal_mp_offices (
       constituency,
-      email,
+      general_email,
       website,
       office_type,
       office_title,
