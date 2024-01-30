@@ -1,6 +1,7 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
 import { initFederalTablePopulation } from '../scripts/db-population/federal/initFederalTablesFromCSV';
 import { initOntarioTablePopulation } from '../scripts/db-population/ontario/initOntarioTableFromCSV';
+import { updateAllRepMatView } from '../scripts/db-population/repMatView';
 
 async function initDatabase() {
   const timeStarted = Date.now();
@@ -9,6 +10,7 @@ async function initDatabase() {
   try { 
     await initFederalTablePopulation(); 
     await initOntarioTablePopulation();
+    await updateAllRepMatView();
   } catch (error) { 
     console.error(`${CONSOLE_ERROR}Encountered an error trying to initialize the database: ${CONSOLE_RESET}`, error);
     throw error;

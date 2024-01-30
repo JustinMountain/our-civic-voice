@@ -1,7 +1,7 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
 import { runFederalUpdate } from './runFederalUpdate';
 import { runOntarioUpdate } from './runOntarioUpdate';
-
+import { updateAllRepMatView } from './db-population/repMatView';
 /**
  * Runs the all of the update processes to scrape, check for updates, and populate the database as needed.
  */
@@ -10,8 +10,13 @@ export async function runAllUpdates() {
   console.log(`Checking for updates from public sources...`);
 
   try {
-    await runFederalUpdate();
-    await runOntarioUpdate();  
+    const updatedOntario = await runFederalUpdate();
+    const updatedFederal = await runOntarioUpdate();  
+
+    if (updatedOntario || updatedFederal) {
+      await updateAllRepMatView()
+    }
+
   } catch (error) { 
     console.error(`${CONSOLE_ERROR}Encountered an error while trying to update all sources: ${CONSOLE_RESET}`, error);
     throw error;

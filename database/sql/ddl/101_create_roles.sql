@@ -25,5 +25,7 @@ GRANT SELECT ON TABLE federal_mp_offices TO express;
 GRANT USAGE ON SEQUENCE federal_mp_offices_office_id_seq TO admin, automations;
 
 -- Setup privileges on the 'All Representatives' Materialized View
--- GRANT EXECUTE ON FUNCTION refresh_all_representatives() TO automations;
--- GRANT SELECT ON all_representatives TO express;
+GRANT USAGE ON SCHEMA public TO automations, express;
+ALTER MATERIALIZED VIEW all_representatives OWNER TO automations;
+
+GRANT SELECT ON all_representatives TO express;
