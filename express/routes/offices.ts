@@ -2,13 +2,24 @@ import express, { Request, Response } from 'express';
 import pool from '../config/databasePool';
 
 const router = express.Router();
-
-// SELECT honorific, first_name, last_name, constituency, party, province_territory, 'Federal' AS gov_level FROM federal_mps WHERE LOWER(constituency) = '${constituency}';
+const officeSelect = `
+  SELECT office_id,
+    constituency,
+    general_email,
+    office_type,
+    office_address,
+    office_city,
+    office_province,
+    office_postal_code,
+    office_telephone,
+    office_fax,
+    updated_date
+`;
 
 router.get('/federal/:constituency', async (req: Request, res: Response) => {
   const constituency = req.params.constituency.toLowerCase();
   const officeStatement = `
-    SELECT * 
+    ${officeSelect}
     FROM federal_mp_offices
     WHERE LOWER(constituency) = '${constituency}';
   `;
@@ -30,7 +41,7 @@ router.get('/federal/:constituency', async (req: Request, res: Response) => {
 router.get('/ontario/:constituency', async (req: Request, res: Response) => {
   const constituency = req.params.constituency.toLowerCase();
   const officeStatement = `
-    SELECT * 
+    ${officeSelect}
     FROM ontario_mpp_offices
     WHERE LOWER(constituency) = '${constituency}';
   `;
