@@ -8,18 +8,8 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config
 import { formatDateForFileName } from '../../../config/csvUtilities';
 import { checkForCSVUpdate } from '../../../config/csvUtilities';
 import { FED_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
-
-// Interface to hold data for individual members
-interface MemberData {
-  honorific: string;
-  firstName: string;
-  lastName: string;
-  constituency: string;
-  provinceTerritory: string;
-  partyAffiliation: string;
-  startDate: string;
-  timeRetrieved: number;
-}
+import { fetchFederalMPURLs, mergeData } from './utils';
+import { ScrapedData, MemberData, MergedMemberData } from './utils';
 
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchXML = `${baseURL}/members/en/search/xml`;
@@ -50,8 +40,11 @@ export async function runFederalMPScraperToCSV(): Promise<Boolean> {
   console.log(`Starting the Federal MP Member scraper...`)
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance);
-    const data: MemberData[] = parseFederalMPData(parser, axiosResponse, timeRetrieved);  
-    const isFileCreated = await createFederalMembersCSV(data, csvFilepath);
+    const memberData: MemberData[] = await parseFederalMPData(parser, axiosResponse, timeRetrieved); 
+    const scrapedData: ScrapedData[] = await fetchFederalMPURLs(axiosInstance);
+    const merged: MergedMemberData[] = mergeData(memberData, scrapedData);
+
+    const isFileCreated = await createFederalMembersCSV(merged, csvFilepath);
 
     if (isFileCreated) {
       const handled = await checkForCSVUpdate(FED_MEMBER_INFO_DIRECTORY);
@@ -87,7 +80,7 @@ async function fetchFederalMPData(axiosInstance: AxiosInstance): Promise<any> {
  * @param timeRetrieved The time the data was retrieved.
  * @returns An array of MemberData objects, each representing a single MP found in the XML.
  */
-function parseFederalMPData(parser: XMLParser, axiosResponse: any, timeRetrieved: number): MemberData[] {
+async function parseFederalMPData(parser: XMLParser, axiosResponse: any, timeRetrieved: number): Promise<MemberData[]> {
   console.log('Parsing Federal MP data from retrieved XML...');
   const jsonObj = parser.parse(axiosResponse.data);
   const data: MemberData[] = [];
@@ -115,13 +108,14 @@ function parseFederalMPData(parser: XMLParser, axiosResponse: any, timeRetrieved
  * @param csvFilepath The filepath to write the CSV file to.
  * @returns True if the CSV file was created, false otherwise.
  */
-async function createFederalMembersCSV(data: MemberData[], csvFilepath: string): Promise<Boolean> {
+async function createFederalMembersCSV(data: MergedMemberData[], csvFilepath: string): Promise<Boolean> {
   console.log('Writing Federal MP data to CSV...');
   try {
     // Create CSV from scraped data
     const csvWriter = createObjectCsvWriter({
       path: csvFilepath,
       header: [
+        { id: 'member_id', title: 'member_id' },
         { id: 'honorific', title: 'honorific' },
         { id: 'firstName', title: 'first_name' },
         { id: 'lastName', title: 'last_name' },
@@ -129,7 +123,8 @@ async function createFederalMembersCSV(data: MemberData[], csvFilepath: string):
         { id: 'provinceTerritory', title: 'province_territory' },
         { id: 'partyAffiliation', title: 'party_affiliation' },
         { id: 'startDate', title: 'start_date' },
-        { id: 'timeRetrieved', title: 'time_retrieved' }
+        { id: 'timeRetrieved', title: 'time_retrieved' },
+        { id: 'source', title: 'source'}
       ]
     });
 
@@ -144,4 +139,3 @@ async function createFederalMembersCSV(data: MemberData[], csvFilepath: string):
     throw error;
   }
 }
-

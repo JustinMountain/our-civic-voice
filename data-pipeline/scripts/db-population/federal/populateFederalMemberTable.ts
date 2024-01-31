@@ -58,6 +58,7 @@ export async function populateFederalMemberTable(): Promise<Boolean> {
 function createMPQuery(record: string[]): dbQuery {
   const mpQuery = {
     text: `INSERT INTO federal_mps (
+      member_id,
       honorific,
       first_name,
       last_name,
@@ -65,8 +66,9 @@ function createMPQuery(record: string[]): dbQuery {
       province_territory,
       party,
       active_from,
-      updated_date) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`,
+      updated_date,
+      source) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
     values: [
       record[0],
       record[1],
@@ -75,7 +77,9 @@ function createMPQuery(record: string[]): dbQuery {
       record[4],
       record[5],
       record[6],
-      new Date(parseInt(record[7])),
+      record[7],
+      new Date(parseInt(record[8])),
+      record[9],
     ],
   };
   return mpQuery;
