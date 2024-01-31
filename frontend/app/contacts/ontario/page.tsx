@@ -1,11 +1,10 @@
 import { RepColumns } from "@/components/ui/rep-table/columns"
 import { getDataForRepTable } from "@/components/ui/rep-table/rep-table";
 import RepTable from "@/components/ui/rep-table/rep-table";
+import { ONTARIO_REPRESENTATIVE_ENDPOINT } from "@/config/constants";
 
-const REPRESENTATIVE_ENDPOINT = 'representatives/';
-
-export default async function Representatives() {
-  const data: RepColumns[] = await getDataForRepTable(REPRESENTATIVE_ENDPOINT)
+export default async function OntarioRepresentatives() {
+  const data: RepColumns[] = await getDataForRepTable(ONTARIO_REPRESENTATIVE_ENDPOINT)
 
   return (
     <div className="container mx-auto py-10">
