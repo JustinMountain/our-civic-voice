@@ -3,6 +3,7 @@
 
 -- Create Federal tables
 CREATE TABLE IF NOT EXISTS federal_mps (
+  member_id INT,
   honorific VARCHAR(255),
   first_name VARCHAR(255),
   last_name VARCHAR(255),
@@ -10,7 +11,8 @@ CREATE TABLE IF NOT EXISTS federal_mps (
   province_territory VARCHAR(255),
   party VARCHAR(255),
   active_from VARCHAR(255),
-  updated_date TIMESTAMP
+  updated_date TIMESTAMP,
+  source VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS federal_mp_offices (

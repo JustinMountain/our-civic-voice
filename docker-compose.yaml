@@ -61,6 +61,8 @@ services:
       - DB_HOST=database
     volumes: 
       - ./data-pipeline/:/usr/app/
+    ports: 
+      - 3001:3000
     networks:
       - ocv-network
 
