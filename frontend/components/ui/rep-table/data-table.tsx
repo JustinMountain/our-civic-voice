@@ -23,6 +23,11 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
+function getLowercaseValue(cell: any): string {
+  const value = cell.getValue();
+  return typeof value === 'string' ? value.toLowerCase() : '';
+}
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -46,7 +51,9 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers
+                    .slice(1)     // Added this to skip the id column from being displaued
+                    .map((header) => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
@@ -68,9 +75,17 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells()
+                    .slice(1)     // Added this to skip the id column from being displayed
+                    .map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      <a href={row.getVisibleCells().at(5)?.getValue() as string === 'Provincial' ? (
+                        `/contacts/${getLowercaseValue(row.getVisibleCells().at(3))}/${row.getVisibleCells().at(0)?.getValue() as string }`
+                      ) : (
+                        `/contacts/federal/${row.getVisibleCells().at(0)?.getValue() as string }`
+                      ) }>  
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </a>
                     </TableCell>
                   ))}
                 </TableRow>

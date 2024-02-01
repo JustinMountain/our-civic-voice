@@ -3,6 +3,7 @@ import { DataTable } from "./data-table"
 import { REST_API_URL } from "@/config/constants";
 
 interface Representative {
+  member_id: string,
   honorific: string,
   first_name: string,
   last_name: string,
@@ -23,6 +24,7 @@ export async function getDataForRepTable(path: string): Promise<RepColumns[]> {
     // For each row, adapt to the columns interface
     json.forEach((row: Representative) => {
       const thisRep: RepColumns = {
+        member_id: `${row.member_id}`,
         name: `${row.first_name} ${row.last_name}`,
         constituency: `${row.constituency}`,
         province_territory: `${row.province_territory}`,

@@ -1,4 +1,4 @@
-import { OfficeInfo } from "@/components/ui/office-card-stack/office-info";
+import { OfficeInfo } from "@/components/ui/contact/office-card-stack/office-info";
 
 export default async function OfficeCard(props: {data: OfficeInfo}) {
   return (

@@ -3,7 +3,8 @@ import pool from '../config/databasePool';
 
 const router = express.Router();
 const officeSelect = `
-  SELECT office_id,
+  SELECT member_id,
+    office_id,
     constituency,
     general_email,
     office_type,
@@ -16,12 +17,12 @@ const officeSelect = `
     updated_date
 `;
 
-router.get('/federal/:constituency', async (req: Request, res: Response) => {
-  const constituency = req.params.constituency.toLowerCase();
+router.get('/federal/:member_id', async (req: Request, res: Response) => {
+  const member_id = req.params.member_id;
   const officeStatement = `
     ${officeSelect}
     FROM federal_mp_offices
-    WHERE LOWER(constituency) = '${constituency}';
+    WHERE member_id = '${member_id}';
   `;
 
   try {
@@ -38,12 +39,12 @@ router.get('/federal/:constituency', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/ontario/:constituency', async (req: Request, res: Response) => {
-  const constituency = req.params.constituency.toLowerCase();
+router.get('/ontario/:member_id', async (req: Request, res: Response) => {
+  const member_id = req.params.member_id.toLowerCase();
   const officeStatement = `
     ${officeSelect}
     FROM ontario_mpp_offices
-    WHERE LOWER(constituency) = '${constituency}';
+    WHERE member_id = '${member_id}';
   `;
 
   try {

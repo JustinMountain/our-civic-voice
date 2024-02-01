@@ -3,7 +3,8 @@ import pool from '../config/databasePool';
 
 const router = express.Router();
 const repSelect = `
-  SELECT honorific, 
+  SELECT member_id,
+    honorific, 
     first_name, 
     last_name, 
     constituency, 
@@ -66,12 +67,12 @@ router.get('/federal', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/federal/:constituency', async (req: Request, res: Response) => {
-  const constituency = req.params.constituency.toLowerCase();
+router.get('/federal/:member_id', async (req: Request, res: Response) => {
+  const memberId = req.params.member_id.toLowerCase();
   const repStatement = `
     ${repSelect}
     ${federalSelect}
-    FROM federal_mps WHERE LOWER(constituency) = '${constituency}';
+    FROM federal_mps WHERE member_id = '${memberId}';
   `;
 
   try {
@@ -93,7 +94,7 @@ router.get('/ontario', async (req: Request, res: Response) => {
   const repStatement = `
     ${repSelect}
     ${ontarioSelect}
-    FROM federal_mps;
+    FROM ontario_mpps;
   `;
 
   try {
@@ -113,12 +114,12 @@ router.get('/ontario', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/ontario/:constituency', async (req: Request, res: Response) => {
-  const constituency = req.params.constituency.toLowerCase();
+router.get('/ontario/:member_id', async (req: Request, res: Response) => {
+  const member_id = req.params.member_id.toLowerCase();
   const repStatement = `
     ${repSelect}
     ${ontarioSelect}
-    FROM ontario_mpps WHERE LOWER(constituency) = '${constituency}';
+    FROM ontario_mpps WHERE member_id = '${member_id}';
   `;
 
   try {

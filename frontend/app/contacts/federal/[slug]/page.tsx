@@ -1,9 +1,9 @@
 import { RepColumns } from "@/components/ui/rep-table/columns"
 import { getDataForRepTable } from "@/components/ui/rep-table/rep-table";
 import RepTable from "@/components/ui/rep-table/rep-table";
-import OfficeCardStack from "@/components/ui/office-card-stack/office-card-stack";
+import OfficeCardStack from "@/components/ui/contact/office-card-stack/office-card-stack";
 
-import { OfficeInfo, getDataForOfficeInfo } from "@/components/ui/office-card-stack/office-info";
+import { OfficeInfo, getDataForOfficeInfo } from "@/components/ui/contact/office-card-stack/office-info";
 
 import { FEDERAL_REPRESENTATIVE_ENDPOINT } from "@/config/constants";
 import { FEDERAL_OFFICE_ENDPOINT } from "@/config/constants";
