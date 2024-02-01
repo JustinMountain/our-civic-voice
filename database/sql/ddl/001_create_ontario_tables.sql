@@ -3,8 +3,8 @@
 
 -- Create Ontario tables
 CREATE TABLE IF NOT EXISTS ontario_mpps (
-  member_id INT,
-  constituency VARCHAR(255) PRIMARY KEY,
+  member_id INT PRIMARY KEY,
+  constituency VARCHAR(255),
   parliamentary_role VARCHAR(255),
   party VARCHAR(255),
   first_name VARCHAR(255),
@@ -14,8 +14,9 @@ CREATE TABLE IF NOT EXISTS ontario_mpps (
 );
 
 CREATE TABLE IF NOT EXISTS ontario_mpp_offices (
+  member_id INT REFERENCES ontario_mpps(member_id),
   office_id SERIAL PRIMARY KEY,
-  constituency VARCHAR(255) REFERENCES ontario_mpps(constituency),
+  constituency VARCHAR(255),
   office_type VARCHAR(255),
   office_address VARCHAR(255),
   office_city VARCHAR(255),

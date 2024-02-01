@@ -31,10 +31,13 @@ export async function populateOntarioMemberTables(): Promise<Boolean> {
 
       const res = await client.query(existsQuery);
       const exists = res.rows[0].exists;
-      if (!exists) {
+      if (!exists && mppQuery !== null) {
         await client.query(mppQuery);
       }
-      await client.query(mppOfficeQuery);
+
+      if (mppOfficeQuery !== null) {
+        await client.query(mppOfficeQuery);
+      }
     }
 
     console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all Ontario Member info!${CONSOLE_RESET}`);
@@ -88,11 +91,14 @@ function createExistQuery(record: string[]): dbQuery {
  * @param record A single record representing one Ontario MPP and their office contact info.
  * @returns A dbQuery object to use with a client connection.
  */
-function createMPPQuery(record: string[]): dbQuery {
+function createMPPQuery(record: string[]): dbQuery | null {
   let memID: number = 0;
   if (parseInt(record[17], 10)) {
     memID = parseInt(record[17], 10);
+  } else {
+    return null;
   }
+
   const mppQuery = {
     text: `INSERT INTO ontario_mpps (
       member_id,
@@ -122,9 +128,17 @@ function createMPPQuery(record: string[]): dbQuery {
  * @param record A single record representing one Ontario MPP and their office contact info.
  * @returns A dbQuery object to use with a client connection.
  */
-function createMPPOfficeQuery(record: string[]): dbQuery {
+function createMPPOfficeQuery(record: string[]): dbQuery | null {
+  let memID: number = 0;
+  if (parseInt(record[17], 10)) {
+    memID = parseInt(record[17], 10);
+  } else {
+    return null;
+  }
+
   const mppOfficeQuery = {
     text: `INSERT INTO ontario_mpp_offices (
+      member_id,
       constituency,
       office_type,
       office_address,
@@ -138,8 +152,9 @@ function createMPPOfficeQuery(record: string[]): dbQuery {
       office_toll_free,
       office_tty,
       updated_date)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())`,
     values: [
+      memID, // CHECK THIS
       record[14].trim(),
       record[3].trim(),
       record[4].trim(),
