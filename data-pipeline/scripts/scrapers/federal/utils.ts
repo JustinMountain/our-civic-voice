@@ -5,6 +5,7 @@ import { CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchURL = `${baseURL}/members/en/search`;
 
+// Interfaces for Federal Representative Data
 export interface MemberData {
   honorific: string;
   firstName: string;
@@ -16,7 +17,7 @@ export interface MemberData {
   timeRetrieved: number;
 }
 
-export interface ScrapedData {
+export interface ScrapedMemberData {
   source?: (string | undefined);
   constituency?: string;
   member_id?: number;
@@ -35,20 +36,41 @@ export interface MergedMemberData {
   source?: (string | undefined);
 }
 
-export async function fetchFederalMPURLs(axiosInstance: AxiosInstance): Promise<ScrapedData[]> {
+// Interfaces for Federal Office Data
+export interface MemberContactData {
+  member_id: number;
+  name: string;
+  constituency: string;
+  email: string;
+  website: string;
+  office_type: string;
+  office_title: string;
+  office_address: string;
+  office_city: string;
+  office_province: string;
+  office_postal_code: string;
+  office_note: string;
+  office_phone: string;
+  office_fax: string;
+  source: string;
+  timeRetrieved: number;
+}
+
+
+export async function fetchFederalMPURLs(axiosInstance: AxiosInstance): Promise<ScrapedMemberData[]> {
   console.log(`Fetching Federal MP URLs from  ${federalMemberSearchURL}...`);
   try {
     const allMembersPage = await axiosInstance.get(federalMemberSearchURL);
     const selector = cheerio.load(allMembersPage.data);
 
-    const urlInfo: ScrapedData[] = [];
+    const urlInfo: ScrapedMemberData[] = [];
 
     selector(".ce-mip-mp-tile-container > a").map((i, el) => {
       const url = selector(el).attr("href");
       let id = 0;
       url ? id = extractNumber(url) : id = 0;
 
-      const thisMember: ScrapedData = {
+      const thisMember: ScrapedMemberData = {
         source: url,
         constituency: selector(el).find(".ce-mip-mp-constituency").text().trim(),
         member_id: id,
@@ -64,14 +86,14 @@ export async function fetchFederalMPURLs(axiosInstance: AxiosInstance): Promise<
   }
 }
 
-function extractNumber(inputString: string): number {
+export function extractNumber(inputString: string): number {
   // Regular expression to match digits inside parentheses
   const regex = /\((\d+)\)/;
   const match = inputString.match(regex);
   return match ? parseInt(match[1]) : 0;
 }
 
-export function mergeData(members: MemberData[], scraped: ScrapedData[]): MergedMemberData[] {
+export function mergeMemberData(members: MemberData[], scraped: ScrapedMemberData[]): MergedMemberData[] {
   // Create a map with constituency as key and MemberData as value
   const memberMap = new Map<string, MemberData>();
   members.forEach(member => {

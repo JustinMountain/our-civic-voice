@@ -8,25 +8,8 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config
 import { formatDateForFileName } from '../../../config/csvUtilities';
 import { checkForCSVUpdate } from '../../../config/csvUtilities';
 import { FED_MEMBER_CONTACT_DIRECTORY } from '../../../config/constants';
-
-// Interface to hold data for one office of a member
-interface MemberContactData {
-  name: string;
-  constituency: string;
-  email: string;
-  website: string;
-  office_type: string;
-  office_title: string;
-  office_address: string;
-  office_city: string;
-  office_province: string;
-  office_postal_code: string;
-  office_note: string;
-  office_phone: string;
-  office_fax: string;
-  source: string;
-  timeRetrieved: number;
-}
+import { MemberContactData } from './utils';
+import { extractNumber } from './utils';
 
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchURL = `${baseURL}/members/en/search`;
@@ -123,6 +106,7 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
 
   for (const oneMember of axiosResponse) {
     const selector = cheerio.load(oneMember.data);
+    const member_id = extractNumber(oneMember.url);
 
     // Retrieve Hill Office contact info
     if (selector('#contact .row .col-md-3 > h4').text() === 'Hill Office') {
@@ -140,6 +124,7 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
       }
 
       const thisMember: MemberContactData = {
+        member_id: member_id,
         name: selector('h1').first().text(),
         constituency: selector('.ce-mip-overview a').first().text(),
         email: selector('#contact a:eq(0)').text(),
@@ -210,6 +195,7 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
         }
   
         const thisMember: MemberContactData = {
+          member_id: member_id,
           name: selector('h1').first().text(),
           constituency: selector('.ce-mip-overview a').first().text(),
           email: selector('#contact a:eq(0)').text(),
@@ -232,6 +218,7 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
   
     }
   }
+  console.log(`${data}`);
   return data;
 }
 
@@ -249,6 +236,7 @@ async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: 
     const csvWriter = createObjectCsvWriter({
       path: csvFilepath,
       header: [
+        { id: 'member_id', title: 'member_id'},
         { id: 'name', title: 'name' },
         { id: 'constituency', title: 'constituency' },
         { id: 'email', title: 'email' },

@@ -58,6 +58,7 @@ export async function populateFederalMemberOfficeTable(): Promise<Boolean> {
 function createMPOfficeQuery(record: string[]): dbQuery {
   const mppOfficeQuery = {
     text: `INSERT INTO federal_mp_offices (
+      member_id,
       constituency,
       general_email,
       website,
@@ -72,9 +73,9 @@ function createMPOfficeQuery(record: string[]): dbQuery {
       office_fax,
       source,
       updated_date) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 , $11, $12, $13, $14);`,
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 , $11, $12, $13, $14, $15);`,
     values: [
-      record[1],
+      record[0],
       record[2],
       record[3],
       record[4],
@@ -87,7 +88,8 @@ function createMPOfficeQuery(record: string[]): dbQuery {
       record[11],
       record[12],
       record[13],
-      new Date(parseInt(record[14])),
+      record[14],
+      new Date(parseInt(record[15])),
     ],
   }
   return mppOfficeQuery;

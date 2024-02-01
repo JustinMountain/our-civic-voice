@@ -8,8 +8,8 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config
 import { formatDateForFileName } from '../../../config/csvUtilities';
 import { checkForCSVUpdate } from '../../../config/csvUtilities';
 import { FED_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
-import { fetchFederalMPURLs, mergeData } from './utils';
-import { ScrapedData, MemberData, MergedMemberData } from './utils';
+import { fetchFederalMPURLs, mergeMemberData } from './utils';
+import { ScrapedMemberData, MemberData, MergedMemberData } from './utils';
 
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchXML = `${baseURL}/members/en/search/xml`;
@@ -41,8 +41,8 @@ export async function runFederalMPScraperToCSV(): Promise<Boolean> {
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance);
     const memberData: MemberData[] = await parseFederalMPData(parser, axiosResponse, timeRetrieved); 
-    const scrapedData: ScrapedData[] = await fetchFederalMPURLs(axiosInstance);
-    const merged: MergedMemberData[] = mergeData(memberData, scrapedData);
+    const scrapedMemberData: ScrapedMemberData[] = await fetchFederalMPURLs(axiosInstance);
+    const merged: MergedMemberData[] = mergeMemberData(memberData, scrapedMemberData);
 
     const isFileCreated = await createFederalMembersCSV(merged, csvFilepath);
 
