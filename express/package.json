@@ -1,6 +1,6 @@
 {
-  "name": "express",
-  "version": "1.0.0",
+  "name": "our-civic-voice-express",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {

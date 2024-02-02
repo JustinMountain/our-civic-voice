@@ -3,6 +3,9 @@ import { initFederalTablePopulation } from '../scripts/db-population/federal/ini
 import { initOntarioTablePopulation } from '../scripts/db-population/ontario/initOntarioTableFromCSV';
 import { updateAllRepMatView } from '../scripts/db-population/repMatView';
 
+/**
+ * Initializes the database by populating the tables with data from the CSV files on disk.
+ */
 async function initDatabase() {
   const timeStarted = Date.now();
   console.log(`Initializing the database from from CSV files on disk...`);

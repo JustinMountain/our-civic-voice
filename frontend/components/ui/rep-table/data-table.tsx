@@ -80,9 +80,9 @@ export function DataTable<TData, TValue>({
                     .map((cell) => (
                     <TableCell key={cell.id}>
                       <a href={row.getVisibleCells().at(5)?.getValue() as string === 'Provincial' ? (
-                        `/contacts/${getLowercaseValue(row.getVisibleCells().at(3))}/${row.getVisibleCells().at(0)?.getValue() as string }`
+                        `/browse/${getLowercaseValue(row.getVisibleCells().at(3))}/${row.getVisibleCells().at(0)?.getValue() as string }`
                       ) : (
-                        `/contacts/federal/${row.getVisibleCells().at(0)?.getValue() as string }`
+                        `/browse/federal/${row.getVisibleCells().at(0)?.getValue() as string }`
                       ) }>  
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </a>

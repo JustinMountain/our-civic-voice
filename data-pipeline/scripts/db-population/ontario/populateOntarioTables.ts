@@ -4,7 +4,7 @@ import { processCSVtoMemory } from '../../../config/populationUtilities';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
 import { ONT_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
 import { dbQuery } from '../../../config/populationUtilities';
-
+import { ONT_SOURCE } from '../../../config/constants';
 /**
  * Populates the ontario_mpps table with the data from the saved CSV files.
  * @returns True if successful, otherwise false.
@@ -77,10 +77,15 @@ async function retrieveDataForPopulation(): Promise<string[][]> {
  * @returns A dbQuery object to use with a client connection.
  */
 function createExistQuery(record: string[]): dbQuery {
+  let member_id = 0;
+  if (parseInt(record[17], 10)) {
+    member_id = parseInt(record[17], 10);
+  }
+  
   const existsQuery: dbQuery = {
-    text: 'SELECT EXISTS(SELECT 1 FROM ontario_mpps WHERE constituency = $1)',
+    text: 'SELECT EXISTS(SELECT 1 FROM ontario_mpps WHERE member_id = $1)',
     values: [
-      record[14],
+      member_id,
     ],
   };
   return existsQuery;
@@ -92,6 +97,7 @@ function createExistQuery(record: string[]): dbQuery {
  * @returns A dbQuery object to use with a client connection.
  */
 function createMPPQuery(record: string[]): dbQuery | null {
+  const source = ONT_SOURCE;
   let memID: number = 0;
   if (parseInt(record[17], 10)) {
     memID = parseInt(record[17], 10);
@@ -108,8 +114,9 @@ function createMPPQuery(record: string[]): dbQuery | null {
       first_name,
       last_name,
       honorific,
+      source,
       updated_date)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())`,
     values: [
       memID,
       record[14].trim(),
@@ -118,6 +125,7 @@ function createMPPQuery(record: string[]): dbQuery | null {
       record[1].trim(),
       record[2].trim(),
       record[0].trim(),
+      source
     ],
   };
   return mppQuery;
@@ -139,7 +147,6 @@ function createMPPOfficeQuery(record: string[]): dbQuery | null {
   const mppOfficeQuery = {
     text: `INSERT INTO ontario_mpp_offices (
       member_id,
-      constituency,
       office_type,
       office_address,
       office_city,
@@ -151,12 +158,12 @@ function createMPPOfficeQuery(record: string[]): dbQuery | null {
       office_fax,
       office_toll_free,
       office_tty,
+      source,
       updated_date)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())`,
     values: [
-      memID, // CHECK THIS
+      memID,
       record[14].trim(),
-      record[3].trim(),
       record[4].trim(),
       record[5].trim(),
       record[6].trim(),
@@ -167,6 +174,7 @@ function createMPPOfficeQuery(record: string[]): dbQuery | null {
       record[11].trim(),
       record[12].trim(),
       record[13].trim(),
+      ONT_SOURCE
     ],
   };
   return mppOfficeQuery;

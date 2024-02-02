@@ -23,7 +23,13 @@ const ontarioSelect = `
     'Provincial' AS gov_level
 `;
 
-router.get('/', async (req: Request, res: Response) => {
+/**
+ * Handle GET request to retrieve all representatives from the database.
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<Boolean>} - A promise that resolves to true if successful.
+ */
+router.get('/', async (req: Request, res: Response): Promise<Boolean> => {
   const repStatement = `
     ${repSelect}
     ${allSelect}
@@ -32,7 +38,6 @@ router.get('/', async (req: Request, res: Response) => {
 
   try {
     const client = await pool.connect();
-
     const reps = await client.query(repStatement);
 
     res.status(200).json(reps.rows); 
@@ -45,7 +50,13 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/federal', async (req: Request, res: Response) => {
+/**
+ * Handle GET request to retrieve Federal representatives from the database.
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<Boolean>} - A promise that resolves to true if successful.
+ */
+router.get('/federal', async (req: Request, res: Response): Promise<Boolean> => {
   const repStatement = `
     ${repSelect}
     ${federalSelect}
@@ -54,7 +65,6 @@ router.get('/federal', async (req: Request, res: Response) => {
 
   try {
     const client = await pool.connect();
-
     const reps = await client.query(repStatement);
 
     res.status(200).json(reps.rows); 
@@ -67,7 +77,13 @@ router.get('/federal', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/federal/:member_id', async (req: Request, res: Response) => {
+/**
+ * Handle GET request to retrieve a specific Federal Member's info from the database.
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<Boolean>} - A promise that resolves to true if successful.
+ */
+router.get('/federal/:member_id', async (req: Request, res: Response): Promise<Boolean> => {
   const memberId = req.params.member_id.toLowerCase();
   const repStatement = `
     ${repSelect}
@@ -77,7 +93,6 @@ router.get('/federal/:member_id', async (req: Request, res: Response) => {
 
   try {
     const client = await pool.connect();
-
     const reps = await client.query(repStatement);
 
     res.status(200).json(reps.rows); 
@@ -90,7 +105,13 @@ router.get('/federal/:member_id', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/ontario', async (req: Request, res: Response) => {
+/**
+ * Handle GET request to retrieve Ontario representatives from the database.
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<Boolean>} - A promise that resolves to true if successful.
+ */
+router.get('/ontario', async (req: Request, res: Response): Promise<Boolean> => {
   const repStatement = `
     ${repSelect}
     ${ontarioSelect}
@@ -99,10 +120,7 @@ router.get('/ontario', async (req: Request, res: Response) => {
 
   try {
     const client = await pool.connect();
-
     const reps = await client.query(repStatement);
-
-    // const reps = await client.query(`SELECT honorific, first_name, last_name, constituency, party, 'Ontario' AS province_territory, 'Provincial' AS gov_level FROM ontario_mpps;`);
 
     res.status(200).json(reps.rows); 
     client.release();
@@ -114,7 +132,13 @@ router.get('/ontario', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/ontario/:member_id', async (req: Request, res: Response) => {
+/**
+ * Handle GET request to retrieve a specific Ontario Member's info from the database.
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<Boolean>} - A promise that resolves to true if successful.
+ */
+router.get('/ontario/:member_id', async (req: Request, res: Response): Promise<Boolean> => {
   const member_id = req.params.member_id.toLowerCase();
   const repStatement = `
     ${repSelect}
@@ -124,7 +148,6 @@ router.get('/ontario/:member_id', async (req: Request, res: Response) => {
 
   try {
     const client = await pool.connect();
-
     const reps = await client.query(repStatement);
 
     res.status(200).json(reps.rows); 

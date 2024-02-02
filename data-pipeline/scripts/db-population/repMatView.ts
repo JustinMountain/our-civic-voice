@@ -1,26 +1,6 @@
 import pool from '../../config/databasePool';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 
-// const dropAllRepMatViewQuery = `DROP MATERIALIZED VIEW IF EXISTS all_representatives`;
-// const updateAllRepMatViewQuery = `
-//   CREATE MATERIALIZED VIEW all_representatives AS
-//   SELECT honorific, 
-//     first_name, 
-//     last_name, 
-//     constituency, 
-//     party, 'Ontario' AS province_territory, 
-//     'Provincial' AS gov_level 
-//   FROM ontario_mpps 
-//   UNION
-//   SELECT honorific, 
-//     first_name, 
-//     last_name, 
-//     constituency, 
-//     party, 
-//     province_territory, 'Federal' AS gov_level 
-//   FROM federal_mps;
-// `;
-
 const refreshMatViewQuery = `REFRESH MATERIALIZED VIEW all_representatives`;
 
 /**

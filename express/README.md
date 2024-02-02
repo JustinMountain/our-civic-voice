@@ -1,14 +1,20 @@
 # Express REST API
 
-The Express REST API is being built behind nginx and is available over HTTP via the docker host. 
+The REST API has been build with Express and is currently available via port `3001` on the docker host.
 
 ## REST Endpoints
 
-The following GET endpoints need to be created:
+The following GET endpoints have been established:
 
-1. The `/representatives/` endpoint will require a Materialized View with *Honorific*, *Constituency*, *Prov/Territory*, and *Party*, as well as the *Level of Government*. 
-2. The `/representatives/federal`endpoint should only respond with Federal MPs.
-3. The `/representatives/ontario`endpoint should only respond with Ontario MPPs.
-4. The `/representatives/:constituency`endpoint should respond with each of the offices associated with the respective constituency.
+For the `/representatives` endpoint:
 
-> This assumes that the constituencies all have different names at the federal and provincial levels. 
+1. The `/representatives` endpoint returns the information from the *all_representatives* Materialized View. 
+2. The `/representatives/federal` endpoint returns the information from the *federal_mps* Table.
+3. The `/representatives/federal/:id` endpoint returns the information for a specific member in the *federal_mps* Table.
+4. The `/representatives/ontario` endpoint returns the information from the *ontario_mpps* Table.
+5. The `/representatives/ontario/:id` endpoint returns the information for a specific member in the *ontario_mpps* Table.
+
+For the `/offices` endpoint:
+
+1. The `/offices/federal/:id` endpoint returns the information for a specific member's office info in the *federal_mp_offices* Table.
+2. The `/offices/ontario/:id` endpoint returns the information for a specific member's office info in the *ontario_mpp_offices* Table.

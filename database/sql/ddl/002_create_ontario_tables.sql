@@ -10,13 +10,13 @@ CREATE TABLE IF NOT EXISTS ontario_mpps (
   first_name VARCHAR(255),
   last_name VARCHAR(255),
   honorific VARCHAR(255),
-  updated_date TIMESTAMP
+  updated_date TIMESTAMP,
+  source VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS ontario_mpp_offices (
   member_id INT REFERENCES ontario_mpps(member_id),
   office_id SERIAL PRIMARY KEY,
-  constituency VARCHAR(255),
   office_type VARCHAR(255),
   office_address VARCHAR(255),
   office_city VARCHAR(255),
@@ -28,5 +28,6 @@ CREATE TABLE IF NOT EXISTS ontario_mpp_offices (
   office_fax VARCHAR(20),
   office_toll_free VARCHAR(20),
   office_tty VARCHAR(20),
+  source VARCHAR(255),
   updated_date TIMESTAMP
 );

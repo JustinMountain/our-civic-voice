@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS federal_mps (
 CREATE TABLE IF NOT EXISTS federal_mp_offices (
   member_id INT REFERENCES federal_mps(member_id),
   office_id SERIAL PRIMARY KEY,
-  constituency VARCHAR(255),
   general_email VARCHAR(255),
   website VARCHAR(255),
   office_type VARCHAR(255),

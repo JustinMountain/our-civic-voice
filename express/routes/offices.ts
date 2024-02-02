@@ -5,7 +5,6 @@ const router = express.Router();
 const officeSelect = `
   SELECT member_id,
     office_id,
-    constituency,
     general_email,
     office_type,
     office_address,
@@ -17,7 +16,13 @@ const officeSelect = `
     updated_date
 `;
 
-router.get('/federal/:member_id', async (req: Request, res: Response) => {
+/**
+ * Handle GET request to retrieve a specific Federal Member's office info from the database.
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<boolean>} - A promise that resolves to true if successful.
+ */
+router.get('/federal/:member_id', async (req: Request, res: Response): Promise<Boolean> => {
   const member_id = req.params.member_id;
   const officeStatement = `
     ${officeSelect}
@@ -39,7 +44,13 @@ router.get('/federal/:member_id', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/ontario/:member_id', async (req: Request, res: Response) => {
+/**
+ * Handle GET request to retrieve a specific Ontario Member's office info from the database.
+ * @param {Request} req - The Express request object.
+ * @param {Response} res - The Express response object.
+ * @returns {Promise<boolean>} - A promise that resolves to true if successful.
+ */
+router.get('/ontario/:member_id', async (req: Request, res: Response): Promise<Boolean> => {
   const member_id = req.params.member_id.toLowerCase();
   const officeStatement = `
     ${officeSelect}

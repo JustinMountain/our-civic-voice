@@ -2,6 +2,7 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/const
 import { runFederalUpdate } from './runFederalUpdate';
 import { runOntarioUpdate } from './runOntarioUpdate';
 import { updateAllRepMatView } from './db-population/repMatView';
+
 /**
  * Runs the all of the update processes to scrape, check for updates, and populate the database as needed.
  */
