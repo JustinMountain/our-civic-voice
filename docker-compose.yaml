@@ -1,23 +1,44 @@
 version: '3.8'
 services:
-  civic-voice-db:
-    container_name: civic-voice-db
+  nginx: 
+    container_name: ocv-nginx
+    build: ./nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    networks:
+      - ocv-network
+
+  frontend:
+    container_name: ocv-frontend
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - nginx
+      - backend-express
+    environment:
+      - REST_ENDPOINT=http://backend-express:3000 # optional
+    volumes: 
+      - ./frontend/:/usr/app/
+    networks:
+      - ocv-network
+
+  database:
+    container_name: ocv-postgres
     image: postgres:16.1-alpine
     restart: always
     environment:
       - POSTGRES_USER=${PG_USERNAME}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
-    ports:
-      - '5432:5432'
     volumes: 
-      - civic-voice-db:/var/lib/postgresql/data
+      - ocv-postgres:/var/lib/postgresql/data
       - ./database/sql/ddl/:/docker-entrypoint-initdb.d/
     networks:
       - ocv-network
 
-  civic-voice-pgadmin4:
+  pgadmin4:
     image: dpage/pgadmin4:8.1
-    container_name: civic-voice-pgadmin4
+    container_name: ocv-pgadmin4
     restart: always
     ports:
       - '8888:80'
@@ -30,23 +51,39 @@ services:
       - ocv-network
 
   data-pipeline:
-    container_name: data-pipeline
+    container_name: ocv-data-pipeline
     restart: unless-stopped
     build: ./data-pipeline
-    ports:
-      - '3000:3000'
     depends_on:
-      - civic-voice-db
+      - database
     environment:
       # DB container_name used for the database connection in /data-pipeline/config/databasePool.ts
-      - DB_HOST=civic-voice-db
+      - DB_HOST=database
     volumes: 
-      - ./data-pipeline/csv/:/usr/app/data-pipeline/csv/
+      - ./data-pipeline/:/usr/app/
+    ports: 
+      - 3000:3000
+    networks:
+      - ocv-network
+
+  backend-express:
+    container_name: ocv-backend-express
+    restart: unless-stopped
+    build: ./express
+    depends_on:
+      - database
+    environment:
+      # DB container_name used for the database connection in /data-pipeline/config/databasePool.ts
+      - DB_HOST=database
+    ports:
+      - 3001:3000
+    volumes: 
+      - ./express/:/usr/app/
     networks:
       - ocv-network
 
 networks:
   ocv-network:
 volumes:
-  civic-voice-db:
+  ocv-postgres:
   civic-voice-pgadmin4:

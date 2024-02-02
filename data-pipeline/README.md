@@ -21,13 +21,17 @@ As of version 0.1, changing the `DB_NAME` and `DB_NAME` environment variables fr
 
 ## Exposing the Update Scripts
 
-With the service running, visit `[host.address]:3000/scripts/update/scriptname` in a web browser. The following scriptnames are currently functional:
+As of version 0.2, the only way to access the updates scripts is through the exposed port in the `docker-compose.yaml` or by running them directly via `ts-node`. 
+
+Visit `[host.address]:3000/scripts/update/scriptname` in a web browser. The following scriptnames are currently functional:
 
 1. `/all` 
 2. `/federal`
 3. `/ontario`
 
 These endpoints will extract, transform, and load data for their respective tables.
+
+These scripts will eventually be built behind an *Admin* panel on the Frontend and be set to run nightly via CRON on the host machine, before eventually being deployed serverless via Lambda.
 
 ## Note on Security
 

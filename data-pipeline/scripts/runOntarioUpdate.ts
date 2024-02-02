@@ -5,7 +5,7 @@ import { initOntarioTablePopulation } from './db-population/ontario/initOntarioT
 /**
  * Runs the Ontario update process to scrape, check for updates, and populate the database as needed.
  */
-export async function runOntarioUpdate() {
+export async function runOntarioUpdate(): Promise<Boolean> {
   const timeStarted = Date.now();
   console.log(`Checking for updates to Federal tables from public sources...`);
 
@@ -19,5 +19,6 @@ export async function runOntarioUpdate() {
     console.error(`${CONSOLE_ERROR}Encountered an error while updating the Ontario sources: ${CONSOLE_RESET}`, error);
     throw error;
   }
-  console.log(`${CONSOLE_HIGHLIGHT}Database was updated from public sources in ${Date.now() - timeStarted}ms!${CONSOLE_RESET}`);   
+  console.log(`${CONSOLE_HIGHLIGHT}Database was updated from public sources in ${Date.now() - timeStarted}ms!${CONSOLE_RESET}`);  
+  return true; 
 }

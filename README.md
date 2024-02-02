@@ -1,10 +1,8 @@
 [![Our Civic Voice banner image](/images/banner.jpg "Our Civic Voice")](/images/banner.jpg)
 
-# About
-
 Our Civic Voice is a portal for connecting Canadians with their elected representatives. 
 
-Version 0.1
+Version 0.2
 
 ## Starting the Application
 
@@ -19,6 +17,18 @@ PG_PASSWORD=postgres
 PGADMIN_EMAIL=admin@example.com
 PGADMIN_PASSWORD=strong-password
 ```
+
+## Exploring the Application
+
+With the program running in Docker, the application is available over HTTP via the docker host `http://host.address`. 
+
+Version 0.2 has included the following endpoints to explore the data in the application:
+
+1. `/browse`
+2. `/browse/federal`
+3. `/browse/ontario`
+
+Navigating to an individual member's page via these tables will display the relevant information for that member. 
 
 ## Running the Update Scripts
 
@@ -55,6 +65,32 @@ DELETE FROM federal_mps;
 
 ## Architecture
 
-Our Civic Voice is still a work in progress. The following represents the MVP architecture that I'm currently working towards:
+Our Civic Voice is still a work in progress. The following represents the MVP architecture that I'm currently working on:
 
 [![Architecture diagram image](/images/architecture.jpg "Planned Architecture")](/images/architecture.jpg)
+
+### Database Layer
+
+The PostgreSQL database is available within the stack via `civic-voice-db:5432` or externally by exposing port `5432` in the `docker-compose.yaml`.
+
+pgAdmin has been packaged with the application and is available via a web browser at `host-address:8888`.
+
+[Link to README](/database/README.md)
+
+### Data Pipeline Layer
+
+The functions running the ETL layer are temporarily available via port `3000` on the docker host. 
+
+[Link to README](/data-pipeline/README.md)
+
+### REST API
+
+The REST API has been build with Express and is currently available via port `3001` on the docker host.
+
+[Link to README](/express/README.md)
+
+### Next.js Frontend
+
+The Next.js frontend is currently being built behind nginx and is available over HTTP via the docker host `http://host.address`.
+
+[Link to README](/frontend/README.md)

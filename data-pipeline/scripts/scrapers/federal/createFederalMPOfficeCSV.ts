@@ -8,25 +8,8 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config
 import { formatDateForFileName } from '../../../config/csvUtilities';
 import { checkForCSVUpdate } from '../../../config/csvUtilities';
 import { FED_MEMBER_CONTACT_DIRECTORY } from '../../../config/constants';
-
-// Interface to hold data for one office of a member
-interface MemberContactData {
-  name: string;
-  constituency: string;
-  email: string;
-  website: string;
-  office_type: string;
-  office_title: string;
-  office_address: string;
-  office_city: string;
-  office_province: string;
-  office_postal_code: string;
-  office_note: string;
-  office_phone: string;
-  office_fax: string;
-  source: string;
-  timeRetrieved: number;
-}
+import { FederalMemberContactData } from './utils';
+import { extractNumber } from './utils';
 
 const baseURL = 'https://www.ourcommons.ca';
 const federalMemberSearchURL = `${baseURL}/members/en/search`;
@@ -52,7 +35,7 @@ export async function runFederalMPOfficeScraperToCSV(): Promise<Boolean> {
   console.log(`Starting the Federal MP Office scraper...`)
   try {
     const axiosResponse  = await fetchFederalMPData(axiosInstance, federalMemberSearchURL);
-    const data: MemberContactData[] = parseFederalMPOfficeData(axiosResponse, timeRetrieved);  
+    const data: FederalMemberContactData[] = parseFederalMPOfficeData(axiosResponse, timeRetrieved);  
     const isFileCreated = await createFederalMPOfficeCSV(data, csvFilepath);
 
     if (isFileCreated) {
@@ -115,14 +98,15 @@ async function fetchContactInfoInBatches(urls: string[], axiosInstance: AxiosIns
  * Helper function to parse the Federal MP data from the Parliament of Canada website.
  * @param axiosResponse The Axios Response object containing the HTML data.
  * @param timeRetrieved The time the data was retrieved.
- * @returns An array of MemberContactData objects, each representing a single office of an MP.
+ * @returns An array of FederalMemberContactData objects, each representing a single office of an MP.
  */
-function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): MemberContactData[] {
+function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): FederalMemberContactData[] {
   console.log('Parsing Federal MP data from URL...');
-  const data: MemberContactData[] = [];
+  const data: FederalMemberContactData[] = [];
 
   for (const oneMember of axiosResponse) {
     const selector = cheerio.load(oneMember.data);
+    const member_id = extractNumber(oneMember.url);
 
     // Retrieve Hill Office contact info
     if (selector('#contact .row .col-md-3 > h4').text() === 'Hill Office') {
@@ -139,9 +123,9 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
         }
       }
 
-      const thisMember: MemberContactData = {
+      const thisMember: FederalMemberContactData = {
+        member_id: member_id,
         name: selector('h1').first().text(),
-        constituency: selector('.ce-mip-overview a').first().text(),
         email: selector('#contact a:eq(0)').text(),
         website: selector('#contact a:eq(1)').text(),
         office_type: selector('#contact .row .col-md-3 > h4').text(),
@@ -209,9 +193,9 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
           }
         }
   
-        const thisMember: MemberContactData = {
+        const thisMember: FederalMemberContactData = {
+          member_id: member_id,
           name: selector('h1').first().text(),
-          constituency: selector('.ce-mip-overview a').first().text(),
           email: selector('#contact a:eq(0)').text(),
           website: selector('#contact a:eq(1)').text(),
           office_type: 'Constituency Office',
@@ -232,16 +216,17 @@ function parseFederalMPOfficeData(axiosResponse: any, timeRetrieved: number): Me
   
     }
   }
+  console.log(`${data}`);
   return data;
 }
 
 /**
  * Helper function to create a CSV file from the scraped data.
- * @param data An array of MemberContactData objects.
+ * @param data An array of FederalMemberContactData objects.
  * @param csvFilepath The filepath to write the CSV file to.
  * @returns True if the CSV file was created, false otherwise.
  */
-async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: string): Promise<Boolean> {
+async function createFederalMPOfficeCSV(data: FederalMemberContactData[], csvFilepath: string): Promise<Boolean> {
   console.log('Writing Federal MP contact info to CSV...');
 
   try {
@@ -249,6 +234,7 @@ async function createFederalMPOfficeCSV(data: MemberContactData[], csvFilepath: 
     const csvWriter = createObjectCsvWriter({
       path: csvFilepath,
       header: [
+        { id: 'member_id', title: 'member_id'},
         { id: 'name', title: 'name' },
         { id: 'constituency', title: 'constituency' },
         { id: 'email', title: 'email' },

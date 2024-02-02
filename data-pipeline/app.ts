@@ -15,6 +15,9 @@ const scriptActions = {
   'ontario': runOntarioUpdate,
 };
 
+/**
+ * Creates an endpoint to run different database update scripts.
+ */
 app.get('/scripts/update/:scriptname', async (req: Request, res: Response) => {
   const scriptName = req.params.scriptname.toLowerCase();
   const scriptToRun = scriptActions[scriptName as keyof typeof scriptActions];
@@ -34,6 +37,9 @@ app.get('/scripts/update/:scriptname', async (req: Request, res: Response) => {
 
 });
 
+/**
+ * Determines the port Express wrapper listens on internally.
+ */
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

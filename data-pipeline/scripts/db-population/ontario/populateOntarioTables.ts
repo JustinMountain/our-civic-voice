@@ -4,7 +4,7 @@ import { processCSVtoMemory } from '../../../config/populationUtilities';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
 import { ONT_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
 import { dbQuery } from '../../../config/populationUtilities';
-
+import { ONT_SOURCE } from '../../../config/constants';
 /**
  * Populates the ontario_mpps table with the data from the saved CSV files.
  * @returns True if successful, otherwise false.
@@ -31,10 +31,13 @@ export async function populateOntarioMemberTables(): Promise<Boolean> {
 
       const res = await client.query(existsQuery);
       const exists = res.rows[0].exists;
-      if (!exists) {
+      if (!exists && mppQuery !== null) {
         await client.query(mppQuery);
       }
-      await client.query(mppOfficeQuery);
+
+      if (mppOfficeQuery !== null) {
+        await client.query(mppOfficeQuery);
+      }
     }
 
     console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all Ontario Member info!${CONSOLE_RESET}`);
@@ -74,10 +77,15 @@ async function retrieveDataForPopulation(): Promise<string[][]> {
  * @returns A dbQuery object to use with a client connection.
  */
 function createExistQuery(record: string[]): dbQuery {
+  let member_id = 0;
+  if (parseInt(record[17], 10)) {
+    member_id = parseInt(record[17], 10);
+  }
+  
   const existsQuery: dbQuery = {
-    text: 'SELECT EXISTS(SELECT 1 FROM ontario_mpps WHERE constituency = $1)',
+    text: 'SELECT EXISTS(SELECT 1 FROM ontario_mpps WHERE member_id = $1)',
     values: [
-      record[14],
+      member_id,
     ],
   };
   return existsQuery;
@@ -88,11 +96,15 @@ function createExistQuery(record: string[]): dbQuery {
  * @param record A single record representing one Ontario MPP and their office contact info.
  * @returns A dbQuery object to use with a client connection.
  */
-function createMPPQuery(record: string[]): dbQuery {
+function createMPPQuery(record: string[]): dbQuery | null {
+  const source = ONT_SOURCE;
   let memID: number = 0;
   if (parseInt(record[17], 10)) {
     memID = parseInt(record[17], 10);
+  } else {
+    return null;
   }
+
   const mppQuery = {
     text: `INSERT INTO ontario_mpps (
       member_id,
@@ -102,16 +114,18 @@ function createMPPQuery(record: string[]): dbQuery {
       first_name,
       last_name,
       honorific,
+      source,
       updated_date)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())`,
     values: [
       memID,
-      record[14],
-      record[16],
-      record[15],
-      record[1],
-      record[2],
-      record[0],
+      record[14].trim(),
+      record[16].trim(),
+      record[15].trim(),
+      record[1].trim(),
+      record[2].trim(),
+      record[0].trim(),
+      source
     ],
   };
   return mppQuery;
@@ -122,10 +136,17 @@ function createMPPQuery(record: string[]): dbQuery {
  * @param record A single record representing one Ontario MPP and their office contact info.
  * @returns A dbQuery object to use with a client connection.
  */
-function createMPPOfficeQuery(record: string[]): dbQuery {
+function createMPPOfficeQuery(record: string[]): dbQuery | null {
+  let memID: number = 0;
+  if (parseInt(record[17], 10)) {
+    memID = parseInt(record[17], 10);
+  } else {
+    return null;
+  }
+
   const mppOfficeQuery = {
     text: `INSERT INTO ontario_mpp_offices (
-      constituency,
+      member_id,
       office_type,
       office_address,
       office_city,
@@ -137,21 +158,23 @@ function createMPPOfficeQuery(record: string[]): dbQuery {
       office_fax,
       office_toll_free,
       office_tty,
+      source,
       updated_date)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())`,
     values: [
-      record[14],
-      record[3],
-      record[4],
-      record[5],
-      record[6],
-      record[7],
-      record[8],
-      record[9],
-      record[10],
-      record[11],
-      record[12],
-      record[13],
+      memID,
+      record[14].trim(),
+      record[4].trim(),
+      record[5].trim(),
+      record[6].trim(),
+      record[7].trim(),
+      record[8].trim(),
+      record[9].trim(),
+      record[10].trim(),
+      record[11].trim(),
+      record[12].trim(),
+      record[13].trim(),
+      ONT_SOURCE
     ],
   };
   return mppOfficeQuery;

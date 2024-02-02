@@ -7,8 +7,9 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config
 import { formatDateForFileName } from '../../../config/csvUtilities';
 import { checkForCSVUpdate } from '../../../config/csvUtilities';
 import { ONT_MEMBER_INFO_DIRECTORY } from '../../../config/constants';
+import { ONT_SOURCE } from '../../../config/constants';
 
-const ontarioMPPContactInfoURL = 'https://www.ola.org/sites/default/files/node-files/office_csvs/offices-all.csv';
+const ontarioMPPContactInfoURL = `${ONT_SOURCE}`;
 
 const timeRetrieved = Date.now();
 const axiosInstance = axios.create({

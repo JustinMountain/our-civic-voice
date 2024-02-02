@@ -1,4 +1,4 @@
-node_modules/
+/**/node_modules/
 data-pipeline/*/csv-sources/*/archive/*
 
 /**/.env

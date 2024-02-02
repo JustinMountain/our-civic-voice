@@ -3,20 +3,22 @@
 
 -- Create Federal tables
 CREATE TABLE IF NOT EXISTS federal_mps (
+  member_id INT PRIMARY KEY,
   honorific VARCHAR(255),
   first_name VARCHAR(255),
   last_name VARCHAR(255),
-  constituency VARCHAR(255) PRIMARY KEY,
+  constituency VARCHAR(255),
   province_territory VARCHAR(255),
   party VARCHAR(255),
   active_from VARCHAR(255),
-  updated_date TIMESTAMP
+  updated_date TIMESTAMP,
+  source VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS federal_mp_offices (
+  member_id INT REFERENCES federal_mps(member_id),
   office_id SERIAL PRIMARY KEY,
-  constituency VARCHAR(255) REFERENCES federal_mps(constituency),
-  email VARCHAR(255),
+  general_email VARCHAR(255),
   website VARCHAR(255),
   office_type VARCHAR(255),
   office_title VARCHAR(255),
