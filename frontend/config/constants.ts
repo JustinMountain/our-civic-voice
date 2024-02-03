@@ -1,5 +1,5 @@
-export const REST_API_URL = process.env.REST_ENDPOINT || 'http://backend-express:3000'; 
-// export const REST_API_URL = 'http://192.168.1.245:3001' // Dev server IP for connection
+// export const REST_API_URL = process.env.REST_ENDPOINT || 'http://backend-express:3000'; 
+export const REST_API_URL = 'http://192.168.1.245:3001' // Dev server IP for connection
 
 export const ALL_REPRESENTATIVE_ENDPOINT = 'representatives/';
 
