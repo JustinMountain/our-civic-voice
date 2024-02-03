@@ -17,7 +17,7 @@ services:
       - nginx
       - backend-express
     environment:
-      - REST_ENDPOINT=http://backend-express:3000 # optional
+      - REST_ENDPOINT=${REST_ENDPOINT} # optional
     volumes: 
       - ./frontend/:/usr/app/
     networks:

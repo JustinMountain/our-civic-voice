@@ -17,9 +17,6 @@ RUN npm install -g typescript
 # Copy all filess
 COPY ./ ./
 
-# Build app
-RUN npm run build
-
 # Expose the listening port
 EXPOSE 3000
 
@@ -30,4 +27,4 @@ RUN chown -R node:node /usr/app
 USER node
 
 # Command to run when starting the container
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

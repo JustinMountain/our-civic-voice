@@ -22,14 +22,14 @@ export async function getDataForRepInfo(path: string): Promise<RepInfo[]> {
     // For each row, adapt to the columns interface
     json.forEach((row: RepInfo) => {
       const thisOffice: RepInfo = {
-        member_id: number,
-        honorific: string,
-        first_name: string,
-        last_name: string,
-        constituency: string,
-        party: string,
-        province_territory: string,
-        gov_level: string,
+        member_id: row.member_id,
+        honorific: row.honorific,
+        first_name: row.first_name,
+        last_name: row.last_name,
+        constituency: row.constituency,
+        party: row.party,
+        province_territory: row.province_territory,
+        gov_level: row.gov_level,
       }
       officeArray.push(thisOffice);
     });
