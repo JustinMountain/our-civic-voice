@@ -46,7 +46,7 @@ export default function Header() {
                       2xl:px-0'>
           <NavigationMenu>
             <NavigationMenuList>
-              <Link href="/docs" legacyBehavior passHref>
+              <Link href="/" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Connect
                 </NavigationMenuLink>
