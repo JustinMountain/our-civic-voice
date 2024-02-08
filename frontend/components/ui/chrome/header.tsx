@@ -1,6 +1,18 @@
 import React from 'react';
 import { useState } from "react";
 import Link from 'next/link';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu"
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
+import { cn } from "@/lib/utils"
 
 export default function Header() {
 
@@ -11,38 +23,79 @@ export default function Header() {
     setBtnState(btnState => !btnState);
   };
   
+  const browse: { title: string; href: string }[] = [
+    {
+      title: "Federal",
+      href: "/browse/federal",
+    },
+    {
+      title: "Ontario",
+      href: "/browse/ontario",
+    },
+    {
+      title: "All",
+      href: "/browse",
+    }
+  ]
 
   return (
     <header className="bg-primary top-0" id="top">
-      <div className='flex flex-col px-4 py-6 max-w-7xl m-auto text-lg
-                      md:flex-row md:px-8
+      <div className='flex flex-row justify-end px-4 py-6 max-w-7xl m-auto text-lg text-white
+                      md:px-8
                       xl:py-8
                       2xl:px-0'>
-        <div className="flex my-auto justify-between 
-                        md:w-1/2 md:justify-start">
-          <div>
-            <h1 className='control-link-color'>
-              <Link href="/">
-                Our Civic Voice
+          <NavigationMenu>
+            <NavigationMenuList>
+              <Link href="/docs" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Connect
+                </NavigationMenuLink>
               </Link>
-            </h1>
-          </div>
-          <button 
-            className='my-auto justify-end 
-                        md:hidden'
-            onClick={handleClick}>
-            <div>
-              <div className='bg-light w-12 h-0.5 my-1'></div>
-              <div className='bg-light w-12 h-0.5 my-1'></div>
-              <div className='bg-light w-12 h-0.5 my-1'></div>
-            </div>
-          </button> 
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Browse</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="gap-3 p-4 w-48">
+                    {browse.map((item) => (
+                      <ListItem
+                        key={item.title}
+                        title={item.title}
+                        href={item.href}
+                      >
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
-        <div className={`justify-end absolute w-screen top-16 right-0 pb-8
-                          md:flex md:w-1/2 md:static md:bg-transparent md:pr-0 md:pb-0 ${buttonAddClass}`}>
-          {/* <MainNav color={color} /> */}
-        </div>
-      </div>
     </header>
   );
 };
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
