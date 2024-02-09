@@ -5,6 +5,7 @@ import { getDataForRepTable } from "@/components/ui/rep-table/rep-table";
 import OfficeCardStack from "@/components/ui/contact/office-card-stack/office-card-stack";
 import HeroComponent from "@/components/ui/hero/hero";
 import RepInfo from "@/components/ui/hero/rep-info";
+import Footer from "@/components/ui/chrome/footer";
 
 import { OfficeInfo, getDataForOfficeInfo } from "@/components/ui/contact/office-card-stack/office-info";
 
@@ -25,6 +26,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
       </HeroComponent>
 
       <OfficeCardStack data={officeData} />
+
+      <Footer />
     </div>
   )
 }
