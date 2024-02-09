@@ -42,8 +42,7 @@ export default function Header() {
     <header className="bg-primary top-0" id="top">
       <div className='flex flex-row justify-end px-4 py-6 max-w-7xl m-auto text-lg text-white
                       md:px-8
-                      xl:py-8
-                      2xl:px-0'>
+                      xl:py-8'>
           <NavigationMenu>
             <NavigationMenuList>
               <Link href="/" legacyBehavior passHref>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Header from "@/components/ui/chrome/header";
+import HeroForm from "@/components/ui/hero/main-form";
 
 interface HeroHomeProps {
   title: string;
@@ -11,7 +12,7 @@ const HeroHome: React.FC<HeroHomeProps> = ({ title }) => {
     <section className='bg-primary text-light m-auto
                         md:text-left'>
       <div className="mx-auto
-                        md:grid md:grid-cols-2 align-bottom
+                        md:grid md:grid-cols-2 align-start
                         ">
         <div className="md:row-start-1 md:row-end-2
                         md:col-start-2 md:col-end-3">
@@ -22,11 +23,15 @@ const HeroHome: React.FC<HeroHomeProps> = ({ title }) => {
                         md:row-start-2 md:row-end-3
                         md:col-start-2 md:col-end-3 md:max-w-xl">
           <h1 className="text-5xl text-white text-center pt-4 pb-8
-                        md:pt-0 md:pb-96">
+                        md:pt-0">
             {title}
           </h1>
+          <div className="pb-8">
+            <HeroForm />
 
-          {/* This is where I should be able to dynamically add a div */}
+            {/* This is where I should be able to dynamically add a div */}
+
+          </div>
         </div>
 
         <div className="md:col-start-1 md:col-end-2 
