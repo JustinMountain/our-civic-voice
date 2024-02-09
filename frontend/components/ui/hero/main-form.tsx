@@ -51,7 +51,7 @@ const formSchema = z.object({
   }),
 })
  
-export default function HeroForm() {
+export default function MainForm() {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,7 +69,8 @@ export default function HeroForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 bg-muted p-8 rounded-xl">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 bg-muted p-8 rounded-xl mx-4 
+                                                              md:min-w-96">
 
         <FormField
           control={form.control}

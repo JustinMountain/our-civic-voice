@@ -40,7 +40,8 @@ export default function Header() {
 
   return (
     <header className="bg-primary top-0" id="top">
-      <div className='flex flex-row justify-end px-4 py-6 max-w-7xl m-auto text-lg text-white
+      <h1 className="sr-only">Our Civic Voice</h1>
+      <div className='flex flex-row justify-end px-4 py-6 max-w-7xl m-auto text-lg text-light
                       md:px-8
                       xl:py-8'>
           <NavigationMenu>

@@ -4,6 +4,8 @@
  
 @layer base {
   :root {
+    --light: 0 0% 96.1%; /* Same as muted */
+
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
 
@@ -72,5 +74,16 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .sr-only {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
   }
 }
