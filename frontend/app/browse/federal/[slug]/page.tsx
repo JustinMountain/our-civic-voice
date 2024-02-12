@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const officeData: OfficeInfo[] = await getDataForOfficeInfo(`${FEDERAL_OFFICE_ENDPOINT}${slug}`);
 
   return (
-    <div className="container mx-auto p-0">
+    <div className="mx-auto p-0">
 
       <HeroComponent title={repData[0].name}>
         <RepInfo data={repData} />

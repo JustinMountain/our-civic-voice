@@ -11,7 +11,7 @@ const HeroComponent: React.FC<HeroProps> = ({ title, children }) => {
   return (
     <section className='bg-primary m-auto
                         md:text-left'>
-      <div className="mx-auto
+      <div className="container p-0 mx-auto
                         md:grid md:grid-cols-2 align-start
                         ">
         <div className="md:row-start-1 md:row-end-2

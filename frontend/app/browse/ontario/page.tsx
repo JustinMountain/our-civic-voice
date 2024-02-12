@@ -12,7 +12,7 @@ export default async function OntarioRepresentatives() {
   const data: RepColumns[] = await getDataForRepTable(ONTARIO_REPRESENTATIVE_ENDPOINT)
 
   return (
-    <div className="container mx-auto p-0">
+    <div className="mx-auto p-0">
       <HeroComponent title="Browse Ontario Reps">
         <MainForm />
       </HeroComponent>

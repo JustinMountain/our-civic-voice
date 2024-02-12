@@ -12,7 +12,7 @@ export default async function FederalRepresentatives() {
   const data: RepColumns[] = await getDataForRepTable(FEDERAL_REPRESENTATIVE_ENDPOINT)
 
   return (
-    <div className="container mx-auto p-0">
+    <div className="mx-auto p-0">
       <HeroComponent title="Browse Federal Reps">
         <MainForm />
       </HeroComponent>

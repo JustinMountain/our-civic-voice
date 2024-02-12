@@ -43,7 +43,7 @@ export async function getDataForRepTable(path: string): Promise<RepColumns[]> {
 
 export default async function RepTable(props: {data: RepColumns[]}) {
   return (
-    <div className="container mx-auto py-10">
+    <div className="max-w-7xl p-4 mx-auto py-10">
       <DataTable columns={columns} data={props.data} />
     </div>
   )

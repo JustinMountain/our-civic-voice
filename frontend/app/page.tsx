@@ -12,7 +12,7 @@ export default async function Representatives() {
   const data: RepColumns[] = await getDataForRepTable(ALL_REPRESENTATIVE_ENDPOINT)
 
   return (
-    <div className="container mx-auto p-0">
+    <div className="mx-auto p-0">
       <HeroComponent title="Our Civic Voice">
         <MainForm />
       </HeroComponent>
