@@ -76,7 +76,11 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
           </div>
           <div className="text-right">
             <Popover>
-              <PopoverTrigger>Source</PopoverTrigger>
+              <PopoverTrigger>
+                <p className="text-sm text-muted-foreground">
+                  Source
+                </p>
+              </PopoverTrigger>
               <PopoverContent>Updated: {formattedDate}</PopoverContent>
             </Popover>
           </div>

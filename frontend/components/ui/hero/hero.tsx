@@ -22,7 +22,7 @@ const HeroComponent: React.FC<HeroProps> = ({ title, children }) => {
         <div className="max-w-lg mx-auto 
                         md:row-start-2 md:row-end-3
                         md:col-start-2 md:col-end-3 md:max-w-xl">
-          <h2 className="text-5xl text-light text-center pt-4 pb-8
+          <h2 className="text-5xl text-light text-center px-4 pt-4 pb-8
                         md:pt-0">
             {title}
           </h2>

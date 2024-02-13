@@ -17,7 +17,7 @@ export default function RepInfo(props: {data: RepColumns[]}) {
 
   return (
 
-    <div>
+    <div className="px-4">
       <Card>
         <CardHeader>
           <CardDescription>{levelCapitalized} Constituency</CardDescription>
