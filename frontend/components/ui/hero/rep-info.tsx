@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { BellIcon, EyeNoneIcon, PersonIcon } from "@radix-ui/react-icons"
+import { SewingPinIcon, InfoCircledIcon } from "@radix-ui/react-icons"
 
 
 export default function RepInfo(props: {data: RepColumns[]}) {
@@ -24,8 +24,11 @@ export default function RepInfo(props: {data: RepColumns[]}) {
           <CardTitle>{props.data[0].constituency}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-1">
-        <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-            <BellIcon className="mt-px h-5 w-5" />
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div>
+              <br />
+              <SewingPinIcon className="mt-px h-5 w-5" />
+            </div>
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">
                 Province / Territory
@@ -36,7 +39,10 @@ export default function RepInfo(props: {data: RepColumns[]}) {
             </div>
           </div>
           <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-            <BellIcon className="mt-px h-5 w-5" />
+            <div>
+              <br />
+              <InfoCircledIcon className="mt-px h-5 w-5" />
+            </div>
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">
                 Affiliation

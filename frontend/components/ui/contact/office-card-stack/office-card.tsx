@@ -7,7 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { BellIcon, EyeNoneIcon, PersonIcon } from "@radix-ui/react-icons"
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
+import { EnvelopeClosedIcon, FileTextIcon, BellIcon } from "@radix-ui/react-icons"
 
 export default async function OfficeCard(props: {data: OfficeInfo}) {
   const sourceDate = new Date(props.data.updated_date);
@@ -27,7 +34,11 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
         </CardHeader>
         <CardContent className="grid gap-1">
           <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-            <BellIcon className="mt-px h-5 w-5" />
+            <div>
+              <br />
+              <EnvelopeClosedIcon className="mt-px h-5 w-5" />
+            </div>
+
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Mailing Address</p>
               <p className="font-medium ">
@@ -38,7 +49,11 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
             </div>
           </div>
           <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-            <PersonIcon className="mt-px h-5 w-5" />
+            <div>
+              <br />
+              <BellIcon className="mt-px h-5 w-5" />
+            </div>
+
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Phone</p>
               <p className="font-medium ">
@@ -47,7 +62,11 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
             </div>
           </div>
           <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
-            <EyeNoneIcon className="mt-px h-5 w-5" />
+            <div>
+              <br />
+              <FileTextIcon className="mt-px h-5 w-5" />
+            </div>
+
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Fax</p>
               <p className="font-medium ">
@@ -56,8 +75,10 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
             </div>
           </div>
           <div className="text-right">
-            <span className="text-sm text-muted-foreground">Updated: </span> {formattedDate}
-            
+            <Popover>
+              <PopoverTrigger>Source</PopoverTrigger>
+              <PopoverContent>Updated: {formattedDate}</PopoverContent>
+            </Popover>
           </div>
         </CardContent>
       </Card>
