@@ -1,7 +1,7 @@
 "use client"
  
 import { ColumnDef } from "@tanstack/react-table"
-
+import { DataTableColumnHeader } from "./column-header"
 
 
 export type RepColumns = {
@@ -16,26 +16,38 @@ export type RepColumns = {
 export const columns: ColumnDef<RepColumns>[] = [
   {
     accessorKey: "member_id",
-    header: "member_id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="member_id" />
+    ),
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
+    ),
   },
   {
     accessorKey: "constituency",
-    header: "Constituency",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Constituency" />
+    ),
   },
   {
     accessorKey: "province_territory",
-    header: "Province/Territory",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Province/Territory" />
+    ),
   },
   {
     accessorKey: "party",
-    header: "Political Affiliation",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Political Affiliation" />
+    ),
   },
   {
     accessorKey: "gov_level",
-    header: "Level of Government",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Government Level" />
+    ),
   },
 ]

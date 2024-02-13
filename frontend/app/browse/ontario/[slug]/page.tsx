@@ -1,7 +1,11 @@
+"use client"
+
 import { RepColumns } from "@/components/ui/rep-table/columns"
 import { getDataForRepTable } from "@/components/ui/rep-table/rep-table";
-import RepTable from "@/components/ui/rep-table/rep-table";
 import OfficeCardStack from "@/components/ui/contact/office-card-stack/office-card-stack";
+import HeroComponent from "@/components/ui/hero/hero";
+import RepInfo from "@/components/ui/hero/rep-info";
+import Footer from "@/components/ui/chrome/footer";
 
 import { OfficeInfo, getDataForOfficeInfo } from "@/components/ui/contact/office-card-stack/office-info";
 
@@ -15,9 +19,14 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const officeData: OfficeInfo[] = await getDataForOfficeInfo(`${ONTARIO_OFFICE_ENDPOINT}${slug}`);
 
   return (
-    <div className="container mx-auto py-10">
-      <RepTable data={repData} />
+    <div className="mx-auto p-0">
+      <HeroComponent title={repData[0].name}>
+        <RepInfo data={repData} />
+      </HeroComponent>
+
       <OfficeCardStack data={officeData} />
+
+      <Footer />
     </div>
   )
 }
