@@ -1,7 +1,7 @@
 /**
  * Interface for the rep_info tables.
  */
-export interface repInfo {
+export interface RepInfo {
   member_id: number;
   time_retrieved: number;
   honorific: string;
@@ -19,7 +19,7 @@ export interface repInfo {
 /**
  * Interface for the office_info tables.
  */
-export interface officeInfo {
+export interface OfficeInfo {
   member_id: number;
   time_retrieved: number;
   office_id: string;
@@ -35,7 +35,6 @@ export interface officeInfo {
   office_email: string;
   office_toll_free: string;
   office_tty: string;
-  image_url: string;
   source_url: string;
 }
 

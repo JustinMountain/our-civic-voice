@@ -1,17 +1,22 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
+import { XMLParser } from 'fast-xml-parser';
 
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
+
+import { RepInfo } from '../tableInterfaces';
+
+
 import { scrapeFederalMPDataXML, 
   scrapeFederalMPPages, 
   scrapeFederalMPDataFromURLs } from "./extract/scrapeFederalMPs";
-
+import { parseFederalXML, parseFederalPages } from "./transform/parseResponses";
 
 
 const federalMemberSearchURL = `https://www.ourcommons.ca/members/en/search`;
 const federalMemberSearchXML = `https://www.ourcommons.ca/members/en/search/xml`;
 const timeRetrieved = Date.now();
-// const parser = new XMLParser();
+const parser = new XMLParser();
 
 
 const axiosInstance = axios.create({
@@ -40,11 +45,10 @@ async function runFederalPipeline() {
     const federalMPPages = await scrapeFederalMPPages(axiosInstance, federalMemberSearchURL);
     const federalMPDataFromURLs = await scrapeFederalMPDataFromURLs(axiosInstance, federalMPPages);
 
-    console.log(federalMPDataFromURLs);
-
-
+    const federalMPXMLData = await parseFederalXML(parser, federalMPXML);
+    const federalMPPageData = await parseFederalPages(federalMPDataFromURLs);
     
-
+    console.log(federalMPPageData);
     console.log(`${CONSOLE_HIGHLIGHT}Finished${CONSOLE_RESET} the Federal MP Data Pipeline in ${CONSOLE_HIGHLIGHT}${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`);
 
   } catch (error) {
