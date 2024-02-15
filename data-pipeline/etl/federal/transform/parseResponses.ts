@@ -5,7 +5,7 @@ import * as cheerio from "cheerio";
  * Represents data about a Federal member retrieved from XML.
  * @interface
  */
-interface FederalMemberXML {
+export interface FederalMemberXMLData {
   honorific: string;
   firstName: string;
   lastName: string;
@@ -18,20 +18,21 @@ interface FederalMemberXML {
  * Represents data from a Federal member's page.
  * @interface
  */
-interface FederalMemberPageData {
+export interface FederalMemberPageData {
   member_id: number;
+  constituency?: string;
   name: string;
   email: string;
   website: string;
-  office_type: string;
-  office_title: string;
-  office_address: string;
-  office_city: string;
-  office_province: string;
-  office_postal_code: string;
-  office_note: string;
-  office_phone: string;
-  office_fax: string;
+  officeType: string;
+  officeTitle: string;
+  officeAddress: string;
+  officeCity: string;
+  officeProvinceTerritory: string;
+  officePostalCode: string;
+  officeNote: string;
+  officePhone: string;
+  officeFax: string;
   image: string | undefined;
   source: string;
 }
@@ -54,13 +55,13 @@ function extractNumber(inputString: string): number {
  * @param axiosInstance The axios instance to use for the request.
  * @returns An array of FederalMemberXML objects, each representing a single MP found in the XML.
  */
-export function parseFederalXML(parser: XMLParser, axiosResponse: any): FederalMemberXML[] {
+export function parseFederalXML(parser: XMLParser, axiosResponse: any): FederalMemberXMLData[] {
   console.log('Parsing Federal MP data from retrieved XML...');
   const jsonObj = parser.parse(axiosResponse.data);
-  const data: FederalMemberXML[] = [];
+  const data: FederalMemberXMLData[] = [];
 
   for (const oneMember of jsonObj.ArrayOfMemberOfParliament.MemberOfParliament) {
-    const thisMember: FederalMemberXML = {
+    const thisMember: FederalMemberXMLData = {
       honorific: oneMember.PersonShortHonorific.trim(),
       firstName: oneMember.PersonOfficialFirstName.trim(),
       lastName: oneMember.PersonOfficialLastName.trim(),
@@ -104,18 +105,19 @@ export function parseFederalPages(axiosResponse: any): FederalMemberPageData[] {
 
       const thisMember: FederalMemberPageData = {
         member_id: member_id,
+        constituency: selector('.ce-mip-overview a').text().trim(),
         name: selector('h1').first().text().trim(),
         email: selector('#contact a:eq(0)').text().trim(),
         website: selector('#contact a:eq(1)').text().trim(),
-        office_type: selector('#contact .row .col-md-3 > h4').text().trim(),
-        office_title: selector('#contact .row .col-md-3 strong').first().text().trim(),
-        office_address: '',
-        office_city: 'Ottawa',
-        office_province: 'Ontario',
-        office_postal_code: 'K1A 0A6',
-        office_note: '* Mail may be sent postage-free to any member of Parliament.',
-        office_phone: phoneNumber,
-        office_fax: faxNumber,
+        officeType: selector('#contact .row .col-md-3 > h4').text().trim(),
+        officeTitle: selector('#contact .row .col-md-3 strong').first().text().trim(),
+        officeAddress: '',
+        officeCity: 'Ottawa',
+        officeProvinceTerritory: 'Ontario',
+        officePostalCode: 'K1A 0A6',
+        officeNote: '* Mail may be sent postage-free to any member of Parliament.',
+        officePhone: phoneNumber,
+        officeFax: faxNumber,
         image: selector('.ce-mip-mp-picture-container img').attr('src'),
         source: oneMember.url,
       };
@@ -170,18 +172,19 @@ export function parseFederalPages(axiosResponse: any): FederalMemberPageData[] {
   
         const thisMember: FederalMemberPageData = {
           member_id: member_id,
+          constituency: selector('.ce-mip-overview a').text().trim(),
           name: selector('h1').first().text().trim(),
           email: selector('#contact a:eq(0)').text().trim(),
           website: selector('#contact a:eq(1)').text().trim(),
-          office_type: 'Constituency Office',
-          office_title: selector(`.ce-mip-contact-constituency-office:nth-of-type(${i}) strong`).text().trim(),
-          office_address: officeAddress,
-          office_city: officeCity,
-          office_province: officeProvince,
-          office_postal_code: officePostalCode,
-          office_note: '',
-          office_phone: phoneNumber,
-          office_fax: faxNumber,
+          officeType: 'Constituency Office',
+          officeTitle: selector(`.ce-mip-contact-constituency-office:nth-of-type(${i}) strong`).text().trim(),
+          officeAddress: officeAddress,
+          officeCity: officeCity,
+          officeProvinceTerritory: officeProvince,
+          officePostalCode: officePostalCode,
+          officeNote: '',
+          officePhone: phoneNumber,
+          officeFax: faxNumber,
           image: selector('.ce-mip-mp-picture-container img').attr('src'),
           source: oneMember.url,
         };
@@ -191,6 +194,6 @@ export function parseFederalPages(axiosResponse: any): FederalMemberPageData[] {
   
     }
   }
-  console.log(`${data}`);
+  // console.log(`${data}`);
   return data;
 }
