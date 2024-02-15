@@ -6,8 +6,7 @@ import { formatDateForFileName } from '../../../config/csvUtilities';
 import { RepInfo } from '../../tableInterfaces';
 import { OfficeInfo } from '../../tableInterfaces';
 
-const FED_MEMBER_INFO_DIRECTORY = './csv/federal/member-info/';
-const FED_MEMBER_OFFICE_DIRECTORY = './csv/federal/office-info/';
+import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../../utilities';
 
 /**
  * Function to create a CSV file from the standardized Federal Representative data.

@@ -3,7 +3,7 @@ import { OfficeInfo } from '../../tableInterfaces';
 import { FederalMemberXMLData, FederalMemberPageData } from "./parseResponses";
 
 /**
- * Creates a standardized in-memory array used to create the table for the Federal MP data.
+ * Creates a standardized in-memory array used to populate the table for the Federal MP data.
  * @param pageData Parsed data from the Federal MP pages.
  * @param xmlData Parsed data from the Federal MP XML.
  * @returns Standardized RepInfo objects to use for DB insertion and CSV backup.
