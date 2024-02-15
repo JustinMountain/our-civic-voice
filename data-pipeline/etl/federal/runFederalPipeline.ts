@@ -12,11 +12,8 @@ import { parseFederalXML, parseFederalPages } from "./transform/parseResponses";
 
 import { standardizeFederalMPInfo, standardizeFederalMPOfficeInfo } from "./transform/standardizeParsedResponses";
 
+import { createFederalMembersCSV, createFederalMemberOfficeCSV } from "./load/memoryToCSV";
 
-const federalMemberSearchURL = `https://www.ourcommons.ca/members/en/search`;
-const federalMemberSearchXML = `https://www.ourcommons.ca/members/en/search/xml`;
-const timeRetrieved = Date.now();
-const parser = new XMLParser();
 
 
 const axiosInstance = axios.create({
@@ -38,21 +35,27 @@ axiosRetry(axiosInstance, {
 
 
 async function runFederalPipeline() {
+  const federalMemberSearchURL = `https://www.ourcommons.ca/members/en/search`;
+  const federalMemberSearchXML = `https://www.ourcommons.ca/members/en/search/xml`;
+  const timeRetrieved = Date.now();
+  const parser = new XMLParser();
+
   try {
     console.log(`Starting the Federal MP Data Pipeline.`)
 
-    // const federalMPXML = await scrapeFederalMPDataXML(axiosInstance, federalMemberSearchXML);
+    const federalMPXML = await scrapeFederalMPDataXML(axiosInstance, federalMemberSearchXML);
     const federalMPPages = await scrapeFederalMPPages(axiosInstance, federalMemberSearchURL);
     const federalMPDataFromURLs = await scrapeFederalMPDataFromURLs(axiosInstance, federalMPPages);
 
-    // const federalMPXMLData = await parseFederalXML(parser, federalMPXML);
+    const federalMPXMLData = await parseFederalXML(parser, federalMPXML);
     const federalMPPageData = await parseFederalPages(federalMPDataFromURLs);
 
-    // const standardizedRepInfo = standardizeFederalMPInfo(federalMPPageData, federalMPXMLData);
+    const standardizedRepInfo = standardizeFederalMPInfo(federalMPPageData, federalMPXMLData);
     const standardizedOfficeInfo = standardizeFederalMPOfficeInfo(federalMPPageData);
-    
-    console.log(standardizedOfficeInfo);
-    console.log(standardizedOfficeInfo.length);
+
+    const createdFederalRepCSV = await createFederalMembersCSV(standardizedRepInfo);
+    const createdFederalRepOfficeCSV = await createFederalMemberOfficeCSV(standardizedOfficeInfo);
+
     console.log(`${CONSOLE_HIGHLIGHT}Finished${CONSOLE_RESET} the Federal MP Data Pipeline in ${CONSOLE_HIGHLIGHT}${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`);
 
   } catch (error) {
