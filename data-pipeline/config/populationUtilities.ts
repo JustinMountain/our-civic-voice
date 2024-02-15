@@ -6,7 +6,7 @@ import fs from 'fs';
  */
 export interface dbQuery {
   text: string;
-  values: (string | number | Date)[];
+  values: (string | number | Date | undefined)[];
 }
 
 /**
