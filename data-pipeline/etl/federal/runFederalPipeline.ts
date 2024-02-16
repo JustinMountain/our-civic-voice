@@ -14,9 +14,15 @@ import { standardizeFederalMPInfo, standardizeFederalMPOfficeInfo } from "./tran
 
 import { createFederalMembersCSV, createFederalMemberOfficeCSV } from "./load/memoryToCSV";
 
-import { dropAllFederalTables, populateFederalMemberTable, populateFederalOfficeTable } from "./load/memoryToPostgres";
+import { populateFederalMemberTable, populateFederalOfficeTable } from "./load/memoryToPostgres";
 
-import { standardizeFederalRepCSVResponse } from "./transform/csvToMemory";
+import { mostRecentFederalRepCSVtoMemory } from "./transform/csvToMemory";
+
+import { checkForCSVUpdate } from '../utilities';
+
+import { initFederalTablePopulation } from './initFederalTablePopulation';
+
+import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../utilities';
 
 const axiosInstance = axios.create({
   headers: {
@@ -46,29 +52,36 @@ async function runFederalPipeline() {
     console.log(`Starting the Federal MP Data Pipeline.`)
 
     // Scrapers
-    // const federalMPXML = await scrapeFederalMPDataXML(axiosInstance, federalMemberSearchXML);
-    // const federalMPPages = await scrapeFederalMPPages(axiosInstance, federalMemberSearchURL);
-    // const federalMPDataFromURLs = await scrapeFederalMPDataFromURLs(axiosInstance, federalMPPages);
+    const federalMPXML = await scrapeFederalMPDataXML(axiosInstance, federalMemberSearchXML);
+    const federalMPPages = await scrapeFederalMPPages(axiosInstance, federalMemberSearchURL);
+    const federalMPDataFromURLs = await scrapeFederalMPDataFromURLs(axiosInstance, federalMPPages);
 
     // Parse scraped data to memory
-    // const federalMPXMLData = await parseFederalXML(parser, federalMPXML);
-    // const federalMPPageData = await parseFederalPages(federalMPDataFromURLs);
+    const federalMPXMLData = await parseFederalXML(parser, federalMPXML);
+    const federalMPPageData = await parseFederalPages(federalMPDataFromURLs);
 
     // Transform parsed data to standardized format
-    // const standardizedRepInfo = standardizeFederalMPInfo(federalMPPageData, federalMPXMLData);
-    // const standardizedOfficeInfo = standardizeFederalMPOfficeInfo(federalMPPageData);
+    const standardizedRepInfo = standardizeFederalMPInfo(federalMPPageData, federalMPXMLData);
+    const standardizedOfficeInfo = standardizeFederalMPOfficeInfo(federalMPPageData);
 
     // Creates CSV from standardized data
-    // const createdFederalRepCSV = await createFederalMembersCSV(standardizedRepInfo);
-    // const createdFederalRepOfficeCSV = await createFederalMemberOfficeCSV(standardizedOfficeInfo);
+    const createdFederalRepCSV = await createFederalMembersCSV(standardizedRepInfo);
+    const createdFederalRepOfficeCSV = await createFederalMemberOfficeCSV(standardizedOfficeInfo);
+    
+    // Checks created CSV files for updates
+    let isFederalRepCSVUpdated: Boolean = false;
+    let isFederalOfficeCSVUpdated: Boolean = false;
+    if (createdFederalRepCSV) {
+      isFederalRepCSVUpdated = await checkForCSVUpdate(FED_MEMBER_INFO_DIRECTORY);
+    }
+    if (createdFederalRepOfficeCSV) {
+      isFederalOfficeCSVUpdated = await checkForCSVUpdate(FED_MEMBER_OFFICE_DIRECTORY);
+    }
 
-    // Populates the database with the standardized data
-    await dropAllFederalTables();
-    // const populatedFederalRepPG = await populateFederalMemberTable(standardizedRepInfo);
-    // const populatedFederalOfficePG = await populateFederalOfficeTable(standardizedOfficeInfo);
-
-    const res = await standardizeFederalRepCSVResponse();
-    const populatedFederalRepPG = await populateFederalMemberTable(res);
+    // If either table was updated, re-initialize them
+    if (isFederalRepCSVUpdated || isFederalOfficeCSVUpdated) {
+      await initFederalTablePopulation();
+    }  
 
     console.log(`${CONSOLE_HIGHLIGHT}Finished${CONSOLE_RESET} the Federal MP Data Pipeline in ${CONSOLE_HIGHLIGHT}${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`);
 

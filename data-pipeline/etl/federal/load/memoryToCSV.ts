@@ -1,7 +1,7 @@
 import { createObjectCsvWriter } from 'csv-writer';
 
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
-import { formatDateForFileName } from '../../../config/csvUtilities';
+import { formatDateForFileName } from '../../utilities';
 
 import { RepInfo } from '../../tableInterfaces';
 import { OfficeInfo } from '../../tableInterfaces';
