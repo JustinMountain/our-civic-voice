@@ -3,10 +3,15 @@ import * as path from 'path';
 import { format } from "date-fns";
 import { parse } from 'csv-parse';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+export const CONSOLE_HIGHLIGHT = "\x1b[34m";
+export const CONSOLE_ERROR = "\x1b[31m";
+export const CONSOLE_RESET = "\x1b[0m";
 
 export const FED_MEMBER_INFO_DIRECTORY = './csv/federal/member-info/';
 export const FED_MEMBER_OFFICE_DIRECTORY = './csv/federal/office-info/';
+
+export const ONT_SOURCE = 'https://www.ola.org/sites/default/files/node-files/office_csvs/offices-all.csv'
+export const ONT_MEMBER_INFO_DIRECTORY = './csv/ontario/csv-download/';
 
 /**
  * Finds the most recent CSV file in the provided directory.
@@ -43,7 +48,7 @@ export function formatDateForFileName(timeRetrieved: number): string {
  * @param directory The directory to check for CSV files.
  * @returns True if there was a CSV update, otherwise false.
  */
-export async function checkForCSVUpdate(directory: string): Promise<Boolean> {
+export async function handleCSVUpdateConditions(directory: string): Promise<Boolean> {
   console.log(`Handling CSV file created in ${directory}...`)
   const allFiles = await findCSVFiles(directory);
 

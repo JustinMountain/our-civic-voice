@@ -2,7 +2,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { XMLParser } from 'fast-xml-parser';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../utilities';
 
 import { scrapeFederalMPDataXML, 
   scrapeFederalMPPages, 
@@ -18,7 +18,7 @@ import { populateFederalMemberTable, populateFederalOfficeTable } from "./load/m
 
 import { mostRecentFederalRepCSVtoMemory } from "./transform/csvToMemory";
 
-import { checkForCSVUpdate } from '../utilities';
+import { handleCSVUpdateConditions } from '../utilities';
 
 import { initFederalTablePopulation } from './initFederalTablePopulation';
 
@@ -39,9 +39,6 @@ axiosRetry(axiosInstance, {
   retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
 })  
   
-
-
-
 async function runFederalPipeline() {
   const federalMemberSearchURL = `https://www.ourcommons.ca/members/en/search`;
   const federalMemberSearchXML = `https://www.ourcommons.ca/members/en/search/xml`;
@@ -72,10 +69,10 @@ async function runFederalPipeline() {
     let isFederalRepCSVUpdated: Boolean = false;
     let isFederalOfficeCSVUpdated: Boolean = false;
     if (createdFederalRepCSV) {
-      isFederalRepCSVUpdated = await checkForCSVUpdate(FED_MEMBER_INFO_DIRECTORY);
+      isFederalRepCSVUpdated = await handleCSVUpdateConditions(FED_MEMBER_INFO_DIRECTORY);
     }
     if (createdFederalRepOfficeCSV) {
-      isFederalOfficeCSVUpdated = await checkForCSVUpdate(FED_MEMBER_OFFICE_DIRECTORY);
+      isFederalOfficeCSVUpdated = await handleCSVUpdateConditions(FED_MEMBER_OFFICE_DIRECTORY);
     }
 
     // If either table was updated, re-initialize them
