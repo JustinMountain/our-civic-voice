@@ -1,12 +1,12 @@
 import { createObjectCsvWriter } from 'csv-writer';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
 import { formatDateForFileName } from '../../utilities';
 
 import { RepInfo } from '../../tableInterfaces';
 import { OfficeInfo } from '../../tableInterfaces';
 
-import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../../utilities';
+import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../../constants';
 
 /**
  * Function to create a CSV file from the standardized Federal Representative data.

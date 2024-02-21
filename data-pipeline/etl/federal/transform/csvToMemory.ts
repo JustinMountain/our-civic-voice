@@ -2,7 +2,7 @@ import { parse } from 'csv-parse';
 import fs from 'fs-extra';
 
 import { findMostRecentCSVFile } from '../../utilities';
-import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../../utilities';
+import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../../constants';
 
 import { RepInfo, OfficeInfo } from '../../tableInterfaces';
 

@@ -2,7 +2,7 @@ import pool from '../../config/databasePool';
 
 // import { populateFederalMemberTable } from './populateFederalMemberTable';
 // import { populateFederalMemberOfficeTable } from './populateFederalMemberOfficeTable';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
 
 import { mostRecentFederalRepCSVtoMemory, mostRecentFederalOfficeCSVtoMemory } from './transform/csvToMemory';
 import { populateFederalMemberTable, populateFederalOfficeTable } from './load/memoryToPostgres';

@@ -2,7 +2,8 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { XMLParser } from 'fast-xml-parser';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../utilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
+import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../constants';
 
 import { scrapeFederalMPDataXML, 
   scrapeFederalMPPages, 
@@ -22,8 +23,6 @@ import { handleCSVUpdateConditions } from '../utilities';
 
 import { initFederalTablePopulation } from './initFederalTablePopulation';
 
-import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../utilities';
-
 const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'document/xml',
@@ -40,8 +39,6 @@ axiosRetry(axiosInstance, {
 })  
   
 async function runFederalPipeline() {
-  const federalMemberSearchURL = `https://www.ourcommons.ca/members/en/search`;
-  const federalMemberSearchXML = `https://www.ourcommons.ca/members/en/search/xml`;
   const timeRetrieved = Date.now();
   const parser = new XMLParser();
 
@@ -49,8 +46,8 @@ async function runFederalPipeline() {
     console.log(`Starting the Federal MP Data Pipeline.`)
 
     // Scrapers
-    const federalMPXML = await scrapeFederalMPDataXML(axiosInstance, federalMemberSearchXML);
-    const federalMPPages = await scrapeFederalMPPages(axiosInstance, federalMemberSearchURL);
+    const federalMPXML = await scrapeFederalMPDataXML(axiosInstance);
+    const federalMPPages = await scrapeFederalMPPages(axiosInstance);
     const federalMPDataFromURLs = await scrapeFederalMPDataFromURLs(axiosInstance, federalMPPages);
 
     // Parse scraped data to memory

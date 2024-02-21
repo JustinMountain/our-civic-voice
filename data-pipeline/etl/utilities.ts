@@ -2,16 +2,9 @@ import fs from 'fs-extra';
 import * as path from 'path';
 import { format } from "date-fns";
 import { parse } from 'csv-parse';
+import { AxiosInstance } from 'axios';
 
-export const CONSOLE_HIGHLIGHT = "\x1b[34m";
-export const CONSOLE_ERROR = "\x1b[31m";
-export const CONSOLE_RESET = "\x1b[0m";
-
-export const FED_MEMBER_INFO_DIRECTORY = './csv/federal/member-info/';
-export const FED_MEMBER_OFFICE_DIRECTORY = './csv/federal/office-info/';
-
-export const ONT_SOURCE = 'https://www.ola.org/sites/default/files/node-files/office_csvs/offices-all.csv'
-export const ONT_MEMBER_INFO_DIRECTORY = './csv/ontario/csv-download/';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './constants';
 
 /**
  * Finds the most recent CSV file in the provided directory.
@@ -156,5 +149,35 @@ async function checkCSVLength(directory: string, fileName: string): Promise<numb
   } catch (error) {
     console.error(`${CONSOLE_ERROR}Something went wrong reading the CSV file. ${CONSOLE_RESET}`);
     throw error; 
+  }
+}
+
+/**
+ * Helper function used for scraping batches of MPs.
+ * @param urls The URLs to scrape.
+ * @param axiosInstance The axios instance to use for the request.
+ * @param batchSize The number of URLs to scrape at a time.
+ * @returns The bulk contact info for each federal MP.
+ */
+export async function scrapeContactInfoInBatches(baseURL: string, memberURLs: string[], axiosInstance: AxiosInstance): Promise<any> {
+  const batchSize = 30;
+
+  let results: any[] = [];
+
+  try {
+    for (let i = 0; i < memberURLs.length; i += batchSize) {
+      const batch = memberURLs.slice(i, i + batchSize);
+      const batchResults = await Promise.all(batch.map(async url => {
+        const memberURL = `${baseURL}${url}`;
+        const response = await axiosInstance.get(memberURL);
+        return { url: memberURL, data: response.data };
+      }));
+      results = [...results, ...batchResults];
+    }
+    return results;
+  
+  } catch (error) {
+    console.error(`${CONSOLE_ERROR}Error during batch scraping for member info. ${CONSOLE_RESET}`);
+    throw error;
   }
 }

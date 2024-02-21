@@ -1,5 +1,5 @@
 import pool from '../../../config/databasePool';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../../config/constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
 import { dbQuery } from '../../../config/populationUtilities';
 
 import { RepInfo } from '../../tableInterfaces';

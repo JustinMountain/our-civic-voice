@@ -1,40 +1,24 @@
-import axios from 'axios';
 import { AxiosInstance } from 'axios';
-import axiosRetry from 'axios-retry';
 import { writeFile } from 'fs/promises';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../utilities';
-import { ONT_MEMBER_INFO_DIRECTORY } from '../../utilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
+import { ONT_MEMBER_INFO_DIRECTORY, ONT_CSV_SOURCE } from '../../constants';
 
 import { formatDateForFileName } from '../../utilities';
 
-const timeRetrieved = Date.now();
-const axiosInstance = axios.create({
-  headers: {
-    'Content-Type': 'document/xml',
-    'Accept': 'document/xml'
-  }
-});
-
-// Setup axios retry for status code 5xx and Network errors
-axiosRetry(axiosInstance, {
-  retries: 5,
-  retryDelay: (retryCount) => { return retryCount * 1000},
-  onRetry: (count, error, req) => { console.error(`${CONSOLE_ERROR}Retry attempt #${count}${CONSOLE_RESET} got ${error}`); },
-  retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
-})  
-
 /**
- * Helper function to fetch the Ontario MPP data from the source.
+ * Function to fetch the Ontario MPP data from the source.
  * @param axiosInstance The axios instance to use for the request.
  * @returns True if the file was downloaded successfully, false otherwise.
  */
-async function fetchOntarioMPPCSV(axiosInstance: AxiosInstance, ontarioMPPContactInfoURL: string): Promise<Boolean> {
-  console.log(`Fetching Ontario MPP data from ${ontarioMPPContactInfoURL}...`);
+export async function downloadOntarioMPPCSV(axiosInstance: AxiosInstance): Promise<Boolean> {
+  console.log(`Fetching Ontario MPP data from ${ONT_CSV_SOURCE}...`);
+  
+  const timeRetrieved = Date.now();
   const fileName = `${formatDateForFileName(timeRetrieved)}-ontario-mpps.csv`;
 
   try {
-    const response = await axiosInstance.get(ontarioMPPContactInfoURL, {
+    const response = await axiosInstance.get(ONT_CSV_SOURCE, {
       responseType: 'arraybuffer'
     });
   
@@ -46,7 +30,7 @@ async function fetchOntarioMPPCSV(axiosInstance: AxiosInstance, ontarioMPPContac
     }
     return true;
   } catch (error) {
-    console.error(`${CONSOLE_ERROR}Could not fetch data${CONSOLE_RESET} from ${ontarioMPPContactInfoURL}. `);
+    console.error(`${CONSOLE_ERROR}Could not fetch data${CONSOLE_RESET} from ${ONT_CSV_SOURCE}. `);
     throw error;
   }
 }
