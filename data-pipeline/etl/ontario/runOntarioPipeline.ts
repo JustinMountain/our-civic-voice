@@ -5,11 +5,12 @@ import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
 import { ONT_MEMBER_INFO_DIRECTORY } from '../constants';
 
 import { downloadOntarioMPPCSV } from './extract/downloadOntarioCSV';
-import { parseOntarioCSV } from './transform/parseResponses';
+import { parseOntarioCSV, parseOntarioPages } from './transform/parseResponses';
 import { handleCSVUpdateConditions } from '../utilities';
 
 import { scrapeOntarioMPPs, scrapeOntarioMPPDataFromURLs } from './extract/scrapeOntarioMPPs';
 
+import { standardizeOntarioMPPInfo, standardizeOntarioMPPOfficeInfo } from './transform/standardizeParsedResponses';
 
 const axiosInstance = axios.create({
   headers: {
@@ -30,6 +31,36 @@ axiosRetry(axiosInstance, {
 async function runOntarioPipeline() {
   const timeRetrieved = Date.now();
 
+  // const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_INFO_DIRECTORY);
+  // console.log(ontarioCSVData);
+
+  const ontarioMPPages = await scrapeOntarioMPPs(axiosInstance);
+  const ontarioMPDataFromURLs = await scrapeOntarioMPPDataFromURLs(axiosInstance, ontarioMPPages);
+
+  // Parse the scraped content into memory
+  const ontarioPageData = await parseOntarioPages(ontarioMPDataFromURLs);
+
+  // Parse the content of the source CSV file
+  const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_INFO_DIRECTORY);
+
+  // const standardizedMPPData = await standardizeOntarioMPPInfo(ontarioPageData, ontarioCSVData);
+  const standardizedMPPOfficeData = await standardizeOntarioMPPOfficeInfo(ontarioPageData, ontarioCSVData);
+
+  console.log(standardizedMPPOfficeData[0]);
+
+
+
+  // Standardization DONE
+    // Need to sanitize address
+    // 
+
+
+
+
+
+
+
+
   try {
 
 
@@ -42,30 +73,30 @@ async function runOntarioPipeline() {
       isOntarioRepCSVUpdated = await handleCSVUpdateConditions(ONT_MEMBER_INFO_DIRECTORY);
     }
 
-
-    // Extract DONE
-    // Work on Transform step
-
-
-
     // When the CSV file is updated, the pipeline continues
     if (isOntarioRepCSVUpdated) {
 
       // Scrape for remaining information
       const ontarioMPPages = await scrapeOntarioMPPs(axiosInstance);
       const ontarioMPDataFromURLs = await scrapeOntarioMPPDataFromURLs(axiosInstance, ontarioMPPages);
-
-      // Parse the scraped content into memory
-
-      // Parse the content of the source CSV file
-      // const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_INFO_DIRECTORY);
-
-      console.log(ontarioMPDataFromURLs);
-
-
+    
+      // Parse the scraped data and CSV into memory
+      const ontarioPageData = await parseOntarioPages(ontarioMPDataFromURLs);
+      const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_INFO_DIRECTORY);
+  
       // Transform parsed data to standardized format
-
+      const standardizedMPPData = await standardizeOntarioMPPInfo(ontarioPageData, ontarioCSVData);
+      const standardizedMPPOfficeData = await standardizeOntarioMPPOfficeInfo(ontarioPageData, ontarioCSVData);
+    
       // Creates CSV from standardized data
+
+
+
+
+
+
+
+
 
       // Checks created CSV files for updates
 

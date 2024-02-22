@@ -1,5 +1,8 @@
 import fs from 'fs';
 import { parse } from 'csv-parse';
+import * as cheerio from "cheerio";
+
+import { ONT_BASE_URL } from '../../constants';
 
 import { findMostRecentCSVFile } from '../../utilities';
 
@@ -31,7 +34,19 @@ export interface OntarioMemberCSVData {
   memberId: number;
 }
 
+/**
+ * Represents data about a Ontario member scraped from the internet.
+ * @interface
+ */
+export interface OntarioMemberPageData {
+  constituency: string;
+  image: string | undefined;
+  source: string;
+}
+
 export async function parseOntarioCSV(directory: string): Promise<OntarioMemberCSVData[]> {
+  console.log('Parsing Ontario MPP data from downloaded CSV...');
+
   const latestCSV = await findMostRecentCSVFile(directory);
   const records: OntarioMemberCSVData[] = [];
 
@@ -68,4 +83,30 @@ export async function parseOntarioCSV(directory: string): Promise<OntarioMemberC
     console.error(`Could not process CSV file: ${latestCSV}`);
     throw error;
   }
+}
+
+export function parseOntarioPages(axiosResponse: any): OntarioMemberPageData[] {
+  console.log('Parsing Ontario MPP data from URL...');
+  const data: OntarioMemberPageData[] = [];
+
+  for (const oneMember of axiosResponse) {
+    const selector = cheerio.load(oneMember.data);
+
+    const imageUrl = selector('#block-views-block-member-member-headshot img').attr('src');
+    const constituency = selector('.riding').text().trim();
+
+    // 
+    const thisMember: OntarioMemberPageData = {
+      constituency: constituency,
+      image: `${ONT_BASE_URL}${imageUrl}`,
+      source: oneMember.url,
+    }
+
+    data.push(thisMember);
+  }
+
+
+
+  return data;
+
 }
