@@ -17,8 +17,10 @@ export async function populateMemberTable(level: string, allRepInfo: RepInfo[]):
 
     console.log(`Attempting to insert ${level} representative records...`);
     for (const rep of allRepInfo) {
-      const federalRepQuery = createRepQuery(level, rep);
-      await client.query(federalRepQuery);
+      if (typeof rep.memberId === "number" && !isNaN(rep.memberId)) {
+        const federalRepQuery = createRepQuery(level, rep);
+        await client.query(federalRepQuery);
+      }
     }
     console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all ${level} representative info!${CONSOLE_RESET}`);
     client.release();
@@ -42,8 +44,10 @@ export async function populateOfficeTable(level: string, allOfficeInfo: OfficeIn
 
     console.log(`Attempting to insert ${level} office records...`);
     for (const office of allOfficeInfo) {
-      const federalOfficeQuery = createOfficeQuery(level, office);
-      await client.query(federalOfficeQuery);
+      if (typeof office.memberId === "number" && !isNaN(office.memberId)) {
+        const federalOfficeQuery = createOfficeQuery(level, office);
+        await client.query(federalOfficeQuery);
+      }
     }
     console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all ${level} office info!${CONSOLE_RESET}`);
     client.release();

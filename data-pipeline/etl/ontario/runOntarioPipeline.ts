@@ -2,7 +2,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
-import { ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY } from '../constants';
+import { ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY, ONT_MEMBER_INFO_DIRECTORY, ONT_MEMBER_OFFICE_DIRECTORY } from '../constants';
 
 import { downloadOntarioMPPCSV } from './extract/downloadOntarioCSV';
 import { parseOntarioCSV, parseOntarioPages } from './transform/parseResponses';
@@ -11,6 +11,9 @@ import { handleCSVUpdateConditions } from '../utilities';
 import { scrapeOntarioMPPs, scrapeOntarioMPPDataFromURLs } from './extract/scrapeOntarioMPPs';
 
 import { standardizeOntarioMPPInfo, standardizeOntarioMPPOfficeInfo } from './transform/standardizeParsedResponses';
+
+import { createMembersCSV, createMemberOfficeCSV } from '../load/memoryToCSV';
+import { populateMemberTable, populateOfficeTable } from '../load/memoryToPostgres';
 
 const axiosInstance = axios.create({
   headers: {
@@ -34,6 +37,8 @@ async function runOntarioPipeline() {
   // const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_SOURCE_DIRECTORY);
   // console.log(ontarioCSVData);
 
+  const createdOntarioCSV = await downloadOntarioMPPCSV(axiosInstance, ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY);
+
   const ontarioMPPages = await scrapeOntarioMPPs(axiosInstance);
   const ontarioMPDataFromURLs = await scrapeOntarioMPPDataFromURLs(axiosInstance, ontarioMPPages);
 
@@ -43,20 +48,30 @@ async function runOntarioPipeline() {
   // Parse the content of the source CSV file
   const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_SOURCE_DIRECTORY);
 
-  // const standardizedMPPData = await standardizeOntarioMPPInfo(ontarioPageData, ontarioCSVData);
+  const standardizedMPPData = await standardizeOntarioMPPInfo(ontarioPageData, ontarioCSVData);
   const standardizedMPPOfficeData = await standardizeOntarioMPPOfficeInfo(ontarioPageData, ontarioCSVData);
 
-  console.log(standardizedMPPOfficeData[0]);
+
+
+  // await createMembersCSV('ontario', ONT_MEMBER_INFO_DIRECTORY, standardizedMPPData);
+  // await createMemberOfficeCSV('ontario', ONT_MEMBER_OFFICE_DIRECTORY, standardizedMPPOfficeData);
+
+
+
+
+  await populateMemberTable('ontario', standardizedMPPData);
+  await populateOfficeTable('ontario', standardizedMPPOfficeData);
 
 
 
   // Standardized LOAD functions
-    // Need to check if they will load to CSV and DB as expected
-    // Requires re-writing table definitions
-    // Will also need to bring Federal up to these standards
+    // Will need to bring Federal up to these standards
     // Probably want to go etl/extract, etl/transform, ... structure instead now
       // With a separate folder for the pipelines
 
+  // Need to handle deleting CSV files if they are duplicates
+
+  // Need to add CSV backup to Memory function, standardized for all backups
 
   // Getting close to being able to switch over to these standardized functions
 

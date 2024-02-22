@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS federal_mp_offices (
 
 
 -- Create Federal tables
-CREATE TABLE IF NOT EXISTS federal_mps_new (
+CREATE TABLE IF NOT EXISTS federal_reps (
   member_id INT PRIMARY KEY,
   time_retrieved TIMESTAMP,
   honorific VARCHAR(255),
@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS federal_mps_new (
   source_url VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS federal_mp_offices_new (
-  member_id INT REFERENCES federal_mps_new(member_id),
+CREATE TABLE IF NOT EXISTS federal_offices (
+  member_id INT REFERENCES federal_reps(member_id),
   office_id SERIAL PRIMARY KEY,
   time_retrieved TIMESTAMP,
   office_type VARCHAR(255),
