@@ -1,26 +1,26 @@
 import { createObjectCsvWriter } from 'csv-writer';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
-import { formatDateForFileName } from '../../utilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
+import { formatDateForFileName } from '../utilities';
 
-import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../../constants';
-import { RepInfo, OfficeInfo } from '../../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../tableInterfaces';
 
 /**
- * Function to create a CSV file from the standardized Federal Representative data.
+ * Function to create a CSV file from the standardized Representative data.
+ * @param level Government level being processed.
+ * @param filePath Directory filepath to store the created CSV.
  * @param data An array of standardized RepInfo objects.
  * @returns True if the CSV file was created, false otherwise.
  */
-export async function createFederalMembersCSV(data: RepInfo[]): Promise<Boolean> {
-  const fileName = `${formatDateForFileName(data[0].timeRetrieved)}-federal-mp.csv`;
+export async function createMembersCSV(level: string, filePath: string, data: RepInfo[]): Promise<Boolean> {
+  const fileName = `${formatDateForFileName(data[0].timeRetrieved)}-${level}-member.csv`;
+  const csvFilepath = `${filePath}${fileName}`;
 
-  const CSV_FILEPATH = `${FED_MEMBER_INFO_DIRECTORY}${fileName}`;
-
-  console.log('Writing Federal MP data to CSV...');
+  console.log(`Writing ${level} representative data to CSV...`);
   try {
     // Create CSV from scraped data
     const csvWriter = createObjectCsvWriter({
-      path: CSV_FILEPATH,
+      path: csvFilepath,
       header: [
         { id: 'memberId', title: 'member_id' },
         { id: 'timeRetrieved', title: 'time_retrieved' },        
@@ -40,30 +40,31 @@ export async function createFederalMembersCSV(data: RepInfo[]): Promise<Boolean>
     // Write CSV and notify user
     await csvWriter.writeRecords(data);
     console.log(
-      `${CONSOLE_HIGHLIGHT}Processed all ${data.length} MPs${CONSOLE_RESET} to ${fileName}!`
+      `${CONSOLE_HIGHLIGHT}Processed all ${data.length} representatives${CONSOLE_RESET} to ${fileName}!`
     );    
     return true;
   } catch (error) {
-    console.error(`${CONSOLE_ERROR}Could not write data${CONSOLE_RESET} to ${CSV_FILEPATH}. `);
+    console.error(`${CONSOLE_ERROR}Could not write data${CONSOLE_RESET} to ${csvFilepath}. `);
     throw error;
   }
 }
 
 /**
- * Function to create a CSV file from the standardized Federal Representative data.
- * @param data An array of standardized RepInfo objects.
+ * Function to create a CSV file from the standardized Office data.
+ * @param level Government level being processed.
+ * @param filePath Directory filepath to store the created CSV.
+ * @param data An array of standardized OfficeInfo objects.
  * @returns True if the CSV file was created, false otherwise.
  */
-export async function createFederalMemberOfficeCSV(data: OfficeInfo[]): Promise<Boolean> {
-  const fileName = `${formatDateForFileName(data[0].timeRetrieved)}-federal-mp-offices.csv`;
+export async function createMemberOfficeCSV(level: string, filePath: string, data: OfficeInfo[]): Promise<Boolean> {
+  const fileName = `${formatDateForFileName(data[0].timeRetrieved)}-${level}-offices.csv`;
+  const csvFilepath = `${filePath}${fileName}`;
 
-  const CSV_FILEPATH = `${FED_MEMBER_OFFICE_DIRECTORY}${fileName}`;
-
-  console.log('Writing Federal MP contact info to CSV...');
+  console.log(`Writing ${level} office info to CSV...`);
   try {
     // Create CSV from scraped data
     const csvWriter = createObjectCsvWriter({
-      path: CSV_FILEPATH,
+      path: csvFilepath,
       header: [
         { id: 'memberId', title: 'member_id' },
         { id: 'timeRetrieved', title: 'time_retrieved' },        
@@ -90,7 +91,7 @@ export async function createFederalMemberOfficeCSV(data: OfficeInfo[]): Promise<
     );    
     return true;
   } catch (error) {
-    console.error(`${CONSOLE_ERROR}Could not write data${CONSOLE_RESET} to ${CSV_FILEPATH}. `);
+    console.error(`${CONSOLE_ERROR}Could not write data${CONSOLE_RESET} to ${csvFilepath}. `);
     throw error;
   }
 }

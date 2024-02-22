@@ -1,25 +1,26 @@
-import pool from '../../databasePool';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
-import { dbQuery } from '../../utilities';
+import pool from '../databasePool';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
+import { dbQuery } from '../utilities';
 
-import { RepInfo } from '../../tableInterfaces';
-import { OfficeInfo } from '../../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../tableInterfaces';
 
 /**
  * Populates the federal_mps table from in-memory data.
+ * @param level Government level being processed.
+ * @param allRepInfo An array of standardized RepInfo objects.
  * @returns True if successful, otherwise false.
  */
-export async function populateFederalMemberTable(allRepInfo: RepInfo[]): Promise<Boolean> {
+export async function populateMemberTable(level: string, allRepInfo: RepInfo[]): Promise<Boolean> {
   console.log('Connecting to the database...');
   try {
     const client = await pool.connect();
 
-    console.log('Attempting to insert Federal Member records...');
+    console.log(`Attempting to insert ${level} representative records...`);
     for (const rep of allRepInfo) {
-      const federalRepQuery = createFederalRepQuery(rep);
+      const federalRepQuery = createRepQuery(level, rep);
       await client.query(federalRepQuery);
     }
-    console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all Federal Member info!${CONSOLE_RESET}`);
+    console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all ${level} representative info!${CONSOLE_RESET}`);
     client.release();
     return true;
   } catch (error) {
@@ -30,19 +31,21 @@ export async function populateFederalMemberTable(allRepInfo: RepInfo[]): Promise
 
 /**
  * Populates the federal_mps table from in-memory data.
+ * @param level Government level being processed.
+ * @param allOfficeInfo An array of standardized OfficeInfo objects.
  * @returns True if successful, otherwise false.
  */
-export async function populateFederalOfficeTable(allOfficeInfo: OfficeInfo[]): Promise<Boolean> {
+export async function populateOfficeTable(level: string, allOfficeInfo: OfficeInfo[]): Promise<Boolean> {
   console.log('Connecting to the database...');
   try {
     const client = await pool.connect();
 
-    console.log('Attempting to insert Federal Office records...');
+    console.log(`Attempting to insert ${level} office records...`);
     for (const office of allOfficeInfo) {
-      const federalOfficeQuery = createFederalOfficeQuery(office);
+      const federalOfficeQuery = createOfficeQuery(level, office);
       await client.query(federalOfficeQuery);
     }
-    console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all Federal Office info!${CONSOLE_RESET}`);
+    console.log(`${CONSOLE_HIGHLIGHT}Successfully inserted all ${level} office info!${CONSOLE_RESET}`);
     client.release();
     return true;
   } catch (error) {
@@ -53,12 +56,13 @@ export async function populateFederalOfficeTable(allOfficeInfo: OfficeInfo[]): P
 
 /**
  * Creates a database query for inserting a single record into the federal_mps table.
+ * @param level Government level being processed.
  * @param rep A single record representing one Federal MP.
  * @returns A dbQuery object to use with a client connection.
  */
-function createFederalRepQuery(rep: RepInfo): dbQuery {
-  const mpQuery = {
-    text: `INSERT INTO federal_mps_new (
+function createRepQuery(level: string, rep: RepInfo): dbQuery {
+  const repQuery = {
+    text: `INSERT INTO ${level}_reps (
       member_id,
       time_retrieved,
       honorific,
@@ -87,17 +91,18 @@ function createFederalRepQuery(rep: RepInfo): dbQuery {
       rep.sourceUrl,
     ],
   };
-  return mpQuery;
+  return repQuery;
 }
 
 /**
  * Creates a database query for inserting a single record into the federal_mps table.
+ * @param level Government level being processed.
  * @param rep A single record representing one Federal MP.
  * @returns A dbQuery object to use with a client connection.
  */
-function createFederalOfficeQuery(office: OfficeInfo): dbQuery {
-  const mpOfficeQuery = {
-    text: `INSERT INTO federal_mp_offices_new (
+function createOfficeQuery(level: string, office: OfficeInfo): dbQuery {
+  const officeQuery = {
+    text: `INSERT INTO ${level}_offices (
       member_id,
       time_retrieved,
       office_type,
@@ -132,5 +137,5 @@ function createFederalOfficeQuery(office: OfficeInfo): dbQuery {
       office.sourceUrl,
     ],
   };
-  return mpOfficeQuery;
+  return officeQuery;
 }

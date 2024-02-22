@@ -2,8 +2,7 @@ import pool from '../../databasePool';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
 import { dbQuery } from '../../utilities';
 
-import { RepInfo } from '../../tableInterfaces';
-import { OfficeInfo } from '../../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../../tableInterfaces';
 
 /**
  * Populates the federal_mps table from in-memory data.

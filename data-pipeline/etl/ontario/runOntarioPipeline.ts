@@ -2,7 +2,7 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
-import { ONT_MEMBER_INFO_DIRECTORY } from '../constants';
+import { ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY } from '../constants';
 
 import { downloadOntarioMPPCSV } from './extract/downloadOntarioCSV';
 import { parseOntarioCSV, parseOntarioPages } from './transform/parseResponses';
@@ -31,7 +31,7 @@ axiosRetry(axiosInstance, {
 async function runOntarioPipeline() {
   const timeRetrieved = Date.now();
 
-  // const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_INFO_DIRECTORY);
+  // const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_SOURCE_DIRECTORY);
   // console.log(ontarioCSVData);
 
   const ontarioMPPages = await scrapeOntarioMPPs(axiosInstance);
@@ -41,7 +41,7 @@ async function runOntarioPipeline() {
   const ontarioPageData = await parseOntarioPages(ontarioMPDataFromURLs);
 
   // Parse the content of the source CSV file
-  const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_INFO_DIRECTORY);
+  const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_SOURCE_DIRECTORY);
 
   // const standardizedMPPData = await standardizeOntarioMPPInfo(ontarioPageData, ontarioCSVData);
   const standardizedMPPOfficeData = await standardizeOntarioMPPOfficeInfo(ontarioPageData, ontarioCSVData);
@@ -50,12 +50,15 @@ async function runOntarioPipeline() {
 
 
 
-  // Standardization DONE
-    // Need to sanitize address
-    // 
+  // Standardized LOAD functions
+    // Need to check if they will load to CSV and DB as expected
+    // Requires re-writing table definitions
+    // Will also need to bring Federal up to these standards
+    // Probably want to go etl/extract, etl/transform, ... structure instead now
+      // With a separate folder for the pipelines
 
 
-
+  // Getting close to being able to switch over to these standardized functions
 
 
 
@@ -65,12 +68,12 @@ async function runOntarioPipeline() {
 
 
     // Initiates downloading the Ontario CSV file
-    const createdOntarioCSV = await downloadOntarioMPPCSV(axiosInstance);
+    const createdOntarioCSV = await downloadOntarioMPPCSV(axiosInstance, ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY);
     let isOntarioRepCSVUpdated: Boolean = false;
 
     // Checks if the CSV file is updated
     if (createdOntarioCSV) {
-      isOntarioRepCSVUpdated = await handleCSVUpdateConditions(ONT_MEMBER_INFO_DIRECTORY);
+      isOntarioRepCSVUpdated = await handleCSVUpdateConditions(ONT_MEMBER_SOURCE_DIRECTORY);
     }
 
     // When the CSV file is updated, the pipeline continues
@@ -82,7 +85,7 @@ async function runOntarioPipeline() {
     
       // Parse the scraped data and CSV into memory
       const ontarioPageData = await parseOntarioPages(ontarioMPDataFromURLs);
-      const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_INFO_DIRECTORY);
+      const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_SOURCE_DIRECTORY);
   
       // Transform parsed data to standardized format
       const standardizedMPPData = await standardizeOntarioMPPInfo(ontarioPageData, ontarioCSVData);

@@ -7,6 +7,14 @@ import { AxiosInstance } from 'axios';
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './constants';
 
 /**
+ * Interface to use when creating a query to insert into the database.
+ */
+export interface dbQuery {
+  text: string;
+  values: (string | number | Date | undefined)[];
+}
+
+/**
  * Finds the most recent CSV file in the provided directory.
  * @param directory The directory to check for CSV files.
  * @returns A string array of CSV file names in the provided directory.
