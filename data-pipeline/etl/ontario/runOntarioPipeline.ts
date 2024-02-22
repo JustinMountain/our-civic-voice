@@ -15,6 +15,8 @@ import { standardizeOntarioMPPInfo, standardizeOntarioMPPOfficeInfo } from './tr
 import { createMembersCSV, createMemberOfficeCSV } from '../load/memoryToCSV';
 import { populateMemberTable, populateOfficeTable } from '../load/memoryToPostgres';
 
+import { initOntarioTablePopulation } from './initOntarioTablePopulation';
+
 const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'document/xml',
@@ -34,54 +36,7 @@ axiosRetry(axiosInstance, {
 async function runOntarioPipeline() {
   const timeRetrieved = Date.now();
 
-  // const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_SOURCE_DIRECTORY);
-  // console.log(ontarioCSVData);
-
-  const createdOntarioCSV = await downloadOntarioMPPCSV(axiosInstance, ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY);
-
-  const ontarioMPPages = await scrapeOntarioMPPs(axiosInstance);
-  const ontarioMPDataFromURLs = await scrapeOntarioMPPDataFromURLs(axiosInstance, ontarioMPPages);
-
-  // Parse the scraped content into memory
-  const ontarioPageData = await parseOntarioPages(ontarioMPDataFromURLs);
-
-  // Parse the content of the source CSV file
-  const ontarioCSVData = await parseOntarioCSV(ONT_MEMBER_SOURCE_DIRECTORY);
-
-  const standardizedMPPData = await standardizeOntarioMPPInfo(ontarioPageData, ontarioCSVData);
-  const standardizedMPPOfficeData = await standardizeOntarioMPPOfficeInfo(ontarioPageData, ontarioCSVData);
-
-
-
-  // await createMembersCSV('ontario', ONT_MEMBER_INFO_DIRECTORY, standardizedMPPData);
-  // await createMemberOfficeCSV('ontario', ONT_MEMBER_OFFICE_DIRECTORY, standardizedMPPOfficeData);
-
-
-
-
-  await populateMemberTable('ontario', standardizedMPPData);
-  await populateOfficeTable('ontario', standardizedMPPOfficeData);
-
-
-
-  // Standardized LOAD functions
-    // Will need to bring Federal up to these standards
-    // Probably want to go etl/extract, etl/transform, ... structure instead now
-      // With a separate folder for the pipelines
-
-  // Need to handle deleting CSV files if they are duplicates
-
-  // Need to add CSV backup to Memory function, standardized for all backups
-
-  // Getting close to being able to switch over to these standardized functions
-
-
-
-
-
   try {
-
-
     // Initiates downloading the Ontario CSV file
     const createdOntarioCSV = await downloadOntarioMPPCSV(axiosInstance, ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY);
     let isOntarioRepCSVUpdated: Boolean = false;
@@ -107,21 +62,40 @@ async function runOntarioPipeline() {
       const standardizedMPPOfficeData = await standardizeOntarioMPPOfficeInfo(ontarioPageData, ontarioCSVData);
     
       // Creates CSV from standardized data
-
-
-
-
-
-
-
-
+      const createdMemberCSV = await createMembersCSV('ontario', ONT_MEMBER_INFO_DIRECTORY, standardizedMPPData);
+      const createdOfficeCSV = await createMemberOfficeCSV('ontario', ONT_MEMBER_OFFICE_DIRECTORY, standardizedMPPOfficeData);
 
       // Checks created CSV files for updates
+      let isOntarioMemberCSVUpdated: Boolean = false;
+      let isOntarioOfficeCSVUpdated: Boolean = false;
 
-      // Re-initialize tables
+      if (createdMemberCSV) {
+        isOntarioMemberCSVUpdated = await handleCSVUpdateConditions(ONT_MEMBER_SOURCE_DIRECTORY);
+      }
+      if (createdOfficeCSV) {
+        isOntarioOfficeCSVUpdated = await handleCSVUpdateConditions(ONT_MEMBER_SOURCE_DIRECTORY);
+      }
+    
+      // If either table was updated, re-initialize them
+      if (isOntarioMemberCSVUpdated || isOntarioOfficeCSVUpdated) {
+        await initOntarioTablePopulation(standardizedMPPData, standardizedMPPOfficeData);
+      }  
 
+      // Getting close to being able to switch over to these standardized functions
 
-      console.log(`${CONSOLE_HIGHLIGHT}Finished${CONSOLE_RESET} the Federal MP Data Pipeline in ${CONSOLE_HIGHLIGHT}${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`);
+      // Need to standardize backup CSV to memory
+        // Need to fix initOntarioTablePopulation else condition to use when necessary
+
+      // Probably want to go etl/extract, etl/transform, ... structure instead now
+        // With a separate folder for the pipelines and config
+
+      // Bring Federal up to these standards
+
+      // Check for signatures and notes
+
+      // Fix SQL init files
+
+      console.log(`${CONSOLE_HIGHLIGHT}Finished${CONSOLE_RESET} the Ontario MPP Data Pipeline in ${CONSOLE_HIGHLIGHT}${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`);
 
     }  
   } catch (error) {
