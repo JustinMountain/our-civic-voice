@@ -12,6 +12,7 @@ export interface RepInfo {
   party: string;
   email: string;
   website: string;
+  govLevel: string;
   imageUrl: string | undefined;
   sourceUrl: string;
 }

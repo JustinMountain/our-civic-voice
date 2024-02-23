@@ -4,24 +4,18 @@ import pool from '../config/databasePool';
 const router = express.Router();
 const repSelect = `
   SELECT member_id,
-    honorific, 
-    first_name, 
-    last_name, 
-    constituency, 
-    party, 
-`;
-const allSelect = `
+    time_retrieved,
+    honorific,
+    first_name,
+    last_name,
+    constituency,
     province_territory, 
-    gov_level 
-`;
-const federalSelect = `
-    province_territory, 
-    'Federal' AS gov_level 
-`;
-const ontarioSelect = `
-    'Ontario' AS province_territory, 
-    'Provincial' AS gov_level
-`;
+    party,
+    email,
+    website,
+    gov_level,
+    image_url,
+    source_url`;
 
 /**
  * Handle GET request to retrieve all representatives from the database.
@@ -30,11 +24,7 @@ const ontarioSelect = `
  * @returns {Promise<Boolean>} - A promise that resolves to true if successful.
  */
 router.get('/', async (req: Request, res: Response): Promise<Boolean> => {
-  const repStatement = `
-    ${repSelect}
-    ${allSelect}
-    FROM all_representatives;
-  `;
+  const repStatement = `SELECT * FROM all_representatives;`;
 
   try {
     const client = await pool.connect();
@@ -58,9 +48,7 @@ router.get('/', async (req: Request, res: Response): Promise<Boolean> => {
  */
 router.get('/federal', async (req: Request, res: Response): Promise<Boolean> => {
   const repStatement = `
-    ${repSelect}
-    ${federalSelect}
-    FROM federal_reps;
+    ${repSelect} FROM federal_reps;
   `;
 
   try {
@@ -86,9 +74,7 @@ router.get('/federal', async (req: Request, res: Response): Promise<Boolean> => 
 router.get('/federal/:member_id', async (req: Request, res: Response): Promise<Boolean> => {
   const memberId = req.params.member_id.toLowerCase();
   const repStatement = `
-    ${repSelect}
-    ${federalSelect}
-    FROM federal_reps WHERE member_id = '${memberId}';
+    ${repSelect} FROM federal_reps WHERE member_id = '${memberId}';
   `;
 
   try {
@@ -113,9 +99,7 @@ router.get('/federal/:member_id', async (req: Request, res: Response): Promise<B
  */
 router.get('/ontario', async (req: Request, res: Response): Promise<Boolean> => {
   const repStatement = `
-    ${repSelect}
-    ${ontarioSelect}
-    FROM ontario_reps;
+    ${repSelect} FROM ontario_reps;
   `;
 
   try {
@@ -141,9 +125,7 @@ router.get('/ontario', async (req: Request, res: Response): Promise<Boolean> => 
 router.get('/ontario/:member_id', async (req: Request, res: Response): Promise<Boolean> => {
   const member_id = req.params.member_id.toLowerCase();
   const repStatement = `
-    ${repSelect}
-    ${ontarioSelect}
-    FROM ontario_reps WHERE member_id = '${member_id}';
+    ${repSelect} FROM ontario_reps WHERE member_id = '${member_id}';
   `;
 
   try {

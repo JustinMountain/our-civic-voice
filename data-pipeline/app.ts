@@ -19,7 +19,7 @@ const scriptActions = {
 /**
  * Creates an endpoint to run different database update scripts.
  */
-app.get('/scripts/update/:scriptname', async (req: Request, res: Response) => {
+app.get('/api/update/:scriptname', async (req: Request, res: Response) => {
   const scriptName = req.params.scriptname.toLowerCase();
   const scriptToRun = scriptActions[scriptName as keyof typeof scriptActions];
 

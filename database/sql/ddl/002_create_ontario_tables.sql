@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS ontario_reps (
   party VARCHAR(255),
   email VARCHAR(255),
   website VARCHAR(255),
+  gov_level VARCHAR(255),
   image_url VARCHAR(255),
   source_url VARCHAR(255)
 );

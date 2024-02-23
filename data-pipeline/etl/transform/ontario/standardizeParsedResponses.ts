@@ -31,10 +31,11 @@ export function standardizeOntarioMPPInfo(pageData: OntarioMemberPageData[], csv
           firstName: repInfoMatch.firstName,
           lastName: repInfoMatch.lastName,
           constituency: page.constituency,
-          provinceTerritory: repInfoMatch.provinceTerritory,
+          provinceTerritory: 'Ontario',
           party: repInfoMatch.partyAffiliation,
           email: repInfoMatch.generalEmail,
           website: '',
+          govLevel: 'Provincial',
           imageUrl: page.image,
           sourceUrl: page.source,
         };

@@ -24,8 +24,9 @@ export async function mostRecentCSVtoMemory(directory: string): Promise<RepInfo[
       party: line[7],
       email: line[8],
       website: line[9],
-      imageUrl: line[10],
-      sourceUrl: line[11],
+      govLevel: line[10],
+      imageUrl: line[11],
+      sourceUrl: line[12],
     };
     repInfo.push(thisRep);
   });

@@ -32,6 +32,7 @@ export async function createMembersCSV(level: string, filePath: string, data: Re
         { id: 'party', title: 'party' },
         { id: 'email', title: 'email' },
         { id: 'website', title: 'website' },
+        { id: 'govLevel', title: 'gov_level' },
         { id: 'imageUrl', title: 'image_url' },
         { id: 'sourceUrl', title: 'source_url'}
       ]

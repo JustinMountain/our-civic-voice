@@ -32,6 +32,7 @@ export function standardizeFederalMPInfo(pageData: FederalMemberPageData[], xmlD
           party: repInfoMatch.partyAffiliation,
           email: page.email,
           website: page.website,
+          govLevel: 'Federal',
           imageUrl: page.image,
           sourceUrl: page.source,
         };

@@ -5,16 +5,21 @@ const router = express.Router();
 const officeSelect = `
   SELECT member_id,
     office_id,
-    general_email,
+    time_retrieved,
     office_type,
+    office_title,
     office_address,
     office_city,
     office_province,
     office_postal_code,
+    office_note,
     office_telephone,
     office_fax,
-    updated_date
-`;
+    office_email,
+    office_toll_free,
+    office_tty,
+    source_url
+  `;
 
 /**
  * Handle GET request to retrieve a specific Federal Member's office info from the database.

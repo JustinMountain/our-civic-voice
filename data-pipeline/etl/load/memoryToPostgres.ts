@@ -77,9 +77,10 @@ function createRepQuery(level: string, rep: RepInfo): dbQuery {
       party,
       email,
       website,
+      gov_level,
       image_url,
       source_url) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`,
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`,
     values: [
       rep.memberId,
       new Date(rep.timeRetrieved),
@@ -91,6 +92,7 @@ function createRepQuery(level: string, rep: RepInfo): dbQuery {
       rep.party,
       rep.email,
       rep.website,
+      rep.govLevel,
       rep.imageUrl,
       rep.sourceUrl,
     ],
