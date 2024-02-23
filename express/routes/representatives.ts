@@ -60,7 +60,7 @@ router.get('/federal', async (req: Request, res: Response): Promise<Boolean> => 
   const repStatement = `
     ${repSelect}
     ${federalSelect}
-    FROM federal_mps;
+    FROM federal_reps;
   `;
 
   try {
@@ -88,7 +88,7 @@ router.get('/federal/:member_id', async (req: Request, res: Response): Promise<B
   const repStatement = `
     ${repSelect}
     ${federalSelect}
-    FROM federal_mps WHERE member_id = '${memberId}';
+    FROM federal_reps WHERE member_id = '${memberId}';
   `;
 
   try {
@@ -115,7 +115,7 @@ router.get('/ontario', async (req: Request, res: Response): Promise<Boolean> => 
   const repStatement = `
     ${repSelect}
     ${ontarioSelect}
-    FROM ontario_mpps;
+    FROM ontario_reps;
   `;
 
   try {
@@ -143,7 +143,7 @@ router.get('/ontario/:member_id', async (req: Request, res: Response): Promise<B
   const repStatement = `
     ${repSelect}
     ${ontarioSelect}
-    FROM ontario_mpps WHERE member_id = '${member_id}';
+    FROM ontario_reps WHERE member_id = '${member_id}';
   `;
 
   try {

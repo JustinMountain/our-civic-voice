@@ -1,20 +1,7 @@
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../etl/config/constants';
 import { initFederalTablePopulation } from '../etl/load/federal/initFederalTablePopulation';
 import { initOntarioTablePopulation } from '../etl/load/ontario/initOntarioTablePopulation';
-
-
-
-// Materialized View stuff
-
-// Make sure endpoints function as expected
-
-
-
-import { updateAllRepMatView } from '../scripts/db-population/repMatView';
-
-
-
-
+import { refreshRepMatView } from '../etl/pipelines/refreshRepMatView';
 
 /**
  * Initializes the database by populating the tables with data from the CSV files on disk.
@@ -26,7 +13,7 @@ async function initDatabase() {
   try { 
     await initFederalTablePopulation(); 
     await initOntarioTablePopulation();
-    await updateAllRepMatView();
+    await refreshRepMatView();
   } catch (error) { 
     console.error(`${CONSOLE_ERROR}Encountered an error trying to initialize the database: ${CONSOLE_RESET}`, error);
     throw error;

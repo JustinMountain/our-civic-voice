@@ -14,7 +14,7 @@ export async function downloadOntarioMPPCSV(axiosInstance: AxiosInstance, source
   console.log(`Fetching Ontario MPP data from ${sourceLocation}...`);
   
   const timeRetrieved = Date.now();
-  const fileName = `${formatDateForFileName(timeRetrieved)}-ontario-mpps.csv`;
+  const fileName = `${formatDateForFileName(timeRetrieved)}-ontario-source.csv`;
 
   try {
     const response = await axiosInstance.get(sourceLocation, {

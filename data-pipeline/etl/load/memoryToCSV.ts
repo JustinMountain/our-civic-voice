@@ -13,7 +13,7 @@ import { RepInfo, OfficeInfo } from '../config/tableInterfaces';
  * @returns True if the CSV file was created, false otherwise.
  */
 export async function createMembersCSV(level: string, filePath: string, data: RepInfo[]): Promise<Boolean> {
-  const fileName = `${formatDateForFileName(data[0].timeRetrieved)}-${level}-member.csv`;
+  const fileName = `${formatDateForFileName(data[0].timeRetrieved)}-${level}-members.csv`;
   const csvFilepath = `${filePath}${fileName}`;
 
   console.log(`Writing ${level} representative data to CSV...`);

@@ -26,7 +26,7 @@ router.get('/federal/:member_id', async (req: Request, res: Response): Promise<B
   const member_id = req.params.member_id;
   const officeStatement = `
     ${officeSelect}
-    FROM federal_mp_offices
+    FROM federal_offices
     WHERE member_id = '${member_id}';
   `;
 
@@ -54,7 +54,7 @@ router.get('/ontario/:member_id', async (req: Request, res: Response): Promise<B
   const member_id = req.params.member_id.toLowerCase();
   const officeStatement = `
     ${officeSelect}
-    FROM ontario_mpp_offices
+    FROM ontario_offices
     WHERE member_id = '${member_id}';
   `;
 

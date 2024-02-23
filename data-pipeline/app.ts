@@ -1,16 +1,17 @@
 import express, { Request, Response } from 'express';
 
 import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './etl/config/constants';
-import { runAllUpdates } from './scripts/runAllUpdates';
+import { runAllPipelines } from './etl/pipelines/runAllPipelines';
 import { runFederalPipeline } from './etl/pipelines/runFederalPipeline';
 import { runOntarioPipeline } from './etl/pipelines/runOntarioPipeline';
+import { refreshRepMatView } from './etl/pipelines/refreshRepMatView';
 
 const app = express();
 const port = 3000;
 
 // Mapping script names to their respective functions
 const scriptActions = {
-  'all': runAllUpdates,
+  'all': runAllPipelines,
   'federal': runFederalPipeline,
   'ontario': runOntarioPipeline,
 };
@@ -24,7 +25,12 @@ app.get('/scripts/update/:scriptname', async (req: Request, res: Response) => {
 
   if (scriptToRun) {
     try {
-      await scriptToRun();
+      const isUpdated = await scriptToRun();
+
+      if (isUpdated) {
+        await refreshRepMatView();
+      }
+      
       console.log(`${CONSOLE_HIGHLIGHT}Script "${scriptName}" executed successfully${CONSOLE_RESET}`)
       res.send("Script executed successfully");
     } catch (error) {

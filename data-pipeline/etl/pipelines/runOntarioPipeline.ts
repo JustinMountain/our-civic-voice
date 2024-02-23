@@ -79,8 +79,8 @@ export async function runOntarioPipeline() {
       if (isOntarioMemberCSVUpdated || isOntarioOfficeCSVUpdated) {
         await initOntarioTablePopulation(standardizedMPPData, standardizedMPPOfficeData);
       }  
-
       console.log(`${CONSOLE_HIGHLIGHT}Finished${CONSOLE_RESET} the Ontario MPP Data Pipeline in ${CONSOLE_HIGHLIGHT}${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`);
+      return true;
     }  
   } catch (error) {
     console.error(`${CONSOLE_ERROR}Could not complete the Federal MP Data Pipeline. ${CONSOLE_RESET}`);

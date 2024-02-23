@@ -34,7 +34,7 @@ axiosRetry(axiosInstance, {
   retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
 })  
   
-export async function runFederalPipeline() {
+export async function runFederalPipeline(): Promise<Boolean> {
   const timeRetrieved = Date.now();
   const parser = new XMLParser();
 
@@ -73,9 +73,8 @@ export async function runFederalPipeline() {
     if (isFederalRepCSVUpdated || isFederalOfficeCSVUpdated) {
       await initFederalTablePopulation();
     }  
-
     console.log(`${CONSOLE_HIGHLIGHT}Finished${CONSOLE_RESET} the Federal MP Data Pipeline in ${CONSOLE_HIGHLIGHT}${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`);
-
+    return true;
   } catch (error) {
     console.error(`${CONSOLE_ERROR}Could not complete the Federal MP Data Pipeline. ${CONSOLE_RESET}`);
     throw error;
