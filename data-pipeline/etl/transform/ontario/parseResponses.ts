@@ -2,9 +2,9 @@ import fs from 'fs';
 import { parse } from 'csv-parse';
 import * as cheerio from "cheerio";
 
-import { ONT_BASE_URL } from '../../constants';
+import { ONT_BASE_URL } from '../../config/constants';
 
-import { findMostRecentCSVFile } from '../../utilities';
+import { findMostRecentCSVFile } from '../../config/utilities';
 
 // Next up create a scraper for source url and image
 // Parse that info, create the merge function like Federal

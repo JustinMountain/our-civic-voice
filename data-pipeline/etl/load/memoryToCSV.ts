@@ -1,9 +1,9 @@
 import { createObjectCsvWriter } from 'csv-writer';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
-import { formatDateForFileName } from '../utilities';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+import { formatDateForFileName } from '../config/utilities';
 
-import { RepInfo, OfficeInfo } from '../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../config/tableInterfaces';
 
 /**
  * Function to create a CSV file from the standardized Representative data.

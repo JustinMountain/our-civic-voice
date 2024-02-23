@@ -1,12 +1,11 @@
 import pool from '../../config/databasePool';
 
-// import { populateFederalMemberTable } from './populateFederalMemberTable';
-// import { populateFederalMemberOfficeTable } from './populateFederalMemberOfficeTable';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
+import { ONT_MEMBER_INFO_DIRECTORY, ONT_MEMBER_OFFICE_DIRECTORY } from '../../config/constants';
 
-// import { mostRecentFederalRepCSVtoMemory, mostRecentFederalOfficeCSVtoMemory } from './transform/csvToMemory';
-import { populateMemberTable, populateOfficeTable } from '../load/memoryToPostgres';
-import { RepInfo, OfficeInfo } from '../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../../config/tableInterfaces';
+import { populateMemberTable, populateOfficeTable } from '../memoryToPostgres';
+import { mostRecentCSVtoMemory, mostRecentOfficeCSVtoMemory } from '../../transform/backupCsvToMemory';
 
 /**
  * Initializes the Federal tables from the CSV sources.
@@ -24,22 +23,21 @@ export async function initOntarioTablePopulation(repData?: RepInfo[], officeData
         await populateMemberTable('ontario', repData);
       } else {
         // Retrieve from memory
-        // await populateMemberTable('ontario', memberTableInMemory);
+        const memberTableInMemory = await mostRecentCSVtoMemory(ONT_MEMBER_INFO_DIRECTORY);
+
+        // Populate Table
+        await populateMemberTable('ontario', memberTableInMemory);
       }
 
       if (officeData) {
         await populateOfficeTable('ontario', officeData);
       } else {
         // Retrieve from memory
-        // await populateOfficeTable('ontario', officeTableInMemory);
+        const officeTableInMemory = await mostRecentOfficeCSVtoMemory(ONT_MEMBER_OFFICE_DIRECTORY);
+
+        // Populate Table
+        await populateOfficeTable('ontario', officeTableInMemory);
       }
-
-
-      // const memberTableInMemory = await mostRecentFederalRepCSVtoMemory();
-      // const officeTableInMemory = await mostRecentFederalOfficeCSVtoMemory();
-
-      // await populateMemberTable('ontario', memberTableInMemory);
-      // await populateOfficeTable('ontario', officeTableInMemory);
 
       console.log(`${CONSOLE_HIGHLIGHT}Initialization of Federal tables complete!${CONSOLE_RESET}`);
       return true; 

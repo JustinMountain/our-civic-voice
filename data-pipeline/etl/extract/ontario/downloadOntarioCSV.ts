@@ -1,9 +1,9 @@
 import { AxiosInstance } from 'axios';
 import { writeFile } from 'fs/promises';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
 
-import { formatDateForFileName } from '../../utilities';
+import { formatDateForFileName } from '../../config/utilities';
 
 /**
  * Function to fetch the Ontario MPP data from the source.

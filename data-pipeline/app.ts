@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './config/constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from './etl/config/constants';
 import { runAllUpdates } from './scripts/runAllUpdates';
-import { runFederalUpdate } from './scripts/runFederalUpdate';
-import { runOntarioUpdate } from './scripts/runOntarioUpdate';
+import { runFederalPipeline } from './etl/pipelines/runFederalPipeline';
+import { runOntarioPipeline } from './etl/pipelines/runOntarioPipeline';
 
 const app = express();
 const port = 3000;
@@ -11,8 +11,8 @@ const port = 3000;
 // Mapping script names to their respective functions
 const scriptActions = {
   'all': runAllUpdates,
-  'federal': runFederalUpdate,
-  'ontario': runOntarioUpdate,
+  'federal': runFederalPipeline,
+  'ontario': runOntarioPipeline,
 };
 
 /**

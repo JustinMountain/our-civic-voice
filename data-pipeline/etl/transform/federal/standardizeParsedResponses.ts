@@ -1,4 +1,4 @@
-import { RepInfo, OfficeInfo } from '../../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../../config/tableInterfaces';
 import { FederalMemberXMLData, FederalMemberPageData } from "./parseResponses";
 
 /**

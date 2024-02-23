@@ -1,8 +1,8 @@
-import pool from '../databasePool';
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
-import { dbQuery } from '../utilities';
+import pool from '../config/databasePool';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+import { dbQuery } from '../config/utilities';
 
-import { RepInfo, OfficeInfo } from '../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../config/tableInterfaces';
 
 /**
  * Populates the federal_mps table from in-memory data.

@@ -1,20 +1,18 @@
 import { parse } from 'csv-parse';
 import fs from 'fs-extra';
 
-import { findMostRecentCSVFile } from '../utilities';
-import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../constants';
-
-import { RepInfo, OfficeInfo } from '../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../config/tableInterfaces';
+import { findMostRecentCSVFile } from '../config/utilities';
 
 /**
  * Creates a standardized in-memory array used to populate the table for the Federal MP data.
  * @returns Standardized RepInfo objects to use for DB insertion.
  */
-export async function mostRecentFederalRepCSVtoMemory(): Promise<RepInfo[]> {
-  const recentFedMemberCSV = await processRecentCSVtoMemory(FED_MEMBER_INFO_DIRECTORY);
+export async function mostRecentCSVtoMemory(directory: string): Promise<RepInfo[]> {
+  const recentMemberCSV = await processRecentCSVtoMemory(directory);
   const repInfo: RepInfo[] = [];
 
-  recentFedMemberCSV.forEach((line) => {
+  recentMemberCSV.forEach((line) => {
     const thisRep: RepInfo = {
       memberId: parseInt(line[0]),
       timeRetrieved: parseInt(line[1]),
@@ -38,11 +36,11 @@ export async function mostRecentFederalRepCSVtoMemory(): Promise<RepInfo[]> {
  * Creates a standardized in-memory array used to populate the table for the Federal MP data.
  * @returns Standardized RepInfo objects to use for DB insertion.
  */
-export async function mostRecentFederalOfficeCSVtoMemory(): Promise<OfficeInfo[]> {
-  const recentFedOfficeCSV = await processRecentCSVtoMemory(FED_MEMBER_OFFICE_DIRECTORY);
+export async function mostRecentOfficeCSVtoMemory(directory: string): Promise<OfficeInfo[]> {
+  const recentOfficeCSV = await processRecentCSVtoMemory(directory);
   const officeInfo: OfficeInfo[] = [];
 
-  recentFedOfficeCSV.forEach((line) => {
+  recentOfficeCSV.forEach((line) => {
     const thisOffice: OfficeInfo = {
       memberId: parseInt(line[0]),
       timeRetrieved: parseInt(line[1]),

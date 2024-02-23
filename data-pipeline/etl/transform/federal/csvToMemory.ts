@@ -1,10 +1,10 @@
 import { parse } from 'csv-parse';
 import fs from 'fs-extra';
 
-import { findMostRecentCSVFile } from '../../utilities';
-import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../../constants';
+import { findMostRecentCSVFile } from '../../config/utilities';
+import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../../config/constants';
 
-import { RepInfo, OfficeInfo } from '../../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../../config/tableInterfaces';
 
 /**
  * Creates a standardized in-memory array used to populate the table for the Federal MP data.

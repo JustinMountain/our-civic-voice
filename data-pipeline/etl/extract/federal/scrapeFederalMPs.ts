@@ -1,10 +1,10 @@
 import { AxiosInstance } from 'axios';
 import * as cheerio from "cheerio";
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
-import { FED_BASE_URL, FED_SEARCH_URL, FED_SEARCH_XML } from '../../constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
+import { FED_BASE_URL, FED_SEARCH_URL, FED_SEARCH_XML } from '../../config/constants';
 
-import { scrapeContactInfoInBatches } from '../../utilities';
+import { scrapeContactInfoInBatches } from '../../config/utilities';
 
 /**
  * Function to scrape federal MP XML data from the Parliament of Canada website.

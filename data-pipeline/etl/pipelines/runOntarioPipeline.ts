@@ -1,21 +1,20 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
-import { ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY, ONT_MEMBER_INFO_DIRECTORY, ONT_MEMBER_OFFICE_DIRECTORY } from '../constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+import { ONT_CSV_SOURCE, ONT_MEMBER_SOURCE_DIRECTORY, ONT_MEMBER_INFO_DIRECTORY, ONT_MEMBER_OFFICE_DIRECTORY } from '../config/constants';
 
-import { downloadOntarioMPPCSV } from './extract/downloadOntarioCSV';
-import { parseOntarioCSV, parseOntarioPages } from './transform/parseResponses';
-import { handleCSVUpdateConditions } from '../utilities';
+import { downloadOntarioMPPCSV } from '../extract/ontario/downloadOntarioCSV';
+import { parseOntarioCSV, parseOntarioPages } from '../transform/ontario/parseResponses';
+import { handleCSVUpdateConditions } from '../config/utilities';
 
-import { scrapeOntarioMPPs, scrapeOntarioMPPDataFromURLs } from './extract/scrapeOntarioMPPs';
+import { scrapeOntarioMPPs, scrapeOntarioMPPDataFromURLs } from '../extract/ontario/scrapeOntarioMPPs';
 
-import { standardizeOntarioMPPInfo, standardizeOntarioMPPOfficeInfo } from './transform/standardizeParsedResponses';
+import { standardizeOntarioMPPInfo, standardizeOntarioMPPOfficeInfo } from '../transform/ontario/standardizeParsedResponses';
 
 import { createMembersCSV, createMemberOfficeCSV } from '../load/memoryToCSV';
-import { populateMemberTable, populateOfficeTable } from '../load/memoryToPostgres';
 
-import { initOntarioTablePopulation } from './initOntarioTablePopulation';
+import { initOntarioTablePopulation } from '../load/ontario/initOntarioTablePopulation';
 
 const axiosInstance = axios.create({
   headers: {
@@ -33,7 +32,7 @@ axiosRetry(axiosInstance, {
 })  
   
 
-async function runOntarioPipeline() {
+export async function runOntarioPipeline() {
   const timeRetrieved = Date.now();
 
   try {
@@ -81,28 +80,10 @@ async function runOntarioPipeline() {
         await initOntarioTablePopulation(standardizedMPPData, standardizedMPPOfficeData);
       }  
 
-      // Getting close to being able to switch over to these standardized functions
-
-      // Need to standardize backup CSV to memory
-        // Need to fix initOntarioTablePopulation else condition to use when necessary
-
-      // Probably want to go etl/extract, etl/transform, ... structure instead now
-        // With a separate folder for the pipelines and config
-
-      // Bring Federal up to these standards
-
-      // Check for signatures and notes
-
-      // Fix SQL init files
-
       console.log(`${CONSOLE_HIGHLIGHT}Finished${CONSOLE_RESET} the Ontario MPP Data Pipeline in ${CONSOLE_HIGHLIGHT}${Date.now() - timeRetrieved}ms${CONSOLE_RESET}!`);
-
     }  
   } catch (error) {
     console.error(`${CONSOLE_ERROR}Could not complete the Federal MP Data Pipeline. ${CONSOLE_RESET}`);
     throw error;
   }
-
 }
-
-runOntarioPipeline();

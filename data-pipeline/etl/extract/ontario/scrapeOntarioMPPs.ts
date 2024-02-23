@@ -1,10 +1,10 @@
 import { AxiosInstance } from 'axios';
 import * as cheerio from "cheerio";
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../constants';
-import { ONT_BASE_URL, ONT_SCRAPE_SOURCE } from '../../constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../../config/constants';
+import { ONT_BASE_URL, ONT_SCRAPE_SOURCE } from '../../config/constants';
 
-import { scrapeContactInfoInBatches } from '../../utilities';
+import { scrapeContactInfoInBatches } from '../../config/utilities';
 
 /**
  * Function to scrape each Ontario MPP's URL.

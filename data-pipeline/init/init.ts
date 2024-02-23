@@ -1,7 +1,20 @@
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
-import { initFederalTablePopulation } from '../scripts/db-population/federal/initFederalTablesFromCSV';
-import { initOntarioTablePopulation } from '../scripts/db-population/ontario/initOntarioTableFromCSV';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../etl/config/constants';
+import { initFederalTablePopulation } from '../etl/load/federal/initFederalTablePopulation';
+import { initOntarioTablePopulation } from '../etl/load/ontario/initOntarioTablePopulation';
+
+
+
+// Materialized View stuff
+
+// Make sure endpoints function as expected
+
+
+
 import { updateAllRepMatView } from '../scripts/db-population/repMatView';
+
+
+
+
 
 /**
  * Initializes the database by populating the tables with data from the CSV files on disk.

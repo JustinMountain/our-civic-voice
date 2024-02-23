@@ -1,6 +1,6 @@
-import { ONT_CSV_SOURCE } from '../../constants';
+import { ONT_CSV_SOURCE } from '../../config/constants';
 
-import { RepInfo, OfficeInfo } from '../../tableInterfaces';
+import { RepInfo, OfficeInfo } from '../../config/tableInterfaces';
 import { OntarioMemberCSVData, OntarioMemberPageData } from './parseResponses';
 
 

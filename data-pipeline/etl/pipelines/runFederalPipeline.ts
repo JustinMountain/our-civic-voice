@@ -2,26 +2,22 @@ import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { XMLParser } from 'fast-xml-parser';
 
-import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../constants';
-import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../constants';
+import { CONSOLE_HIGHLIGHT, CONSOLE_ERROR, CONSOLE_RESET } from '../config/constants';
+import { FED_MEMBER_INFO_DIRECTORY, FED_MEMBER_OFFICE_DIRECTORY } from '../config/constants';
 
 import { scrapeFederalMPDataXML, 
   scrapeFederalMPPages, 
-  scrapeFederalMPDataFromURLs } from "./extract/scrapeFederalMPs";
+  scrapeFederalMPDataFromURLs } from "../extract/federal/scrapeFederalMPs";
 
-import { parseFederalXML, parseFederalPages } from "./transform/parseResponses";
+import { parseFederalXML, parseFederalPages } from "../transform/federal/parseResponses";
 
-import { standardizeFederalMPInfo, standardizeFederalMPOfficeInfo } from "./transform/standardizeParsedResponses";
+import { standardizeFederalMPInfo, standardizeFederalMPOfficeInfo } from "../transform/federal/standardizeParsedResponses";
 
-import { createFederalMembersCSV, createFederalMemberOfficeCSV } from "./load/memoryToCSV";
+import { createMembersCSV, createMemberOfficeCSV } from "../load/memoryToCSV";
 
-import { populateFederalMemberTable, populateFederalOfficeTable } from "./load/memoryToPostgres";
+import { handleCSVUpdateConditions } from '../config/utilities';
 
-import { mostRecentFederalRepCSVtoMemory } from "./transform/csvToMemory";
-
-import { handleCSVUpdateConditions } from '../utilities';
-
-import { initFederalTablePopulation } from './initFederalTablePopulation';
+import { initFederalTablePopulation } from '../load/federal/initFederalTablePopulation';
 
 const axiosInstance = axios.create({
   headers: {
@@ -38,7 +34,7 @@ axiosRetry(axiosInstance, {
   retryCondition: axiosRetry.isNetworkOrIdempotentRequestError, 
 })  
   
-async function runFederalPipeline() {
+export async function runFederalPipeline() {
   const timeRetrieved = Date.now();
   const parser = new XMLParser();
 
@@ -58,17 +54,18 @@ async function runFederalPipeline() {
     const standardizedRepInfo = standardizeFederalMPInfo(federalMPPageData, federalMPXMLData);
     const standardizedOfficeInfo = standardizeFederalMPOfficeInfo(federalMPPageData);
 
+
     // Creates CSV from standardized data
-    const createdFederalRepCSV = await createFederalMembersCSV(standardizedRepInfo);
-    const createdFederalRepOfficeCSV = await createFederalMemberOfficeCSV(standardizedOfficeInfo);
-    
+    const createdMemberCSV = await createMembersCSV('federal', FED_MEMBER_INFO_DIRECTORY, standardizedRepInfo);
+    const createdOfficeCSV = await createMemberOfficeCSV('federal', FED_MEMBER_OFFICE_DIRECTORY, standardizedOfficeInfo);
+
     // Checks created CSV files for updates
     let isFederalRepCSVUpdated: Boolean = false;
     let isFederalOfficeCSVUpdated: Boolean = false;
-    if (createdFederalRepCSV) {
+    if (createdMemberCSV) {
       isFederalRepCSVUpdated = await handleCSVUpdateConditions(FED_MEMBER_INFO_DIRECTORY);
     }
-    if (createdFederalRepOfficeCSV) {
+    if (createdOfficeCSV) {
       isFederalOfficeCSVUpdated = await handleCSVUpdateConditions(FED_MEMBER_OFFICE_DIRECTORY);
     }
 
@@ -84,5 +81,3 @@ async function runFederalPipeline() {
     throw error;
   }
 }
-
-runFederalPipeline();
