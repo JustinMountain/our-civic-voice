@@ -44,32 +44,32 @@ export default function Header() {
       <div className='flex flex-row justify-end px-4 py-6 max-w-7xl m-auto text-lg text-light
                       md:px-8
                       xl:py-8'>
-          <NavigationMenu>
-            <NavigationMenuList>
-              <Link href="/" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Connect
-                </NavigationMenuLink>
-              </Link>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <Link href="/" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Connect
+              </NavigationMenuLink>
+            </Link>
 
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Browse</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="gap-3 p-4 w-48">
-                    {browse.map((item) => (
-                      <ListItem
-                        key={item.title}
-                        title={item.title}
-                        href={item.href}
-                      >
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Browse</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="gap-3 p-4 w-48">
+                  {browse.map((item) => (
+                    <ListItem
+                      key={item.title}
+                      title={item.title}
+                      href={item.href}
+                    >
+                    </ListItem>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
     </header>
   );
 };

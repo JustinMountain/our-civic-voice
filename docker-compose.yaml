@@ -1,27 +1,27 @@
 version: '3.8'
 services:
-  nginx: 
-    container_name: ocv-nginx
-    build: ./nginx
-    restart: unless-stopped
-    ports:
-      - 80:80
-    networks:
-      - ocv-network
+  # nginx: 
+  #   container_name: ocv-nginx
+  #   build: ./nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - 80:80
+  #   networks:
+  #     - ocv-network
 
-  frontend:
-    container_name: ocv-frontend
-    build: ./frontend
-    restart: unless-stopped
-    depends_on:
-      - nginx
-      - backend-express
-    environment:
-      - REST_ENDPOINT=${REST_ENDPOINT} # optional
-    volumes: 
-      - ./frontend/:/usr/app/
-    networks:
-      - ocv-network
+  # frontend:
+  #   container_name: ocv-frontend
+  #   build: ./frontend
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - nginx
+  #     - backend-express
+  #   environment:
+  #     - REST_ENDPOINT=${REST_ENDPOINT} # optional
+  #   volumes: 
+  #     - ./frontend/:/usr/app/
+  #   networks:
+  #     - ocv-network
 
   database:
     container_name: ocv-postgres
