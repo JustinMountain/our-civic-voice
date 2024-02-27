@@ -3,8 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTableColumnHeader } from "./column-header"
 
-
-export type RepColumns = {
+export type RepTableColumns = {
   member_id: string,
   name: string,
   constituency: string,
@@ -13,17 +12,11 @@ export type RepColumns = {
   gov_level: string,
 }
 
-export const columns: ColumnDef<RepColumns>[] = [
+export const columns: ColumnDef<RepTableColumns>[] = [
   {
     accessorKey: "member_id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="member_id" />
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
     ),
   },
   {
@@ -36,6 +29,12 @@ export const columns: ColumnDef<RepColumns>[] = [
     accessorKey: "province_territory",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Province/Territory" />
+    ),
+  },
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
     ),
   },
   {

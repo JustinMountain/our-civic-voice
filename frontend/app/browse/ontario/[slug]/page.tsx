@@ -1,7 +1,9 @@
 "use client"
 
-import { RepColumns } from "@/components/ui/rep-table/columns"
-import { getDataForRepTable } from "@/components/ui/rep-table/rep-table";
+import { getRepInfo } from "@/components/data-layer/get-representatives";
+
+// import { RepTableColumns } from "@/components/data-layer/interfaces";
+// import { getDataForRepTable } from "@/components/data-layer/rep-table";
 import OfficeCardStack from "@/components/ui/contact/office-card-stack/office-card-stack";
 import HeroComponent from "@/components/ui/hero/hero";
 import RepInfo from "@/components/ui/hero/rep-info";
@@ -14,14 +16,16 @@ import { ONTARIO_OFFICE_ENDPOINT } from "@/config/constants";
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const slug = { params }.params.slug;
+
+  const repInfo = await getRepInfo(`${ONTARIO_REPRESENTATIVE_ENDPOINT}${slug}`);
   
-  const repData: RepColumns[] = await getDataForRepTable(`${ONTARIO_REPRESENTATIVE_ENDPOINT}${slug}`);
+  // const repData: RepTableColumns[] = await getDataForRepTable(`${ONTARIO_REPRESENTATIVE_ENDPOINT}${slug}`);
   const officeData: OfficeInfo[] = await getDataForOfficeInfo(`${ONTARIO_OFFICE_ENDPOINT}${slug}`);
 
   return (
     <div className="mx-auto p-0">
-      <HeroComponent title={repData[0].name}>
-        <RepInfo data={repData} />
+      <HeroComponent title={`${repInfo[0].firstName} ${repInfo[0].lastName}`}>
+        <RepInfo data={repInfo} />
       </HeroComponent>
 
       <OfficeCardStack data={officeData} />

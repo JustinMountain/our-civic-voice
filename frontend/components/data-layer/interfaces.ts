@@ -1,23 +1,4 @@
 /**
- * Interface for the RepTable.
- */
-export interface RepTable {
-  memberId: number;
-  timeRetrieved: number;
-  honorific: string;
-  firstName: string;
-  lastName: string;
-  constituency: string | undefined;
-  provinceTerritory: string;
-  party: string;
-  email: string;
-  website: string;
-  govLevel: string;
-  imageUrl: string | undefined;
-  sourceUrl: string;
-}
-
-/**
  * Interface for data from the ____reps tables.
  */
 export interface RepInfo {
