@@ -1,4 +1,5 @@
-import { OfficeInfo } from "@/components/ui/contact/office-card-stack/office-info";
+import { OfficeInfo } from "@/components/data-layer/interfaces";
+
 import {
   Card,
   CardContent,
@@ -17,7 +18,7 @@ import {
 import { EnvelopeClosedIcon, FileTextIcon, BellIcon } from "@radix-ui/react-icons"
 
 export default async function OfficeCard(props: {data: OfficeInfo}) {
-  const sourceDate = new Date(props.data.updated_date);
+  const sourceDate = new Date(props.data.timeRetrieved);
   const year = sourceDate.getFullYear();
   const month = sourceDate.toLocaleString('default', { month: 'long' });
   const day = sourceDate.getDate().toString().padStart(2, '0');
@@ -29,8 +30,8 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
 
       <Card>
         <CardHeader>
-          <CardTitle>{props.data.office_type}</CardTitle>
-          <CardDescription>{props.data.general_email}</CardDescription>
+          <CardTitle>{props.data.officeType}</CardTitle>
+          <CardDescription>{props.data.officeEmail}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-1">
           <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
@@ -42,9 +43,9 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Mailing Address</p>
               <p className="font-medium ">
-                {props.data.office_address}
-                {props.data.office_city}, {props.data.office_province}<br />
-                {props.data.office_postal_code}
+                {props.data.officeAddress}
+                {props.data.officeCity}, {props.data.officeProvinceTerritory}<br />
+                {props.data.officePostalCode}
               </p>
             </div>
           </div>
@@ -57,7 +58,7 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Phone</p>
               <p className="font-medium ">
-                {props.data.office_telephone}
+                {props.data.officeTelephone}
               </p>
             </div>
           </div>
@@ -70,7 +71,7 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Fax</p>
               <p className="font-medium ">
-                {props.data.office_fax}
+                {props.data.officeFax}
               </p>
             </div>
           </div>

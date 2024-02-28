@@ -22,6 +22,7 @@ export interface RepInfo {
  */
 export interface OfficeInfo {
   memberId: number;
+  officeId: number;
   timeRetrieved: number;
   officeType: string;
   officeTitle: string;

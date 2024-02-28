@@ -2,9 +2,9 @@ import { RepInfo } from './interfaces';
 import { REST_API_URL } from "@/config/constants";
 
 /**
- * Interface for data from the ____reps tables.
+ * Interface for data from the _reps tables in snake case.
  */
-export interface RepInfoResponse {
+interface RepInfoResponse {
   member_id: number;
   time_retrieved: number;
   honorific: string;
