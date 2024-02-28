@@ -1,4 +1,4 @@
-import { RepColumns } from "@/components/ui/rep-table/columns"
+import { RepInfo } from "@/components/data-layer/interfaces"
 
 import {
   Card,
@@ -11,8 +11,8 @@ import {
 import { SewingPinIcon, InfoCircledIcon } from "@radix-ui/react-icons"
 
 
-export default function RepInfo(props: {data: RepColumns[]}) {
-  const level = props.data[0].gov_level
+export default function RepInfo(props: {data: RepInfo}) {
+  const level = props.data.govLevel
   const levelCapitalized = level.charAt(0).toUpperCase() + level.slice(1)
 
   return (
@@ -21,7 +21,7 @@ export default function RepInfo(props: {data: RepColumns[]}) {
       <Card>
         <CardHeader>
           <CardDescription>{levelCapitalized} Constituency</CardDescription>
-          <CardTitle>{props.data[0].constituency}</CardTitle>
+          <CardTitle>{props.data.constituency}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-1">
           <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
@@ -34,7 +34,7 @@ export default function RepInfo(props: {data: RepColumns[]}) {
                 Province / Territory
               </p>
               <p className="font-medium ">
-                {props.data[0].province_territory}
+                {props.data.provinceTerritory}
               </p>
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function RepInfo(props: {data: RepColumns[]}) {
                 Affiliation
               </p>
               <p className="font-medium ">
-                {props.data[0].party}
+                {props.data.party}
               </p>
             </div>
           </div>
