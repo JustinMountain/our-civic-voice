@@ -24,6 +24,27 @@ export function standardizeOntarioMPPInfo(pageData: OntarioMemberPageData[], csv
       // Look for matching constituency in the XML data for remaining info
       const repInfoMatch = csvData.find(info => info.constituency === page.constituency);
       if (repInfoMatch) {
+        const party = repInfoMatch.partyAffiliation.toLowerCase();
+        console.log(party);
+        
+        let sanitizedParty: string = 'Other';
+
+        if (party.includes('conservative')) {
+          sanitizedParty = 'Conservative';
+        }
+        if (party.includes('liberal')) {
+          sanitizedParty = 'Liberal';
+        }
+        if (party.includes('democratic')) {
+          sanitizedParty = 'NDP';
+        }
+        if (party.includes('green')) {
+          sanitizedParty = 'Green Party';
+        }
+        if (party.includes('independent')) {
+          sanitizedParty = 'Independent';
+        }
+
         const thisRep: RepInfo = {
           memberId: repInfoMatch.memberId,
           timeRetrieved: timeRetrieved,
@@ -32,7 +53,7 @@ export function standardizeOntarioMPPInfo(pageData: OntarioMemberPageData[], csv
           lastName: repInfoMatch.lastName,
           constituency: page.constituency,
           provinceTerritory: 'Ontario',
-          party: repInfoMatch.partyAffiliation,
+          party: sanitizedParty,
           email: repInfoMatch.generalEmail,
           website: '',
           govLevel: 'Provincial',
