@@ -74,6 +74,7 @@ services:
     build: ./express
     depends_on:
       - database
+      - data-pipeline
     environment:
       # DB container_name used for the database connection in /data-pipeline/config/databasePool.ts
       - DB_HOST=database

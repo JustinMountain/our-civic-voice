@@ -55,12 +55,28 @@ export async function parseOntarioCSV(directory: string): Promise<OntarioMemberC
     .pipe(parse({ delimiter: ",", from_line: 1, relax_column_count: true }));
 
     for await (const oneMember of parser) {
+      // Sanitize the address
+      let address = oneMember[4].replace(/\n/g, '')
+                                .replace(/\r/g, '<br>')
+                                .replace(/<br><br><br><br>/g, '\n')
+                                .replace(/<br><br><br>/g, '\n')
+                                .replace(/<br><br>/g, '\n')
+                                .replace(/<br>/g, '\n')
+                                .replace(/\n+$/, '')
+                                .replace(/&nbsp;/g, ' ')
+                                .replace(/&amp;/g, '&')
+                                .trim();
+
+      if (address.startsWith('Mailing address: ')) {
+        address = address.slice('Mailing address: '.length).trimStart();
+      }
+
       const thisMember: OntarioMemberCSVData = {
         honorific: oneMember[0],
         firstName: oneMember[1],
         lastName: oneMember[2],
         officeType: oneMember[3],
-        officeAddress: oneMember[4],
+        officeAddress: address,
         officeCity: oneMember[5],
         provinceTerritory: oneMember[6],
         postalCode: oneMember[7],

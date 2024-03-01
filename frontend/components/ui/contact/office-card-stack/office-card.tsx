@@ -1,3 +1,4 @@
+import React from "react";
 import { OfficeInfo } from "@/components/data-layer/interfaces";
 
 import {
@@ -43,7 +44,14 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Mailing Address</p>
               <p className="font-medium ">
-                {props.data.officeAddress}
+              {props.data.officeAddress.split('\n').map((line, index, array) => (
+                <React.Fragment key={index}>
+                  {line}
+                  {/* Add <br /> after each line except the last one */}
+                  {index < array.length - 1 && <br />}
+                </React.Fragment>
+              ))}
+              <br />
                 {props.data.officeCity}, {props.data.officeProvinceTerritory}<br />
                 {props.data.officePostalCode}
               </p>

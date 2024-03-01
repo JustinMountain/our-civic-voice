@@ -12,7 +12,7 @@ interface OfficeInfoResponse {
   office_title: string;
   office_address: string;
   office_city: string;
-  office_province_perritory: string;
+  office_province: string;
   office_postal_code: string;
   office_note: string;
   office_telephone: string;
@@ -41,7 +41,7 @@ export async function getOfficeInfo(path: string): Promise<OfficeInfo[]> {
         officeTitle: row.office_title,
         officeAddress: row.office_address,
         officeCity: row.office_city,
-        officeProvinceTerritory: row.office_province_perritory,
+        officeProvinceTerritory: row.office_province,
         officePostalCode: row.office_postal_code,
         officeNote: row.office_note,
         officeTelephone: row.office_telephone,
