@@ -83,6 +83,72 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
               </p>
             </div>
           </div>
+
+
+
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div>
+              <br />
+              <FileTextIcon className="mt-px h-5 w-5" />
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Office Title</p>
+              <p className="font-medium ">
+                {props.data.officeTitle}
+              </p>
+            </div>
+          </div>
+
+
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div>
+              <br />
+              <FileTextIcon className="mt-px h-5 w-5" />
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Office Note</p>
+              <p className="font-medium ">
+                {props.data.officeNote}
+              </p>
+            </div>
+          </div>
+
+
+
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div>
+              <br />
+              <FileTextIcon className="mt-px h-5 w-5" />
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Office Toll Free</p>
+              <p className="font-medium ">
+                {props.data.officeTollFree}
+              </p>
+            </div>
+          </div>
+
+
+
+          <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+            <div>
+              <br />
+              <FileTextIcon className="mt-px h-5 w-5" />
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Office TTY</p>
+              <p className="font-medium ">
+                {props.data.officeTty}
+              </p>
+            </div>
+          </div>
+
+
+
           <div className="text-right">
             <Popover>
               <PopoverTrigger>
@@ -90,7 +156,10 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
                   Source
                 </p>
               </PopoverTrigger>
-              <PopoverContent>Updated: {formattedDate}</PopoverContent>
+              <PopoverContent>
+                {props.data.sourceUrl}<br />
+                Updated: {formattedDate}
+              </PopoverContent>
             </Popover>
           </div>
         </CardContent>

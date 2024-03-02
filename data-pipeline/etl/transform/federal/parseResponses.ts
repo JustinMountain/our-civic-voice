@@ -150,11 +150,11 @@ export function parseFederalPages(axiosResponse: any): FederalMemberPageData[] {
           if (cityAndProvince[1]) {
             officeProvince = cityAndProvince[1].trim()
           }
-          if (address.length == 1) {
-            officeAddress = address[0].trim();
-          }
-          if (address.length == 2) {
-            officeAddress = `${address[0].trim()} ${address[1].trim()}`;
+
+          if (address[2] == address[address.length - 3]) {
+            officeAddress = address[1].trim();
+          } else {
+            officeAddress = address[1].trim() + '\n' + address[2].trim();
           }
         }
   
