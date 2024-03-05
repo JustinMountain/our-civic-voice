@@ -19,9 +19,9 @@ const HeroComponent: React.FC<HeroProps> = ({ title, children }) => {
           <Header />
         </div>
 
-        <div className="max-w-lg mx-auto 
+        <div className="max-w-lg mx-auto w-full
                         md:row-start-2 md:row-end-3
-                        md:col-start-2 md:col-end-3 md:max-w-xl">
+                        md:col-start-2 md:col-end-3 md:max-w-3xl ">
           <h2 className="text-5xl text-light text-center px-4 pt-4 pb-8
                         md:pt-0">
             {title}

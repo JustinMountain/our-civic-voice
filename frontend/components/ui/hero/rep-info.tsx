@@ -10,14 +10,13 @@ import {
 } from "@/components/ui/card"
 import { SewingPinIcon, InfoCircledIcon } from "@radix-ui/react-icons"
 
-
 export default function RepInfo(props: {data: RepInfo}) {
   const level = props.data.govLevel
   const levelCapitalized = level.charAt(0).toUpperCase() + level.slice(1)
 
   return (
 
-    <div className="px-4">
+    <div className="px-4 w-full">
       <Card>
         <CardHeader>
           <CardDescription>{levelCapitalized} Constituency</CardDescription>

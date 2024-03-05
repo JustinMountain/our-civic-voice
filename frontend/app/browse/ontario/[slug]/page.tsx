@@ -3,7 +3,7 @@
 import { getRepInfo } from "@/components/data-layer/get-representatives";
 import { getOfficeInfo } from "@/components/data-layer/get-offices";
 
-import OfficeCardStack from "@/components/ui/contact/office-card-stack/office-card-stack";
+import OfficeCardStack from "@/components/ui/offices/office-card-stack";
 import HeroComponent from "@/components/ui/hero/hero";
 import RepInfo from "@/components/ui/hero/rep-info";
 import Footer from "@/components/ui/chrome/footer";

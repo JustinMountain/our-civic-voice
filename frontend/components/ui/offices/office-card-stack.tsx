@@ -1,7 +1,6 @@
-import OfficeCard from "@/components/ui/contact/office-card-stack/office-card";
+import OfficeCard from "@/components/ui/offices/office-card";
 
 import { OfficeInfo } from "@/components/data-layer/interfaces";
-
 
 export default async function OfficeCardStack(props: {data: OfficeInfo[]}) {
   return (
