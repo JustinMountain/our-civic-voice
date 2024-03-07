@@ -24,8 +24,8 @@ export default function Footer() {
               src="/leaf.png"
               width={256}
               height={256}
-              title="Justin"
-              alt="Justin"
+              title="Our Civic Voice"
+              alt="Our Civic Voice"
               className="pt-8 md:w-64"
           />    
         </div>

@@ -20,8 +20,8 @@ import { EnvelopeClosedIcon,
           FileTextIcon, 
           BellIcon, 
           RocketIcon, 
-          DesktopIcon, 
-          MagicWandIcon } from "@radix-ui/react-icons"
+          MagicWandIcon,
+          KeyboardIcon } from "@radix-ui/react-icons"
 
 export default async function OfficeCard(props: {data: OfficeInfo}) {
   const sourceDate = new Date(props.data.timeRetrieved);
@@ -131,7 +131,7 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
             <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
               <div>
                 <br />
-                <DesktopIcon className="mt-px h-5 w-5" />
+                <KeyboardIcon className="mt-px h-5 w-5" />
               </div>
 
               <div className="space-y-1">

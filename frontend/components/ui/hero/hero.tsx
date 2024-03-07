@@ -38,8 +38,8 @@ const HeroComponent: React.FC<HeroProps> = ({ title, children }) => {
             src="/leaf.png"
             width={660}
             height={660}
-            title="Justin"
-            alt="Justin"
+            title="Our Civic Voice"
+            alt="Our Civic Voice"
             className="align-left align-bottom md:pt-8" />
         </div>
         
