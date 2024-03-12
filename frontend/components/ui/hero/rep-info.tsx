@@ -33,21 +33,10 @@ export default function RepInfo(props: {data: RepInfo}) {
 
   return (
 
-    <div className="px-4 w-full">
+    <div className="w-full px-4
+                    lg:px-8">
       <Card>
-        <div className="md:col-start-1 md:col-end-2 
-                        md:row-start-1 md:row-end-3 
-                        flex flex-col justify-end">
-          <Image
-            src={`${props.data.imageUrl}`}
-            width={140}
-            height={140}
-            title={`${props.data.firstName} ${props.data.lastName} headshot`}
-            alt={`${props.data.firstName} ${props.data.lastName} headshot`}
-            className="mx-auto pt-8" />
-        </div>
-
-        <h2 className="text-4xl text-primary text-center px-4 py-8">
+        <h2 className="text-4xl text-primary text-center px-4 pt-8 pb-0">
           {props.data.firstName} {props.data.lastName}
         </h2>        
         <CardHeader>

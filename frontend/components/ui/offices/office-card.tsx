@@ -23,7 +23,7 @@ import { EnvelopeClosedIcon,
           MagicWandIcon,
           KeyboardIcon } from "@radix-ui/react-icons"
 
-export default async function OfficeCard(props: {data: OfficeInfo}) {
+export default async function OfficeCard(props: {data: OfficeInfo, name: string}) {
   const sourceDate = new Date(props.data.timeRetrieved);
   const year = sourceDate.getFullYear();
   const month = sourceDate.toLocaleString('default', { month: 'long' });
@@ -32,7 +32,8 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
   const addressSplit = props.data.officeAddress.split('\n');
 
   return (
-    <div className="grow w-11/12">
+    <div className="grow px-4
+                    lg:px-8">
       <Card>
         <CardHeader>
           <CardTitle>{props.data.officeType}</CardTitle>
@@ -50,6 +51,7 @@ export default async function OfficeCard(props: {data: OfficeInfo}) {
               
               <p className="text-sm text-muted-foreground">Mailing Address</p>
               <p className="font-medium ">
+                {props.name} <br />
 
               {props.data.officeTitle.length > 0 ? (
                 <>
