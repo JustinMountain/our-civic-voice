@@ -2,7 +2,7 @@ import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { RepTableColumns } from "./columns"
 import { RepInfo } from '../../data-layer/interfaces';
-import { getRepInfo } from '../../data-layer/get-representatives';
+import { getRepInfo } from "@/components/data-layer/get-representatives"
 
 async function getDataForRepTable(path: string): Promise<RepTableColumns[]> {
   try {

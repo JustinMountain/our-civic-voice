@@ -38,3 +38,12 @@ export interface OfficeInfo {
   officeTty: string;
   sourceUrl: string;
 }
+
+/**
+ * Interface for data from the concerns table.
+ */
+export interface Concern {
+  concern_id: number;
+  label: string;
+  level: string;
+}

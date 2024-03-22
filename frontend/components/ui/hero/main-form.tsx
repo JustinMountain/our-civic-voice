@@ -32,33 +32,33 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const concerns = [
-  { label: "Climate Change and Environmental Protection", level: "all", key: 1},
-  { label: "Healthcare Access and Affordability", level: "provterr", key: 2},
-  { label: "Education Reform", level: "provterr", key: 3},
-  { label: "Economic Inequality", level: "all", key: 4},
-  { label: "Women's Rights and Reproductive Health", level: "provterr", key: 5},
-  { label: "LGBTQ+ Rights", level: "fedprov", key: 6},
-  { label: "Racial Justice and Equality", level: "provterr", key: 7},
-  { label: "Housing", level: "all", key: 8},
-  { label: "Infrastructure Investment", level: "provmun", key: 9},
-  { label: "Opioid Crisis and Drug Policy", level: "all", key: 10},
-  { label: "Foreign Policy and National Security", level: "fed", key: 11},
-  { label: "Government Spending", level: "all", key: 12},
-  { label: "Public Health", level: "all", key: 13},
-  { label: "Small Business Support and Entrepreneurship", level: "provmun", key: 14},
-  { label: "Cultural and Historical Preservation", level: "provmun", key: 15},
-  { label: "Food Security and Agriculture", level: "provmun", key: 16},
-  { label: "Indigenous Peoples' Rights and Reconciliation", level: "fedprov", key: 17},
-  { label: "Technology and Privacy", level: "fed", key: 18},
-  { label: "Immigration and Refugee Policies", level: "fed", key: 19},
-  { label: "Mental Health Services", level: "provterr", key: 20},
-  { label: "Renewable Energy and Sustainability", level: "fedprov", key: 21},
-  { label: "Science and Research Funding", level: "fedprov", key: 22},
-  { label: "Youth Employment and Opportunities", level: "provmun", key: 23},
-  { label: "Electoral Reform", level: "all", key: 24},
-  { label: "Digital Infrastructure and Access", level: "fed", key: 25},
-  { label: "Cybersecurity and National Safety", level: "fed", key: 26},
-  { label: "Public Transportation and Mobility", level: "mun", key: 27}
+  { label: "Climate Change and Environmental Protection", level: "all", concern_id: 1},
+  { label: "Healthcare Access and Affordability", level: "provterr", concern_id: 2},
+  { label: "Education Reform", level: "provterr", concern_id: 3},
+  { label: "Economic Inequality", level: "all", concern_id: 4},
+  { label: "Women's Rights and Reproductive Health", level: "provterr", concern_id: 5},
+  { label: "LGBTQ+ Rights", level: "fedprov", concern_id: 6},
+  { label: "Racial Justice and Equality", level: "provterr", concern_id: 7},
+  { label: "Housing", level: "all", concern_id: 8},
+  { label: "Infrastructure Investment", level: "provmun", concern_id: 9},
+  { label: "Opioid Crisis and Drug Policy", level: "all", concern_id: 10},
+  { label: "Foreign Policy and National Security", level: "fed", concern_id: 11},
+  { label: "Government Spending", level: "all", concern_id: 12},
+  { label: "Public Health", level: "all", concern_id: 13},
+  { label: "Small Business Support and Entrepreneurship", level: "provmun", concern_id: 14},
+  { label: "Cultural and Historical Preservation", level: "provmun", concern_id: 15},
+  { label: "Food Security and Agriculture", level: "provmun", concern_id: 16},
+  { label: "Indigenous Peoples' Rights and Reconciliation", level: "fedprov", concern_id: 17},
+  { label: "Technology and Privacy", level: "fed", concern_id: 18},
+  { label: "Immigration and Refugee Policies", level: "fed", concern_id: 19},
+  { label: "Mental Health Services", level: "provterr", concern_id: 20},
+  { label: "Renewable Energy and Sustainability", level: "fedprov", concern_id: 21},
+  { label: "Science and Research Funding", level: "fedprov", concern_id: 22},
+  { label: "Youth Employment and Opportunities", level: "provmun", concern_id: 23},
+  { label: "Electoral Reform", level: "all", concern_id: 24},
+  { label: "Digital Infrastructure and Access", level: "fed", concern_id: 25},
+  { label: "Cybersecurity and National Safety", level: "fed", concern_id: 26},
+  { label: "Public Transportation and Mobility", level: "mun", concern_id: 27}
 ] as const;
   
 const languages = [
@@ -144,7 +144,7 @@ export default function MainForm() {
                         {concerns.map((concern) => (
                           <CommandItem
                             value={concern.label}
-                            key={concern.key}
+                            key={concern.concern_id}
                             onSelect={() => {
                               form.setValue("concern", concern.label);
                               setOpen(false);
